@@ -1,7 +1,7 @@
-package shurona.wordfinder.repository;
+package shurona.wordfinder.user.repository;
 
 import org.springframework.stereotype.Repository;
-import shurona.wordfinder.domain.User;
+import shurona.wordfinder.user.User;
 
 import java.util.HashMap;
 import java.util.Map;

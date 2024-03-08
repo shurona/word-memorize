@@ -1,10 +1,9 @@
-package shurona.wordfinder.service;
+package shurona.wordfinder.user.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import shurona.wordfinder.domain.User;
-import shurona.wordfinder.repository.MemoryUserRepository;
-import shurona.wordfinder.repository.UserRepository;
+import shurona.wordfinder.user.User;
+import shurona.wordfinder.user.repository.UserRepository;
 
 @Service
 public class UserService {

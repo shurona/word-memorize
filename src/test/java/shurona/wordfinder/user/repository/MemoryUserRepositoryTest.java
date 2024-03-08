@@ -1,14 +1,11 @@
-package shurona.wordfinder.repository;
+package shurona.wordfinder.user.repository;
 
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import shurona.wordfinder.domain.User;
-import shurona.wordfinder.service.UserService;
+import shurona.wordfinder.user.User;
+import shurona.wordfinder.user.repository.MemoryUserRepository;
+import shurona.wordfinder.user.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class MemoryUserRepositoryTest {
 

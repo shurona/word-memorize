@@ -1,4 +1,4 @@
-package shurona.wordfinder.controller.dto;
+package shurona.wordfinder.user.controller.dto;
 
 public class UserForm {
     private String nickname;

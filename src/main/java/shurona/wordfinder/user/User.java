@@ -1,4 +1,4 @@
-package shurona.wordfinder.domain;
+package shurona.wordfinder.user;
 
 public class User {
     private Long id;

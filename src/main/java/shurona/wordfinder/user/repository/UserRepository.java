@@ -1,6 +1,6 @@
-package shurona.wordfinder.repository;
+package shurona.wordfinder.user.repository;
 
-import shurona.wordfinder.domain.User;
+import shurona.wordfinder.user.User;
 
 import java.util.Optional;
 
