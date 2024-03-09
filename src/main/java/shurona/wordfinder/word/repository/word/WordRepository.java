@@ -7,5 +7,7 @@ import java.util.UUID;
 public interface WordRepository {
     Word save(Word word);
 
-    Word[] findWordsbyIds(UUID[] ids);
+    Word findWordByWord(String word);
+
+    Word[] findWordsByIds(UUID[] ids);
 }

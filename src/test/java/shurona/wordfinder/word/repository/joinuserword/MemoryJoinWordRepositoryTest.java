@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import shurona.wordfinder.word.JoinWordUser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +25,6 @@ class MemoryJoinWordRepositoryTest {
         //then
         assertThat(userId).isEqualTo(oneRelation.getUserId());
         assertThat(wordId).isEqualTo(oneRelation.getWordId());
-
     }
 
     @Test
@@ -49,5 +49,15 @@ class MemoryJoinWordRepositoryTest {
             // 원하는 유저인지 확인한다.
             assertThat(joinWordUser.getUserId()).isEqualTo(wishUserId);
         }
+    }
+
+    @Test
+    void testUnsavedWords() {
+        // given
+        JoinWordUser[] joinWordUsers = this.joinWordRepository.userOwnedWordList(1L);
+        // when
+        // then
+        assertThat(joinWordUsers).isEmpty();
+
     }
 }
