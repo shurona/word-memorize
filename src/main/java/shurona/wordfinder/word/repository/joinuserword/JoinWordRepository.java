@@ -10,4 +10,6 @@ public interface JoinWordRepository {
 
     // 유저에게 갖고 있는 단어 ids 목록을 갖고 온다.
     JoinWordUser[] userOwnedWordList(Long userId);
+
+    JoinWordUser[] joinWordList();
 }

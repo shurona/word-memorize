@@ -41,4 +41,25 @@ class MemoryUserRepositoryTest {
 
         assertThat(one).isEqualTo(userRepository.findByNickname(one.getNickname()).get());
     }
+
+    @Test
+    void 유저목록만_갖고_오기() {
+        //given
+        User userOne = new User();
+        userOne.setNickname("hello");
+
+        User userTwo = new User();
+        userTwo.setNickname("hi");
+
+        userRepository.save(userOne);
+        userRepository.save(userTwo);
+
+
+        //when
+        Long[] longs = this.userRepository.userIds();
+
+        //then
+        assertThat(longs.length).isEqualTo(2);
+
+    }
 }

@@ -1,9 +1,11 @@
 package shurona.wordfinder.word.repository.word;
 
+import org.springframework.stereotype.Repository;
 import shurona.wordfinder.word.Word;
 
 import java.util.*;
 
+@Repository
 public class MemoryWordRepository implements WordRepository {
         private static final Map<UUID, Word> store = new HashMap<>();
 

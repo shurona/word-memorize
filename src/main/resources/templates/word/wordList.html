@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Word List</title>
+</head>
+<body>
+<h1>Words</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Word</th>
+        <th>Meaning</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- words는 서버에서 전달된 모델 속성으로, 각 요소는 id, word, meaning을 포함합니다 -->
+    <tr th:each="word, stat : ${words}">
+        <td th:text="${stat.count}">Index</td> <!-- stat.count는 1부터 시작하는 인덱스를 반환합니다 -->
+        <td th:text="${word.word}">Example Word</td>
+        <td th:text="${word.meaning}">Example Meaning</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

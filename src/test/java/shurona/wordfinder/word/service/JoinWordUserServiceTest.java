@@ -37,9 +37,10 @@ class JoinWordUserServiceTest {
         // given
         Long userId = 13L;
         String wordInfo = "HelloWorld";
+        String wordMeaning = "안녕";
 
         // when
-        JoinWordUser userWithWord = this.joinWordUserService.generate(userId, wordInfo);
+        JoinWordUser userWithWord = this.joinWordUserService.generate(userId, wordInfo, wordMeaning);
 
         // then
         assertThat(userWithWord.getUserId()).isEqualTo(userId);

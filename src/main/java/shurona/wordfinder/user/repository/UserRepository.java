@@ -10,4 +10,6 @@ public interface UserRepository {
     User findById(Long userId);
 
     Optional<User> findByNickname(String nickname);
+
+    public Long[] userIds();
 }

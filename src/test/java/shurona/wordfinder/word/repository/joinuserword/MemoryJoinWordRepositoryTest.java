@@ -13,6 +13,7 @@ class MemoryJoinWordRepositoryTest {
 
     JoinWordRepository joinWordRepository = new MemoryJoinWordRepository();
 
+    // 유저의 단어 저장
     @Test
     void saveUserWord() {
         //given
@@ -27,6 +28,7 @@ class MemoryJoinWordRepositoryTest {
         assertThat(wordId).isEqualTo(oneRelation.getWordId());
     }
 
+    // 유저가 보유한 단어 목록 보여준다.
     @Test
     void userOwnedWordList() {
         //given

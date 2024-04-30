@@ -6,6 +6,7 @@ import shurona.wordfinder.user.User;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public class MemoryUserRepository implements UserRepository{
@@ -30,5 +31,10 @@ public class MemoryUserRepository implements UserRepository{
     @Override
     public Optional<User> findByNickname(String nickname) {
         return store.values().stream().filter(user -> user.getNickname().equals(nickname)).findAny();
+    }
+
+    public Long[] userIds() {
+        Set<Long> longs = store.keySet();
+        return longs.toArray(new Long[0]);
     }
 }

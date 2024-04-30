@@ -1,9 +1,13 @@
 package shurona.wordfinder.word.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import shurona.wordfinder.word.Word;
 import shurona.wordfinder.word.repository.word.WordRepository;
 
+import java.util.UUID;
+
+@Service
 public class WordService {
     private final WordRepository wordRepository;
 
@@ -12,10 +16,11 @@ public class WordService {
         this.wordRepository = wordRepository;
     }
 
-    public Word saveWord(String wordInfo) {
+    public Word saveWord(String wordInfo, String wordMeaning) {
         // 단어 정보 저장
         Word newWord = new Word();
         newWord.setWord(wordInfo);
+        newWord.setMeaning(wordMeaning);
         return this.wordRepository.save(newWord);
     }
 
@@ -24,5 +29,9 @@ public class WordService {
         return this.wordRepository.findWordByWord(wordInfo);
     }
 
+
+    public Word[] getWordByIds(UUID[] wordIds) {
+        return this.wordRepository.findWordsByIds(wordIds);
+    }
     //
 }

@@ -27,8 +27,9 @@ class WordServiceTest {
     void saveWordTest() {
         //given
         String newWord = "Yahoo";
+        String meaning = "야후";
         //when
-        Word word = wordService.saveWord(newWord);
+        Word word = wordService.saveWord(newWord, meaning);
         //then
         assertThat(word.getWord()).isEqualTo(newWord);
     }
