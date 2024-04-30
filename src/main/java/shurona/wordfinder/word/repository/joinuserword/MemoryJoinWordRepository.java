@@ -36,5 +36,8 @@ public class MemoryJoinWordRepository implements JoinWordRepository{
         return storeUuids.stream().map(store::get).toArray(JoinWordUser[]::new);
     }
 
+    public void clearStore() {
+        store.clear();
+    }
 
 }

@@ -1,5 +1,6 @@
 package shurona.wordfinder.word.repository.joinuserword;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import shurona.wordfinder.word.JoinWordUser;
 
@@ -11,7 +12,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class MemoryJoinWordRepositoryTest {
 
-    JoinWordRepository joinWordRepository = new MemoryJoinWordRepository();
+    MemoryJoinWordRepository joinWordRepository;
+
+    @BeforeEach
+    public void beforeEach() {
+        this.joinWordRepository = new MemoryJoinWordRepository();
+        this.joinWordRepository.clearStore();
+    }
 
     // 유저의 단어 저장
     @Test
@@ -58,6 +65,8 @@ class MemoryJoinWordRepositoryTest {
         // given
         JoinWordUser[] joinWordUsers = this.joinWordRepository.userOwnedWordList(1L);
         // when
+
+        System.out.println("joinWordUsers = " + Arrays.toString(joinWordUsers));
         // then
         assertThat(joinWordUsers).isEmpty();
 
