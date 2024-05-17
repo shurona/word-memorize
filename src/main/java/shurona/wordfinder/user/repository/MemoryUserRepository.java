@@ -3,12 +3,9 @@ package shurona.wordfinder.user.repository;
 import org.springframework.stereotype.Repository;
 import shurona.wordfinder.user.User;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
-@Repository
+//@Repository
 public class MemoryUserRepository implements UserRepository{
 
     private static final Map<Long, User> store = new HashMap<>();
@@ -33,8 +30,16 @@ public class MemoryUserRepository implements UserRepository{
         return store.values().stream().filter(user -> user.getNickname().equals(nickname)).findAny();
     }
 
+    @Override
     public Long[] userIds() {
         Set<Long> longs = store.keySet();
         return longs.toArray(new Long[0]);
+    }
+
+    public Optional<User> login(String loginId, String password) {
+
+        return new ArrayList<>(store.values())
+                .stream().filter(user -> user.getLoginId().equals(loginId) && user.getPassword().equals(password))
+                .findFirst();
     }
 }

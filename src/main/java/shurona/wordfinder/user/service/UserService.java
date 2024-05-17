@@ -7,6 +7,7 @@ import shurona.wordfinder.user.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -18,12 +19,22 @@ public class UserService {
         this.userRepository = memoryUserRepository;
     }
 
+    public User
+    login(String loginId, String password) {
+        //
+        Optional<User> login = this.userRepository.login(loginId, password);
 
-    public Long join(String nickName) {
+        return login.orElse(null);
+    }
 
-        User user = new User();
-        user.setNickname(nickName);
+
+    public Long join(String nickName, String loginId, String password) {
+
+        User user = new User(nickName, loginId, password);
+
         user = userRepository.save(user);
+
+        System.out.println(user.toString());
 
         return user.getId();
     }

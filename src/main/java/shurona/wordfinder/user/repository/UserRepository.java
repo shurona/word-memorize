@@ -12,4 +12,6 @@ public interface UserRepository {
     Optional<User> findByNickname(String nickname);
 
     public Long[] userIds();
+
+    Optional<User> login(String loginId, String password);
 }

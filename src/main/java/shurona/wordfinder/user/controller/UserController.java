@@ -2,15 +2,13 @@ package shurona.wordfinder.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import shurona.wordfinder.user.controller.dto.UserForm;
 import shurona.wordfinder.user.User;
 import shurona.wordfinder.user.service.UserService;
 
 @Controller
+@RequestMapping("user")
 public class UserController {
     private final UserService userService;
 
@@ -19,12 +17,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
-    public String home() {
-        return "home";
-    }
-
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     @ResponseBody
     public String getUserInfo(@PathVariable("id") Long id) {
 
@@ -36,20 +29,17 @@ public class UserController {
         return user.toString();
     }
 
-    @GetMapping("/user/new")
+    @GetMapping("new")
     public String createForm() {
         return "user/createUserForm";
     }
 
-
-    @GetMapping("/home")
-    public String entry() {
-        return "home";
-    }
-
-    @PostMapping("/user/new")
+    /**
+     * 유저 생성
+     */
+    @PostMapping("new")
     public String create(UserForm form) {
-        Long userId = this.userService.join(form.getNickname());
-        return "redirect:/" + userId;
+        Long userId = this.userService.join(form.getNickname(), form.getLoginId(), form.getPassword());
+        return "redirect:/";
     }
 }

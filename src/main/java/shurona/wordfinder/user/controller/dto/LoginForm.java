@@ -2,22 +2,16 @@ package shurona.wordfinder.user.controller.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 
-public class UserForm {
-    @NotEmpty
-    private String nickname;
+public class LoginForm {
 
+    @NotEmpty
     private String loginId;
+    @NotEmpty
     private String password;
 
-
-    public UserForm(String nickname, String loginId, String password) {
-        this.nickname = nickname;
+    public LoginForm(String loginId, String password) {
         this.loginId = loginId;
         this.password = password;
-    }
-
-    public String getNickname() {
-        return nickname;
     }
 
     public String getLoginId() {
@@ -28,7 +22,11 @@ public class UserForm {
         return password;
     }
 
-    //    public void setNickname(String nickname) {
-//        this.nickname = nickname;
-//    }
+    @Override
+    public String toString() {
+        return "LoginForm{" +
+                "loginId='" + loginId + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

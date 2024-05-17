@@ -1,14 +1,37 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<body>
-<div class="container">
-    <form action="/user/new" method="post">
-
-        <div class="form-group">
-            <label for="nickname">이름</label>
-            <input type="text" id="nickname" name="nickname" placeholder="이름을 입력하세요">
+<head>
+    <meta charset="utf-8">
+    <title>회원가입 폼</title>
+    <!-- Bootstrap CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">회원가입</h4>
+                    <form th:action="@{/user/new}" method="post">
+                        <div class="mb-3">
+                            <label for="nickname" class="form-label">이름</label>
+                            <input type="text" class="form-control" id="nickname" name="nickname" placeholder="이름을 입력하세요" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginId" class="form-label">로그인 ID</label>
+                            <input type="text" class="form-control" id="loginId" name="loginId" placeholder="로그인 ID를 입력하세요" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">비밀번호</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">등록</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <button type="submit">등록</button> </form>
+    </div>
 </div> <!-- /container -->
 </body>
 </html>

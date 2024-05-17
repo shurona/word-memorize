@@ -1,34 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="utf-8">
     <title>Submit Word</title>
-    <style>
-        .form-group {
-            margin-bottom: 5px; /* 각 폼 그룹 하단에 5px의 간격을 추가 */
-        }
-    </style>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Submit a New Word</h1>
-<form th:action="@{/word}" th:object="${word}" method="post">
-    <div class="form-group">
-        <label for="userId">User ID:</label>
-        <select id="userId" name="userId" required>
-            <option value="" th:text="'Select User'">Select User</option>
-            <option th:each="id : ${userIds}" th:value="${id}" th:text="${id}">User ID</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="word">Word:</label>
-        <input type="text" id="word" name="word" th:value="*{word}" required />
-    </div>
-    <div class="form-group">
-        <label for="meaning">Meaning:</label>
-        <input type="text" id="meaning" name="meaning" th:value="*{meaning}" required />
-    </div>
-    <div>
-        <button type="submit">Submit</button>
-    </div>
-</form>
+<body class="bg-light">
+<div class="container mt-5">
+    <h1 class="mb-3">Submit a New Word</h1>
+    <form th:action="@{/word}" th:object="${word}" method="post" class="needs-validation" novalidate>
+        <div class="mb-3">
+            <label for="userId" class="form-label">User ID:</label>
+            <select id="userId" name="userId" class="form-select" required>
+                <option value="">Select User</option>
+                <option th:each="id : ${userIds}" th:value="${id}" th:text="${id}"></option>
+            </select>
+            <div class="invalid-feedback">
+                Please select a user ID.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="word" class="form-label">Word:</label>
+            <input type="text" id="word" name="word" th:value="*{word}" class="form-control" required />
+            <div class="invalid-feedback">
+                Please enter a word.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="meaning" class="form-label">Meaning:</label>
+            <input type="text" id="meaning" name="meaning" th:value="*{meaning}" class="form-control" required />
+            <div class="invalid-feedback">
+                Please enter a meaning.
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
 </body>
 </html>

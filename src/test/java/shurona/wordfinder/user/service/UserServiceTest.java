@@ -2,6 +2,7 @@ package shurona.wordfinder.user.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import shurona.wordfinder.user.User;
 import shurona.wordfinder.user.service.UserService;
 import shurona.wordfinder.user.repository.MemoryUserRepository;
 import shurona.wordfinder.user.repository.UserRepository;
@@ -23,8 +24,8 @@ class UserServiceTest {
     void join() {
 
         //given, when
-        Long userId1 = this.userService.join("nickNameOne");
-        Long userId2 = this.userService.join("nickNameTwo");
+        Long userId1 = this.userService.join("nickNameOne", "loginId1", "pwd1");
+        Long userId2 = this.userService.join("nickNameTwo", "loginId2", "pwd2");
 
         // then
         // 증가 확인
@@ -33,9 +34,44 @@ class UserServiceTest {
 
     @Test
     void findById() {
-        Long userId1 = this.userService.join("userOne");
-        Long userId2 = this.userService.join("userTwo");
+        Long userId1 = this.userService.join("userOne", "loginId1", "pwd1");
+        Long userId2 = this.userService.join("userTwo", "loginId2", "pwd2");
         assertThat(this.userService.findById(userId1).getNickname()).isEqualTo("userOne");
         assertThat(this.userService.findById(userId2).getNickname()).isNotEqualTo("userOne");
+    }
+
+    @Test
+    void 로그인_테스트() {
+        String loginId = "login";
+        String password = "pwd";
+        //given
+        this.userService.join("nickname", loginId, password);
+
+        //when
+        User loginUser = this.userService.login(loginId, password);
+
+        //then
+        assertThat(loginUser).isNotNull();
+    }
+
+    @Test
+    void 비_로그인_테스트() {
+        String loginId = "login";
+        String password = "pwd";
+
+        String wrongId = "hello";
+        String wrongPwd = "pdd";
+        //given
+        this.userService.join("nickname", loginId, password);
+
+        //when
+        User loginUserOne = this.userService.login(wrongId, password);
+        User loginUserTwo = this.userService.login(loginId, wrongPwd);
+        User loginUserThree = this.userService.login(wrongId, wrongPwd);
+
+        //then
+        assertThat(loginUserOne).isNull();
+        assertThat(loginUserTwo).isNull();
+        assertThat(loginUserThree).isNull();
     }
 }
