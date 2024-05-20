@@ -38,7 +38,6 @@ class MemoryUserRepositoryTest {
         User userOne = new User();
         userOne.setNickname("hello");
         User one = userRepository.save(userOne);
-
         assertThat(one).isEqualTo(userRepository.findByNickname(one.getNickname()).get());
     }
 

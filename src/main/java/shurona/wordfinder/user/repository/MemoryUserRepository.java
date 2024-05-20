@@ -31,6 +31,11 @@ public class MemoryUserRepository implements UserRepository{
     }
 
     @Override
+    public Optional<User> findByLoginId(String loginId) {
+        return store.values().stream().filter(user -> user.getLoginId().equals(loginId)).findAny();
+    }
+
+    @Override
     public Long[] userIds() {
         Set<Long> longs = store.keySet();
         return longs.toArray(new Long[0]);
@@ -42,4 +47,5 @@ public class MemoryUserRepository implements UserRepository{
                 .stream().filter(user -> user.getLoginId().equals(loginId) && user.getPassword().equals(password))
                 .findFirst();
     }
+
 }

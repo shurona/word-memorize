@@ -11,7 +11,10 @@ public interface UserRepository {
 
     Optional<User> findByNickname(String nickname);
 
+    Optional<User> findByLoginId(String loginId);
+
     public Long[] userIds();
 
     Optional<User> login(String loginId, String password);
+
 }

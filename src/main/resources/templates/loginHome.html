@@ -5,15 +5,59 @@
     <title>Hello Spring</title>
     <!-- Bootstrap CSS from local path -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {background-color: #f1f1f1;}
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 <div class="container mt-5">
+    <div style="position: absolute; top: 10px; right: 10px;">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button">
+                목록
+            </button>
+            <div class="dropdown-content">
+                <a href="/profile">내 정보</a>
+                <form id="logout-form" action="/logout" method="post" style="display: none;">
+
+                </form>
+                <a href="/" onclick="document.getElementById('logout-form').submit(); return false;">로그아웃</a>
+            </div>
+        </div>
+    </div>
     <h1>Hello Spring</h1>
-    <h3>안녕하세요</h3>
+    <h3 th:text="${user.nickname + '님 안녕하세요'}">안녕하세요</h3>
     <div class="list-group">
         <a href="/word" class="list-group-item list-group-item-action">단어 저장</a>
         <a href="/words" class="list-group-item list-group-item-action">단어 목록</a>
     </div>
 </div> <!-- /container -->
+
 </body>
 </html>

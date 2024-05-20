@@ -74,4 +74,28 @@ class UserServiceTest {
         assertThat(loginUserTwo).isNull();
         assertThat(loginUserThree).isNull();
     }
+
+    @Test
+    void 유저닉네임_중복서비스_테스트() {
+        String loginId = "login";
+        String password = "pwd";
+
+        //given
+        this.userService.join("nickname", loginId, password);
+
+        assertThat(this.userService.checkUserNicknameDup("nickname")).isEqualTo(true);
+        assertThat(this.userService.checkUserNicknameDup("ddd")).isEqualTo(false);
+    }
+
+    @Test
+    void 유저로그인아이디_중복서비스_테스트() {
+        String loginId = "login";
+        String password = "pwd";
+
+        //given
+        this.userService.join("nickname", loginId, password);
+
+        assertThat(this.userService.checkUserLoginIdDup("login")).isEqualTo(true);
+        assertThat(this.userService.checkUserLoginIdDup("ddd")).isEqualTo(false);
+    }
 }

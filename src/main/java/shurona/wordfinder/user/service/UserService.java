@@ -27,13 +27,20 @@ public class UserService {
         return login.orElse(null);
     }
 
+    public boolean checkUserLoginIdDup(String loginId) {
+        Optional<User> userInfo = this.userRepository.findByLoginId(loginId);
+        return userInfo.orElse(null) != null;
+    }
+
+    public boolean checkUserNicknameDup(String nickname) {
+        Optional<User> userInfo = this.userRepository.findByNickname(nickname);
+        return userInfo.orElse(null) != null;
+    }
 
     public Long join(String nickName, String loginId, String password) {
 
         User user = new User(nickName, loginId, password);
-
         user = userRepository.save(user);
-
         System.out.println(user.toString());
 
         return user.getId();

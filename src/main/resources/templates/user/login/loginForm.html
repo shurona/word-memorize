@@ -3,13 +3,26 @@
 <head>
     <meta charset="utf-8">
     <title>Login Page</title>
-    <!-- Bootstrap CSS CDN for styling -->
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+        max-width: 560px;
+        }
+        .field-error {
+        border-color: #dc3545;
+        color: #dc3545;
+        }
+    </style>
 </head>
 <body class="bg-light">
 <div class="container mt-5">
     <h2 class="mb-3">Login</h2>
     <form th:action="@{/login}" th:object="${loginForm}" method="post" class="needs-validation" novalidate>
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p class="field-error" th:each="err : ${#fields.globalErrors}" th:text="${err}">
+                오류 메시지
+            </p>
+        </div>
         <div class="mb-3">
             <label for="username" class="form-label">Username:</label>
             <input type="text" id="username" name="username" class="form-control" th:field="*{loginId}" required />
