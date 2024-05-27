@@ -33,8 +33,7 @@ public class UserController {
     }
 
     @GetMapping("new")
-    public String createForm(Model model) {
-        model.addAttribute("userForm", new UserForm());
+    public String createForm(@ModelAttribute("userForm") UserForm form) {
         return "user/createUserForm";
     }
 
@@ -46,9 +45,6 @@ public class UserController {
         @Validated @ModelAttribute("userForm") UserForm form,
         BindingResult bindingResult
     ) {
-
-        System.out.println("form = " + form);
-
         // 중복 체크
         boolean nicknameCheck = this.userService.checkUserNicknameDup(form.getNickname());
         boolean loginIdCheck = this.userService.checkUserLoginIdDup(form.getLoginId());
@@ -66,7 +62,6 @@ public class UserController {
         }
 
         Long userId = this.userService.join(form.getNickname(), form.getLoginId(), form.getPassword());
-        //
 
         return "redirect:/";
     }

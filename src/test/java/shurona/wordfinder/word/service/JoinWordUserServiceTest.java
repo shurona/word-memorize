@@ -4,6 +4,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import shurona.wordfinder.word.JoinWordUser;
+import shurona.wordfinder.word.Word;
+import shurona.wordfinder.word.dto.WordListForm;
 import shurona.wordfinder.word.repository.joinuserword.JoinWordRepository;
 import shurona.wordfinder.word.repository.joinuserword.MemoryJoinWordRepository;
 import shurona.wordfinder.word.repository.word.MemoryWordRepository;
@@ -50,21 +52,25 @@ class JoinWordUserServiceTest {
     @Test
     void getUserWordList() {
         // given
+        String wordUid = UUID.randomUUID().toString();
+        Word exWord = new Word(wordUid, "Hello", "안녕");
+        Word savedWord = this.wordRepository.save(exWord);
+
         ArrayList<JoinWordUser> userWithWordList = new ArrayList<>();
         long wishUserId = 1L;
         for (int i = 0; i < 100; i++) {
-            JoinWordUser output = this.joinWordRepository.saveUserWord((long) (i % 3), UUID.randomUUID());
+            JoinWordUser output = this.joinWordRepository.saveUserWord((long) (i % 3), savedWord.getUid());
             if (i % 3 == wishUserId) {
                 userWithWordList.add(output);
             }
         }
 
         // when
-        JoinWordUser[] userWordList = this.joinWordUserService.getUserWordList(wishUserId);
+        WordListForm[] userWordList = this.joinWordUserService.getUserWordList(wishUserId);
 
         // then
         assertThat(userWithWordList.size()).isEqualTo(userWordList.length);
-        for (JoinWordUser joinWordUser : userWordList) {
+        for (WordListForm joinWordUser : userWordList) {
             assertThat(joinWordUser.getUserId()).isEqualTo(wishUserId);
         }
     }

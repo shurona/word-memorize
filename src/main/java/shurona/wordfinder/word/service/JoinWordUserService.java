@@ -40,15 +40,10 @@ public class JoinWordUserService {
     }
 
     // 유저가 입력간 단어 목록 갖고 오기
-    JoinWordUser[] getUserWordList(Long userId) {
+    public WordListForm[] getUserWordList(Long userId) {
+        JoinWordUser[] joinWordUsers = this.joinWordRepository.userOwnedWordList(userId);
         //
-        return this.joinWordRepository.userOwnedWordList(userId);
-    }
-
-    public WordListForm[] getUserWordList() {
-        JoinWordUser[] joinWordUsers = this.joinWordRepository.joinWordList();
-
-        UUID[] ids = new UUID[joinWordUsers.length];
+        String[] ids = new String[joinWordUsers.length];
 
         for (int idx = 0; idx < joinWordUsers.length; idx++) {
             ids[idx] = joinWordUsers[idx].getWordId();
@@ -59,10 +54,35 @@ public class JoinWordUserService {
 
         for (int index = 0; index < wordByIds.length ; index++) {
             WordListForm wordListForm = new WordListForm();
-            wordListForm.setUid(wordByIds[index].getUid());
+            wordListForm.setWordId(wordByIds[index].getUid());
             wordListForm.setWord(wordByIds[index].getWord());
             wordListForm.setMeaning(wordByIds[index].getMeaning());
+            wordListForm.setUserId(userId);
+            output[index] = wordListForm;
+        }
+        return output;
+    }
 
+    /**
+     * User가 갖고 있는 단어 목록을 갖고 온다.
+     */
+    public WordListForm[] getUserWordList() {
+        JoinWordUser[] joinWordUsers = this.joinWordRepository.joinWordList();
+
+        String[] ids = new String[joinWordUsers.length];
+
+        for (int idx = 0; idx < joinWordUsers.length; idx++) {
+            ids[idx] = joinWordUsers[idx].getWordId();
+        }
+        Word[] wordByIds = this.wordService.getWordByIds(ids);
+
+        WordListForm[] output = new WordListForm[wordByIds.length];
+
+        for (int index = 0; index < wordByIds.length ; index++) {
+            WordListForm wordListForm = new WordListForm();
+            wordListForm.setWordId(wordByIds[index].getUid());
+            wordListForm.setWord(wordByIds[index].getWord());
+            wordListForm.setMeaning(wordByIds[index].getMeaning());
             output[index] = wordListForm;
         }
 

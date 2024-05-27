@@ -1,11 +1,10 @@
 package shurona.wordfinder.word;
 
-import java.util.UUID;
 
 public class JoinWordUser {
-    private UUID id;
+    private String id;
 
-    private UUID wordId;
+    private String wordId;
     private Long userId;
 
     // 등록된 시간
@@ -14,19 +13,19 @@ public class JoinWordUser {
 
     private String recentCheckedAt;
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public UUID getWordId() {
+    public String getWordId() {
         return wordId;
     }
 
-    public void setWordId(UUID wordId) {
+    public void setWordId(String wordId) {
         this.wordId = wordId;
     }
 

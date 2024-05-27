@@ -3,17 +3,27 @@ package shurona.wordfinder.word;
 import java.util.UUID;
 
 public class Word {
-    private UUID uid;
+    private String uid;
 
     private String word;
 
     private String meaning;
 
-    public UUID getUid() {
+    public Word() {
+
+    }
+
+    public Word(String uid, String word, String meaning) {
+        this.uid = uid;
+        this.word = word;
+        this.meaning = meaning;
+    }
+
+    public String getUid() {
         return uid;
     }
 
-    public void setUid(UUID uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 

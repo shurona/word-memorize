@@ -25,7 +25,7 @@ class MemoryJoinWordRepositoryTest {
     void saveUserWord() {
         //given
         long userId = 1L;
-        UUID wordId = UUID.randomUUID();
+        String wordId = UUID.randomUUID().toString();
 
         //when
         JoinWordUser oneRelation = this.joinWordRepository.saveUserWord(userId, wordId);
@@ -42,7 +42,7 @@ class MemoryJoinWordRepositoryTest {
         ArrayList<JoinWordUser> userWithWordList = new ArrayList<>();
         long wishUserId = 1L;
         for (int i = 0; i < 100; i++) {
-            JoinWordUser output = this.joinWordRepository.saveUserWord((long) (i % 3), UUID.randomUUID());
+            JoinWordUser output = this.joinWordRepository.saveUserWord((long) (i % 3), UUID.randomUUID().toString());
             if (i % 3 == wishUserId) {
                 userWithWordList.add(output);
             }

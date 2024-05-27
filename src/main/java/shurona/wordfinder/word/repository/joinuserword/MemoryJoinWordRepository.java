@@ -7,13 +7,13 @@ import java.util.*;
 
 @Repository
 public class MemoryJoinWordRepository implements JoinWordRepository{
-    private static final Map<UUID, JoinWordUser> store = new HashMap<>();
+    private static final Map<String, JoinWordUser> store = new HashMap<>();
 
     @Override
-    public JoinWordUser saveUserWord(Long userId, UUID wordId) {
+    public JoinWordUser saveUserWord(Long userId, String wordId) {
         JoinWordUser joinWordUser = new JoinWordUser();
 
-        UUID newId = UUID.randomUUID();
+        String newId = UUID.randomUUID().toString();
 
         joinWordUser.setUserId(userId);
         joinWordUser.setWordId(wordId);
@@ -26,13 +26,13 @@ public class MemoryJoinWordRepository implements JoinWordRepository{
 
     @Override
     public JoinWordUser[] userOwnedWordList(Long userId) {
-        Set<UUID> storeUuids = store.keySet();
+        Set<String> storeUuids = store.keySet();
         return storeUuids.stream().filter(uuid -> Objects.equals(store.get(uuid).getUserId(), userId)).map(store::get).toArray(JoinWordUser[]::new);
     }
 
     @Override
     public JoinWordUser[] joinWordList() {
-        Set<UUID> storeUuids = store.keySet();
+        Set<String> storeUuids = store.keySet();
         return storeUuids.stream().map(store::get).toArray(JoinWordUser[]::new);
     }
 

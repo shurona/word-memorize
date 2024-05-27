@@ -2,6 +2,7 @@ package shurona.wordfinder.word.repository.word;
 
 import shurona.wordfinder.word.Word;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface WordRepository {
@@ -9,5 +10,9 @@ public interface WordRepository {
 
     Word findWordByWord(String word);
 
-    Word[] findWordsByIds(UUID[] ids);
+    Optional<Word> findWordById(String id);
+
+    Word[] findWordsByIds(String[] ids);
+
+    void editMeaning(String id, String meaning);
 }

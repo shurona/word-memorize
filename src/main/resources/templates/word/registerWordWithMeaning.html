@@ -8,7 +8,7 @@
 <body class="bg-light">
 <div class="container mt-5">
     <h1 class="mb-3">새로운 단어를 입력하세요</h1>
-    <form th:action="@{/word}" th:object="${word}" method="post" class="needs-validation">
+    <form th:action="@{/word-meaning}" th:object="${word}" method="post" class="needs-validation">
         <div class="mb-3">
             <label for="nickname" class="form-label">Nickname:</label>
             <input type="text" id="nickname" th:field="*{nickname}" class="form-control" required readonly />
@@ -18,6 +18,13 @@
             <input type="text" id="word"  th:field="*{word}" class="form-control" required />
             <div class="invalid-feedback">
                 Please enter a word.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="meaning" class="form-label">Meaning:</label>
+            <input type="text" id="meaning" name="meaning" th:field="*{meaning}" class="form-control" required />
+            <div class="invalid-feedback">
+                Please enter a meaning.
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>

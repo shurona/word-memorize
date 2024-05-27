@@ -1,5 +1,6 @@
 package shurona.wordfinder.user.service;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import shurona.wordfinder.user.User;
@@ -12,13 +13,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserServiceTest {
 
     UserService userService;
-    UserRepository userRepository;
+    MemoryUserRepository userRepository;
 
     @BeforeEach
     public void beforeEach() {
         this.userRepository = new MemoryUserRepository();
         this.userService = new UserService(this.userRepository);
     }
+
 
     @Test
     void join() {
@@ -82,6 +84,7 @@ class UserServiceTest {
 
         //given
         this.userService.join("nickname", loginId, password);
+        this.userService.join("ssss", "loginId2", password);
 
         assertThat(this.userService.checkUserNicknameDup("nickname")).isEqualTo(true);
         assertThat(this.userService.checkUserNicknameDup("ddd")).isEqualTo(false);

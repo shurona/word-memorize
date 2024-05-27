@@ -21,7 +21,7 @@ class MemoryWordRepositoryTest {
         // 한 개를 일단 저장한다.
         Word word = new Word();
 
-        UUID uid = UUID.randomUUID();
+        String uid = UUID.randomUUID().toString();
 
         word.setWord("wordOne");
         word.setUid(uid);
@@ -38,7 +38,7 @@ class MemoryWordRepositoryTest {
     void findWordByWord() {
         // given
         // 저장을 먼저 한다.
-        ArrayList<UUID> uuidArray = new ArrayList<>();
+        ArrayList<String> uuidArray = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
             Word word = new Word();
             word.setWord("Word" + i);
@@ -80,7 +80,7 @@ class MemoryWordRepositoryTest {
     void findWordsByIds() {
         // given
         // 저장을 먼저 한다.
-        ArrayList<UUID> uuidArray = new ArrayList<>();
+        ArrayList<String> uuidArray = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
             Word word = new Word();
             word.setWord("Word" + i);
@@ -90,8 +90,8 @@ class MemoryWordRepositoryTest {
         }
 
         // when
-        List<UUID> uuids = uuidArray.subList(0, 10);
-        Word[] wordList = this.wordRepository.findWordsByIds(uuids.toArray(UUID[]::new));
+        List<String> uuids = uuidArray.subList(0, 10);
+        Word[] wordList = this.wordRepository.findWordsByIds(uuids.toArray(String[]::new));
 
         // then
         for (int i = 0; i < 10; i++) {

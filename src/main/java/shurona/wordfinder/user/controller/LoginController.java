@@ -56,8 +56,6 @@ public class LoginController {
     public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
-        log.info("여기는 들어왔나요?");
-
         if (session != null) {
             session.invalidate();
         }
