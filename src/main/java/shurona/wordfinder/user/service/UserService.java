@@ -2,6 +2,7 @@ package shurona.wordfinder.user.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shurona.wordfinder.user.User;
 import shurona.wordfinder.user.repository.UserRepository;
 
@@ -15,8 +16,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository memoryUserRepository) {
-        this.userRepository = memoryUserRepository;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     public User
@@ -37,6 +38,7 @@ public class UserService {
         return userInfo.orElse(null) != null;
     }
 
+    @Transactional
     public Long join(String nickName, String loginId, String password) {
 
         User user = new User(nickName, loginId, password);

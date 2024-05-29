@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import shurona.wordfinder.user.User;
 import shurona.wordfinder.user.repository.UserRepository;
 
-@Component
+//@Component
 public class TestDataInit {
 
     private final UserRepository userRepository;
@@ -18,8 +18,8 @@ public class TestDataInit {
 
     @PostConstruct
     public void init() {
-        userRepository.save(new User("Shurona", "shurona", "test!"));
-        userRepository.save(new User("iron", "iron", "test!"));
+//        userRepository.save(new User("Shurona", "shurona", "test!"));
+//        userRepository.save(new User("iron", "iron", "test!"));
     }
 
 }

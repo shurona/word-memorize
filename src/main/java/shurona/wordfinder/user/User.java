@@ -1,6 +1,13 @@
 package shurona.wordfinder.user;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "_User")
 public class User {
+    @Id
+    @GeneratedValue
+    @Column(name = "USER_ID")
     private Long id;
 
     private String nickname;

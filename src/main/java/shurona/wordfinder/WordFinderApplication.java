@@ -10,7 +10,6 @@ import java.util.Arrays;
 // SpringBootApplication 안에 ComponentScan 들어있음
 @SpringBootApplication
 public class WordFinderApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(WordFinderApplication.class, args);
 
