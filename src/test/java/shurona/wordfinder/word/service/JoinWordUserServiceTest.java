@@ -53,7 +53,8 @@ class JoinWordUserServiceTest {
     void getUserWordList() {
         // given
         String wordUid = UUID.randomUUID().toString();
-        Word exWord = new Word(wordUid, "Hello", "안녕");
+        Word exWord = new Word("Hello", "안녕");
+        exWord.setUid(wordUid);
         Word savedWord = this.wordRepository.save(exWord);
 
         ArrayList<JoinWordUser> userWithWordList = new ArrayList<>();

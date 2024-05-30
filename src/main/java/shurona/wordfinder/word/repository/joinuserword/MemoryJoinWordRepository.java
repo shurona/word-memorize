@@ -3,24 +3,24 @@ package shurona.wordfinder.word.repository.joinuserword;
 import org.springframework.stereotype.Repository;
 import shurona.wordfinder.word.JoinWordUser;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
-@Repository
+//@Repository
 public class MemoryJoinWordRepository implements JoinWordRepository{
     private static final Map<String, JoinWordUser> store = new HashMap<>();
 
     @Override
+    public JoinWordUser findById(String id) {
+        return store.get(id);
+    }
+
+    @Override
     public JoinWordUser saveUserWord(Long userId, String wordId) {
-        JoinWordUser joinWordUser = new JoinWordUser();
-
+        JoinWordUser joinWordUser = new JoinWordUser(userId, wordId, LocalDateTime.now());
         String newId = UUID.randomUUID().toString();
-
-        joinWordUser.setUserId(userId);
-        joinWordUser.setWordId(wordId);
         joinWordUser.setId(newId);
-
         store.put(newId, joinWordUser);
-
         return store.get(newId);
     }
 

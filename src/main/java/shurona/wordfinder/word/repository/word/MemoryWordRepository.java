@@ -5,7 +5,7 @@ import shurona.wordfinder.word.Word;
 
 import java.util.*;
 
-@Repository
+//@Repository
 public class MemoryWordRepository implements WordRepository {
         private static final Map<String, Word> store = new HashMap<>();
 
@@ -44,6 +44,6 @@ public class MemoryWordRepository implements WordRepository {
     @Override
     public void editMeaning(String id, String meaning) {
         Word word = findWordById(id).get();
-        word.setMeaning(meaning);
+        word.editMeaning(meaning);
     }
 }

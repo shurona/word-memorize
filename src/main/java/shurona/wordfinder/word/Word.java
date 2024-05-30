@@ -1,10 +1,15 @@
 package shurona.wordfinder.word;
 
-import java.util.UUID;
+import jakarta.persistence.*;
 
+@Entity
 public class Word {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "WORD_ID")
     private String uid;
 
+    @Column(unique = true)
     private String word;
 
     private String meaning;
@@ -13,34 +18,37 @@ public class Word {
 
     }
 
-    public Word(String uid, String word, String meaning) {
-        this.uid = uid;
+    public Word(String word, String meaning) {
         this.word = word;
         this.meaning = meaning;
-    }
-
-    public String getUid() {
-        return uid;
     }
 
     public void setUid(String uid) {
         this.uid = uid;
     }
 
-    public String getWord() {
-        return word;
+    public String getUid() {
+        return uid;
     }
 
-    public void setWord(String word) {
-        this.word = word;
+    public String getWord() {
+        return word;
     }
 
     public String getMeaning() {
         return meaning;
     }
 
-    public void setMeaning(String meaning) {
+    public void editMeaning(String meaning) {
         this.meaning = meaning;
     }
 
+    @Override
+    public String toString() {
+        return "Word{" +
+                "uid='" + uid + '\'' +
+                ", word='" + word + '\'' +
+                ", meaning='" + meaning + '\'' +
+                '}';
+    }
 }

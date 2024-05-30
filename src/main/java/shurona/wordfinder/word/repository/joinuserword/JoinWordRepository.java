@@ -5,6 +5,8 @@ import shurona.wordfinder.word.JoinWordUser;
 import java.util.UUID;
 
 public interface JoinWordRepository {
+
+    JoinWordUser findById(String id);
     // 유저와 단어 연결
     JoinWordUser saveUserWord(Long userId, String wordId);
 

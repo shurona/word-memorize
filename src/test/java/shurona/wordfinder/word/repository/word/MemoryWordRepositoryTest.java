@@ -19,11 +19,9 @@ class MemoryWordRepositoryTest {
     void save() {
         // given
         // 한 개를 일단 저장한다.
-        Word word = new Word();
+        Word word = new Word("hello", "안녕");
 
         String uid = UUID.randomUUID().toString();
-
-        word.setWord("wordOne");
         word.setUid(uid);
 
         // when
@@ -40,8 +38,7 @@ class MemoryWordRepositoryTest {
         // 저장을 먼저 한다.
         ArrayList<String> uuidArray = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
-            Word word = new Word();
-            word.setWord("Word" + i);
+            Word word = new Word("Word" + i, "단어");
 
             Word afterSaved = this.wordRepository.save(word);
             uuidArray.add(afterSaved.getUid());
@@ -62,8 +59,7 @@ class MemoryWordRepositoryTest {
         // given
         // 저장을 먼저 한다.
         for (int i = 1; i <= 100; i++) {
-            Word word = new Word();
-            word.setWord("Word" + i);
+            Word word = new Word("Word" + i, "단어");
 
             Word afterSaved = this.wordRepository.save(word);
         }
@@ -82,8 +78,7 @@ class MemoryWordRepositoryTest {
         // 저장을 먼저 한다.
         ArrayList<String> uuidArray = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
-            Word word = new Word();
-            word.setWord("Word" + i);
+            Word word = new Word("Word" + i, "안녕");
 
             Word afterSaved = this.wordRepository.save(word);
             uuidArray.add(afterSaved.getUid());

@@ -2,6 +2,7 @@ package shurona.wordfinder.word.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shurona.wordfinder.word.JoinWordUser;
 import shurona.wordfinder.word.Word;
 import shurona.wordfinder.word.dto.WordListForm;
@@ -27,6 +28,7 @@ public class JoinWordUserService {
      * @param userId 유저 아이디
      * @param wordInfo 단어 ex> name <= 이름
      */
+    @Transactional
     public JoinWordUser generate(Long userId, String wordInfo, String wordMeaning) {
 
         // 이미 단어가 존재하는 지 확인 한다.

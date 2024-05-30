@@ -61,7 +61,7 @@ public class DatabaseUserRepository implements UserRepository {
 
         List<Long> userIds = this.em.createQuery(jpqlQuery, Long.class).getResultList();
 
-        return userIds.stream().map(i -> i).toArray(Long[]::new);
+        return userIds.toArray(Long[]::new);
     }
 
     @Override
