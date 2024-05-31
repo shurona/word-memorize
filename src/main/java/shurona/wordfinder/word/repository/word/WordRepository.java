@@ -1,9 +1,8 @@
 package shurona.wordfinder.word.repository.word;
 
-import shurona.wordfinder.word.Word;
+import shurona.wordfinder.word.domain.Word;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public interface WordRepository {
     Word save(Word word);

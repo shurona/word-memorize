@@ -1,10 +1,11 @@
-package shurona.wordfinder.user;
+package shurona.wordfinder.user.domain;
 
 import jakarta.persistence.*;
+import shurona.wordfinder.common.DateInfoEntity;
 
 @Entity
 @Table(name = "_User")
-public class User {
+public class User extends DateInfoEntity {
     @Id
     @GeneratedValue
     @Column(name = "USER_ID")
@@ -20,7 +21,6 @@ public class User {
     }
 
     /**
-     *
      * @param nickname
      * @param loginId
      * @param password

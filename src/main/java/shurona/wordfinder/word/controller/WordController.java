@@ -1,6 +1,5 @@
 package shurona.wordfinder.word.controller;
 
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,21 +7,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import shurona.wordfinder.user.User;
+import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.user.common.SessionConst;
-import shurona.wordfinder.user.controller.dto.UserForm;
 import shurona.wordfinder.user.service.UserService;
-import shurona.wordfinder.word.Word;
+import shurona.wordfinder.word.domain.Word;
 import shurona.wordfinder.word.dto.ConnectWordForm;
 import shurona.wordfinder.word.dto.WordEditForm;
 import shurona.wordfinder.word.dto.WordForm;
 import shurona.wordfinder.word.dto.WordListForm;
 import shurona.wordfinder.word.service.JoinWordUserService;
 import shurona.wordfinder.word.service.WordService;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 @Controller
 public class WordController {

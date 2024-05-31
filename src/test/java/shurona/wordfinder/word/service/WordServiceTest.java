@@ -1,18 +1,12 @@
 package shurona.wordfinder.word.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import shurona.wordfinder.user.repository.MemoryUserRepository;
-import shurona.wordfinder.user.service.UserService;
-import shurona.wordfinder.word.Word;
+import shurona.wordfinder.word.domain.Word;
 import shurona.wordfinder.word.repository.word.MemoryWordRepository;
 import shurona.wordfinder.word.repository.word.WordRepository;
 
-import java.util.UUID;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class WordServiceTest {
 

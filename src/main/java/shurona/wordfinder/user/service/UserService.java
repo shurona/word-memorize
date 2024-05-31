@@ -3,7 +3,7 @@ package shurona.wordfinder.user.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shurona.wordfinder.user.User;
+import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.user.repository.UserRepository;
 
 import java.util.ArrayList;

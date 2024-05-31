@@ -2,7 +2,7 @@ package shurona.wordfinder.word.repository.joinuserword;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import shurona.wordfinder.word.JoinWordUser;
+import shurona.wordfinder.word.domain.JoinWordUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;

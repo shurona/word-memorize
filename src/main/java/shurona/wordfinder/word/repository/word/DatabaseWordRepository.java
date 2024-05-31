@@ -3,12 +3,11 @@ package shurona.wordfinder.word.repository.word;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
-import shurona.wordfinder.word.Word;
+import shurona.wordfinder.word.domain.Word;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 public class DatabaseWordRepository implements WordRepository{

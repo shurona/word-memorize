@@ -9,12 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import shurona.wordfinder.user.User;
+import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.user.common.SessionConst;
 import shurona.wordfinder.user.controller.dto.LoginForm;
 import shurona.wordfinder.user.service.UserService;
-
-import java.util.UUID;
 
 @Controller
 public class LoginController {

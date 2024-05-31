@@ -1,8 +1,6 @@
 package shurona.wordfinder.word.repository.joinuserword;
 
-import shurona.wordfinder.word.JoinWordUser;
-
-import java.util.UUID;
+import shurona.wordfinder.word.domain.JoinWordUser;
 
 public interface JoinWordRepository {
 

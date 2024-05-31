@@ -1,12 +1,13 @@
-package shurona.wordfinder.word;
+package shurona.wordfinder.word.domain;
 
 
 import jakarta.persistence.*;
+import shurona.wordfinder.common.DateInfoEntity;
 
 import java.time.LocalDateTime;
 
 @Entity
-public class JoinWordUser {
+public class JoinWordUser extends DateInfoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "WORD_USER_ID")
@@ -17,7 +18,6 @@ public class JoinWordUser {
 
     // 등록된 시간
     // 추후 DB 연결로 업데이트
-    private LocalDateTime createdAt;
 
     public JoinWordUser() {
         //
@@ -48,10 +48,6 @@ public class JoinWordUser {
         return userId;
     }
 
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
 
     @Override
     public String toString() {

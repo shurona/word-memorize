@@ -1,15 +1,13 @@
 package shurona.wordfinder.word.repository.word;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import shurona.wordfinder.word.Word;
+import shurona.wordfinder.word.domain.Word;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class MemoryWordRepositoryTest {
 

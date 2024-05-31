@@ -1,9 +1,7 @@
 package shurona.wordfinder.user.repository;
 
 import org.junit.jupiter.api.Test;
-import shurona.wordfinder.user.User;
-import shurona.wordfinder.user.repository.MemoryUserRepository;
-import shurona.wordfinder.user.repository.UserRepository;
+import shurona.wordfinder.user.domain.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

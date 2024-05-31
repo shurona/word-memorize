@@ -1,9 +1,10 @@
-package shurona.wordfinder.word;
+package shurona.wordfinder.word.domain;
 
 import jakarta.persistence.*;
+import shurona.wordfinder.common.DateInfoEntity;
 
 @Entity
-public class Word {
+public class Word extends DateInfoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "WORD_ID")

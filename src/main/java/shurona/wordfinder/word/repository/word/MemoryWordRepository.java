@@ -1,7 +1,6 @@
 package shurona.wordfinder.word.repository.word;
 
-import org.springframework.stereotype.Repository;
-import shurona.wordfinder.word.Word;
+import shurona.wordfinder.word.domain.Word;
 
 import java.util.*;
 

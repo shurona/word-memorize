@@ -2,8 +2,6 @@ package shurona.wordfinder;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import shurona.wordfinder.user.User;
 import shurona.wordfinder.user.repository.UserRepository;
 
 //@Component

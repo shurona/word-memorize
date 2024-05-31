@@ -1,7 +1,6 @@
 package shurona.wordfinder.word.repository.joinuserword;
 
-import org.springframework.stereotype.Repository;
-import shurona.wordfinder.word.JoinWordUser;
+import shurona.wordfinder.word.domain.JoinWordUser;
 
 import java.time.LocalDateTime;
 import java.util.*;

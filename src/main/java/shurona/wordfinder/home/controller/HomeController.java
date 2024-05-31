@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
-import shurona.wordfinder.user.User;
+import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.user.common.SessionConst;
 import shurona.wordfinder.user.service.UserService;
 
