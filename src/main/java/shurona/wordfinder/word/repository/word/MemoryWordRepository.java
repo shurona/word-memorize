@@ -45,4 +45,8 @@ public class MemoryWordRepository implements WordRepository {
         Word word = findWordById(id).get();
         word.editMeaning(meaning);
     }
+
+    public void clearStore() {
+        store.clear();
+    }
 }

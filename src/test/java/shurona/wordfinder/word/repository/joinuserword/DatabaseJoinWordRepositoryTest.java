@@ -7,7 +7,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
+import shurona.wordfinder.user.domain.User;
+import shurona.wordfinder.user.repository.DatabaseUserRepository;
 import shurona.wordfinder.word.domain.JoinWordUser;
+import shurona.wordfinder.word.domain.Word;
+import shurona.wordfinder.word.repository.word.DatabaseWordRepository;
 
 import java.util.UUID;
 
@@ -22,39 +26,45 @@ class DatabaseJoinWordRepositoryTest {
 
     @Autowired
     private DatabaseJoinWordRepository joinWordRepository;
+    @Autowired
+    private DatabaseUserRepository userRepository;
+    @Autowired
+    private DatabaseWordRepository wordRepository;
 
     @Test
     public void 저장_조회() {
         // given
-        Long userId = 1L;
-        String wordId = UUID.randomUUID().toString();
+        User user = this.userRepository.save(new User("nickname", "loginId", "password"));
+        Word word = this.wordRepository.save(new Word("wd", "meaning"));
 
         // when
-        JoinWordUser joinWordUser = this.joinWordRepository.saveUserWord(userId, wordId);
+        JoinWordUser joinWordUser = this.joinWordRepository.saveUserWord(user, word);
         JoinWordUser joinById = this.joinWordRepository.findById(joinWordUser.getId());
 
 
         // then
-        assertThat(joinWordUser.getWordId()).isEqualTo(wordId);
-        assertThat(joinWordUser.getUserId()).isEqualTo(userId);
+        assertThat(joinWordUser.getWord().getUid()).isEqualTo(word.getUid());
+        assertThat(joinWordUser.getUser().getId()).isEqualTo(user.getId());
         assertThat(joinWordUser).isEqualTo(joinById);
     }
 
     @Test
     public void 유저보유_목록() {
         // given
-        long userId = 1L;
-        String wordId = UUID.randomUUID().toString();
+        User userOne = this.userRepository.save(new User("nicknameOne", "loginId", "password"));
+        User userTwo = this.userRepository.save(new User("nicknameTwo", "loginId", "password"));
+        Word word = this.wordRepository.save(new Word("wd", "meaning"));
         for (int i = 0; i < 30; i++) {
-            wordId = UUID.randomUUID().toString();
-            if (i >= 20) {
-                userId = 2L;
-            }
             // TODO: Bulk 저장 되나
-            this.joinWordRepository.saveUserWord(userId, wordId);
+            if (i >= 20) {
+                this.joinWordRepository.saveUserWord(userTwo, word);
+            } else {
+                this.joinWordRepository.saveUserWord(userOne, word);
+            }
+
         }
         // when
-        JoinWordUser[] joinWordUsers = this.joinWordRepository.userOwnedWordList(1L);
+        JoinWordUser[] joinWordUsers = this.joinWordRepository.userOwnedWordList(userOne.getId());
 
         // then
         assertThat(joinWordUsers.length).isEqualTo(20);
@@ -63,8 +73,17 @@ class DatabaseJoinWordRepositoryTest {
     @Test
     public void 전체_목록_조회() {
         // given
-        for (long i = 0L; i < 10; i++) {
-            this.joinWordRepository.saveUserWord(i, UUID.randomUUID().toString());
+        Word[] wordList = new Word[10];
+        User[] userList = new User[10];
+        for (int i = 0; i < 10; i++) {
+            wordList[i] = this.wordRepository.save(new Word("word " + i, "mn" + i));
+            userList[i] = this.userRepository.save(new User("nicknameTwo", "loginId", "password"));
+        }
+
+
+        for (int i = 0; i < 10; i++) {
+            this.joinWordRepository.saveUserWord(userList[i], wordList[i]);
+
         }
 
         // when

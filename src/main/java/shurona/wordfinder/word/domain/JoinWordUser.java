@@ -3,6 +3,7 @@ package shurona.wordfinder.word.domain;
 
 import jakarta.persistence.*;
 import shurona.wordfinder.common.DateInfoEntity;
+import shurona.wordfinder.user.domain.User;
 
 import java.time.LocalDateTime;
 
@@ -13,20 +14,24 @@ public class JoinWordUser extends DateInfoEntity {
     @Column(name = "WORD_USER_ID")
     private String uid;
 
-    private String wordId;
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "WORD_ID")
+    private Word word;
 
-    // 등록된 시간
-    // 추후 DB 연결로 업데이트
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
+    private User user;
+
 
     public JoinWordUser() {
         //
     }
 
-    public JoinWordUser(Long userId, String wordId, LocalDateTime createdAt) {
-        this.wordId = wordId;
-        this.userId = userId;
+    public JoinWordUser(User user, Word word, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.user= user;
+        this.word = word;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public String getId() {
@@ -40,12 +45,12 @@ public class JoinWordUser extends DateInfoEntity {
         this.uid = id;
     }
 
-    public String getWordId() {
-        return wordId;
+    public Word getWord() {
+        return this.word;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return this.user;
     }
 
 
@@ -53,8 +58,6 @@ public class JoinWordUser extends DateInfoEntity {
     public String toString() {
         return "JoinWordUser{" +
                 "id=" + uid +
-                ", wordId=" + wordId +
-                ", userId=" + userId +
                 ", createdAt='" + createdAt + '\'' +
                 '}';
     }

@@ -2,7 +2,11 @@ package shurona.wordfinder.word.repository.joinuserword;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import shurona.wordfinder.user.domain.User;
+import shurona.wordfinder.user.repository.MemoryUserRepository;
 import shurona.wordfinder.word.domain.JoinWordUser;
+import shurona.wordfinder.word.domain.Word;
+import shurona.wordfinder.word.repository.word.MemoryWordRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,10 +17,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MemoryJoinWordRepositoryTest {
 
     MemoryJoinWordRepository joinWordRepository;
+    MemoryUserRepository userRepository;
+    MemoryWordRepository wordRepository;
 
     @BeforeEach
     public void beforeEach() {
         this.joinWordRepository = new MemoryJoinWordRepository();
+        this.userRepository = new MemoryUserRepository();
+        this.wordRepository = new MemoryWordRepository();
+        this.userRepository.clearStore();
+        this.wordRepository.clearStore();
         this.joinWordRepository.clearStore();
     }
 
@@ -24,15 +34,15 @@ class MemoryJoinWordRepositoryTest {
     @Test
     void saveUserWord() {
         //given
-        long userId = 1L;
-        String wordId = UUID.randomUUID().toString();
+        User userInfo = this.userRepository.save(new User("", "", ""));
+        Word wordInfo = this.wordRepository.save(new Word("word", "meaning"));
 
         //when
-        JoinWordUser oneRelation = this.joinWordRepository.saveUserWord(userId, wordId);
+        JoinWordUser oneRelation = this.joinWordRepository.saveUserWord(userInfo, wordInfo);
 
         //then
-        assertThat(userId).isEqualTo(oneRelation.getUserId());
-        assertThat(wordId).isEqualTo(oneRelation.getWordId());
+        assertThat(userInfo.getId()).isEqualTo(oneRelation.getUser().getId());
+        assertThat(wordInfo.getUid()).isEqualTo(oneRelation.getWord().getUid());
     }
 
     // 유저가 보유한 단어 목록 보여준다.
@@ -40,14 +50,20 @@ class MemoryJoinWordRepositoryTest {
     void userOwnedWordList() {
         //given
         ArrayList<JoinWordUser> userWithWordList = new ArrayList<>();
-        long wishUserId = 1L;
+
+        User userOne = this.userRepository.save(new User("nickname1", "loginId1", "password1"));
+        User userTwo = this.userRepository.save(new User("nickname2", "loginId2", "password2"));
+        User userThree = this.userRepository.save(new User("nickname3", "loginId3", "password3"));
+        User[] userList = {userOne, userTwo, userThree};
+
+        Word wordInfo = this.wordRepository.save(new Word("", ""));
+        long wishUserId = userOne.getId();
         for (int i = 0; i < 100; i++) {
-            JoinWordUser output = this.joinWordRepository.saveUserWord((long) (i % 3), UUID.randomUUID().toString());
-            if (i % 3 == wishUserId) {
+            JoinWordUser output = this.joinWordRepository.saveUserWord(userList[i % 3], wordInfo);
+            if (i % 3 == wishUserId - 1) {
                 userWithWordList.add(output);
             }
         }
-
         //when
         JoinWordUser[] wordListByUser = this.joinWordRepository.userOwnedWordList(wishUserId);
 
@@ -56,7 +72,7 @@ class MemoryJoinWordRepositoryTest {
         assertThat(userWithWordList.size()).isEqualTo(wordListByUser.length);
         for (JoinWordUser joinWordUser : wordListByUser) {
             // 원하는 유저인지 확인한다.
-            assertThat(joinWordUser.getUserId()).isEqualTo(wishUserId);
+            assertThat(joinWordUser.getUser().getId()).isEqualTo(wishUserId);
         }
     }
 

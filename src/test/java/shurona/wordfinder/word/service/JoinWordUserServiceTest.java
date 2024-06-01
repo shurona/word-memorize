@@ -2,6 +2,10 @@ package shurona.wordfinder.word.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import shurona.wordfinder.user.domain.User;
+import shurona.wordfinder.user.repository.MemoryUserRepository;
+import shurona.wordfinder.user.repository.UserRepository;
+import shurona.wordfinder.user.service.UserService;
 import shurona.wordfinder.word.domain.JoinWordUser;
 import shurona.wordfinder.word.domain.Word;
 import shurona.wordfinder.word.dto.WordListForm;
@@ -19,14 +23,20 @@ class JoinWordUserServiceTest {
     private JoinWordUserService joinWordUserService;
     private WordRepository wordRepository;
     private JoinWordRepository joinWordRepository;
+    private UserRepository userRepository;
+    private UserService userService;
 
     @BeforeEach
     public void beforeEach() {
         this.wordRepository = new MemoryWordRepository();
+        this.userRepository = new MemoryUserRepository();
         this.joinWordRepository = new MemoryJoinWordRepository();
         this.joinWordUserService = new JoinWordUserService(
                 new WordService(
                         this.wordRepository
+                ),
+                new UserService(
+                        this.userRepository
                 ),
                 this.joinWordRepository
         );
@@ -35,16 +45,16 @@ class JoinWordUserServiceTest {
     @Test
     void generateTest() {
         // given
-        Long userId = 13L;
+        User user = this.userRepository.save(new User("nick", "log", "passwd"));
         String wordInfo = "HelloWorld";
         String wordMeaning = "안녕";
 
         // when
-        JoinWordUser userWithWord = this.joinWordUserService.generate(userId, wordInfo, wordMeaning);
+        JoinWordUser userWithWord = this.joinWordUserService.generate(user.getId(), wordInfo, wordMeaning);
 
         // then
-        assertThat(userWithWord.getUserId()).isEqualTo(userId);
-        assertThat(this.wordRepository.findWordByWord(wordInfo).getUid()).isEqualTo(userWithWord.getWordId());
+        assertThat(userWithWord.getUser().getId()).isEqualTo(user.getId());
+        assertThat(this.wordRepository.findWordByWord(wordInfo).getUid()).isEqualTo(userWithWord.getWord().getUid());
     }
 
     @Test
@@ -55,11 +65,16 @@ class JoinWordUserServiceTest {
         exWord.setUid(wordUid);
         Word savedWord = this.wordRepository.save(exWord);
 
+        User userOne = this.userRepository.save(new User("nickname1", "loginId1", "password1"));
+        User userTwo = this.userRepository.save(new User("nickname2", "loginId2", "password2"));
+        User userThree = this.userRepository.save(new User("nickname3", "loginId3", "password3"));
+        User[] userList = {userOne, userTwo, userThree};
+
         ArrayList<JoinWordUser> userWithWordList = new ArrayList<>();
-        long wishUserId = 1L;
+        long wishUserId = userOne.getId();
         for (int i = 0; i < 100; i++) {
-            JoinWordUser output = this.joinWordRepository.saveUserWord((long) (i % 3), savedWord.getUid());
-            if (i % 3 == wishUserId) {
+            JoinWordUser output = this.joinWordRepository.saveUserWord(userList[i % 3], savedWord);
+            if (i % 3 == wishUserId - 1) {
                 userWithWordList.add(output);
             }
         }

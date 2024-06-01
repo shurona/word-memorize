@@ -3,6 +3,9 @@ package shurona.wordfinder.word.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shurona.wordfinder.user.domain.User;
+import shurona.wordfinder.user.repository.UserRepository;
+import shurona.wordfinder.user.service.UserService;
 import shurona.wordfinder.word.domain.JoinWordUser;
 import shurona.wordfinder.word.domain.Word;
 import shurona.wordfinder.word.dto.WordListForm;
@@ -13,9 +16,11 @@ public class JoinWordUserService {
 
     private final WordService wordService;
     private final JoinWordRepository joinWordRepository;
+    private final UserService userService;
 
     @Autowired
-    public JoinWordUserService(WordService wordService, JoinWordRepository joinWordRepository) {
+    public JoinWordUserService(WordService wordService, UserService userService,  JoinWordRepository joinWordRepository) {
+        this.userService = userService;
         this.wordService = wordService;
         this.joinWordRepository = joinWordRepository;
     }
@@ -28,6 +33,7 @@ public class JoinWordUserService {
     @Transactional
     public JoinWordUser generate(Long userId, String wordInfo, String wordMeaning) {
 
+        User userInfo = this.userService.findById(userId);
         // 이미 단어가 존재하는 지 확인 한다.
         Word foundWord = this.wordService.getWordByWordInfo(wordInfo);
 
@@ -35,7 +41,7 @@ public class JoinWordUserService {
         if (foundWord == null) {
             foundWord = this.wordService.saveWord(wordInfo, wordMeaning);
         }
-        return this.joinWordRepository.saveUserWord(userId, foundWord.getUid());
+        return this.joinWordRepository.saveUserWord(userInfo, foundWord);
     }
 
     // 유저가 입력간 단어 목록 갖고 오기
@@ -45,7 +51,7 @@ public class JoinWordUserService {
         String[] ids = new String[joinWordUsers.length];
 
         for (int idx = 0; idx < joinWordUsers.length; idx++) {
-            ids[idx] = joinWordUsers[idx].getWordId();
+            ids[idx] = joinWordUsers[idx].getWord().getUid();
         }
         Word[] wordByIds = this.wordService.getWordByIds(ids);
 
@@ -71,7 +77,8 @@ public class JoinWordUserService {
         String[] ids = new String[joinWordUsers.length];
 
         for (int idx = 0; idx < joinWordUsers.length; idx++) {
-            ids[idx] = joinWordUsers[idx].getWordId();
+            // TODO: 확인
+            ids[idx] = joinWordUsers[idx].getWord().getUid();
         }
         Word[] wordByIds = this.wordService.getWordByIds(ids);
 

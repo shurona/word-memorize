@@ -1,0 +1,48 @@
+@startuml db schema
+
+object "메모할 것" as memoTemp {
+    - 현재 적히지 않은 클래스
+    # Banner
+    # BlackList
+    # Cache
+    # ChromeExtension
+    # Glx *
+    # WebService
+
+}
+
+entity "User" as user {
+    * id : number <<generated>>
+    --
+
+    loginId: String
+    password : String
+    nickname : String
+
+    --
+    * created_at: Date
+    * updated_at: Date
+}
+
+entity "UserWord" as userword {
+  * id : UUID <<generated>>
+  --
+
+  --
+  * created_at: Date
+  * updated_at: Date
+}
+
+entity "Word" as word {
+  * id : UUID <<generated>>
+  --
+
+  --
+  * created_at: Date
+  * updated_at: Date
+}
+
+user ||--|{ userword
+userword }|--||word
+
+@enduml

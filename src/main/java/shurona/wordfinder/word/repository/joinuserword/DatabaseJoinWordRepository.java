@@ -3,7 +3,9 @@ package shurona.wordfinder.word.repository.joinuserword;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
+import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.word.domain.JoinWordUser;
+import shurona.wordfinder.word.domain.Word;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,15 +22,15 @@ public class DatabaseJoinWordRepository implements JoinWordRepository{
     }
 
     @Override
-    public JoinWordUser saveUserWord(Long userId, String wordId) {;
-        JoinWordUser joinWordUser = new JoinWordUser(userId, wordId, LocalDateTime.now());
+    public JoinWordUser saveUserWord(User user, Word word){
+        JoinWordUser joinWordUser = new JoinWordUser(user, word, LocalDateTime.now(), LocalDateTime.now());
         this.em.persist(joinWordUser);
         return joinWordUser;
     }
 
     @Override
     public JoinWordUser[] userOwnedWordList(Long userId) {
-        String query = "select jwu from JoinWordUser as jwu where jwu.userId = :userId";
+        String query = "select jwu from JoinWordUser as jwu where jwu.user.id = :userId";
 
         List<JoinWordUser> joinWordUserList = this.em.createQuery(query, JoinWordUser.class)
                 .setParameter("userId", userId)

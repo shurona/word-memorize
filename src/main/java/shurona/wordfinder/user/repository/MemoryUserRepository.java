@@ -47,5 +47,8 @@ public class MemoryUserRepository implements UserRepository{
                 .findFirst();
     }
 
+    public void clearStore() {
+        store.clear();
+    }
 
 }
