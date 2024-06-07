@@ -18,4 +18,9 @@ public abstract class DateInfoEntity {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+
+    protected void setDataAtFirstTime() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
 }

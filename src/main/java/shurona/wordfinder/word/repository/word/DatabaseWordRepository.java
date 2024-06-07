@@ -2,9 +2,12 @@ package shurona.wordfinder.word.repository.word;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
 import shurona.wordfinder.word.domain.Word;
+import shurona.wordfinder.word.repository.word.repodto.RandWordMeaningDto;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +52,27 @@ public class DatabaseWordRepository implements WordRepository{
                 .getResultList();
 
         return resultList.toArray(Word[]::new);
+    }
+
+    @Override
+    public List<RandWordMeaningDto> findRandomWordMeaning(String exceptWordId) {
+        String query = "select new shurona.wordfinder.word.repository.word.repodto.RandWordMeaningDto(w.uid, w.meaning) from Word w order by random() limit 4";
+        List<RandWordMeaningDto> resultList = this.em.createQuery(query, RandWordMeaningDto.class).getResultList();
+
+
+        List<RandWordMeaningDto> output = new ArrayList<>();
+        int count = 0;
+        for (RandWordMeaningDto randWordMeaningDto : resultList) {
+            if (count == 3) {
+                break;
+            }
+            if (randWordMeaningDto.getWordId().equals(exceptWordId)) {
+                continue;
+            }
+            output.add(randWordMeaningDto);
+            count+=1;
+        }
+        return output;
     }
 
     @Override

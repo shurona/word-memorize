@@ -3,6 +3,8 @@ package shurona.wordfinder.word.domain;
 import jakarta.persistence.*;
 import shurona.wordfinder.common.DateInfoEntity;
 
+import java.time.LocalDateTime;
+
 @Entity
 public class Word extends DateInfoEntity {
     @Id
@@ -22,6 +24,10 @@ public class Word extends DateInfoEntity {
     public Word(String word, String meaning) {
         this.word = word;
         this.meaning = meaning;
+
+        // 날짜 생성
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void setUid(String uid) {

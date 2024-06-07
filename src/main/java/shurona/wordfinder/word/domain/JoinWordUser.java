@@ -27,11 +27,13 @@ public class JoinWordUser extends DateInfoEntity {
         //
     }
 
-    public JoinWordUser(User user, Word word, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public JoinWordUser(User user, Word word) {
         this.user= user;
         this.word = word;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+
+        // 날짜 지정
+        this.createdAt = LocalDateTime.now();;
+        this.updatedAt = LocalDateTime.now();;
     }
 
     public String getId() {

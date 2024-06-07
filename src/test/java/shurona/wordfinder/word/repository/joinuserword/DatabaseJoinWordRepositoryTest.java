@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,10 +62,14 @@ class DatabaseJoinWordRepositoryTest {
             } else {
                 this.joinWordRepository.saveUserWord(userOne, word);
             }
-
         }
+
+        System.out.println("유저 아이디 : " + userOne.getId());
         // when
         JoinWordUser[] joinWordUsers = this.joinWordRepository.userOwnedWordList(userOne.getId());
+
+        System.out.print("정보를 달라 : ");
+        System.out.println(joinWordUsers[0].getWord());
 
         // then
         assertThat(joinWordUsers.length).isEqualTo(20);

@@ -1,6 +1,7 @@
 package shurona.wordfinder.word.repository.word;
 
 import shurona.wordfinder.word.domain.Word;
+import shurona.wordfinder.word.repository.word.repodto.RandWordMeaningDto;
 
 import java.util.*;
 
@@ -48,5 +49,14 @@ public class MemoryWordRepository implements WordRepository {
 
     public void clearStore() {
         store.clear();
+    }
+
+    /*
+     여기서부터는 메모리 미구현
+     */
+
+    @Override
+    public List<RandWordMeaningDto> findRandomWordMeaning(String exceptWordId) {
+        return new ArrayList<>();
     }
 }

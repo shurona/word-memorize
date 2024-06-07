@@ -3,6 +3,8 @@ package shurona.wordfinder.user.domain;
 import jakarta.persistence.*;
 import shurona.wordfinder.common.DateInfoEntity;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "_User")
 public class User extends DateInfoEntity {
@@ -31,6 +33,10 @@ public class User extends DateInfoEntity {
 
         // TODO: 해쉬로 저장해야 한다.
         this.password = password;
+
+        // 날짜 저장
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public Long getId() {

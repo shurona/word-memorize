@@ -23,7 +23,7 @@ public class DatabaseJoinWordRepository implements JoinWordRepository{
 
     @Override
     public JoinWordUser saveUserWord(User user, Word word){
-        JoinWordUser joinWordUser = new JoinWordUser(user, word, LocalDateTime.now(), LocalDateTime.now());
+        JoinWordUser joinWordUser = new JoinWordUser(user, word);
         this.em.persist(joinWordUser);
         return joinWordUser;
     }
@@ -45,4 +45,17 @@ public class DatabaseJoinWordRepository implements JoinWordRepository{
         List<JoinWordUser> resultList = this.em.createQuery(query, JoinWordUser.class).getResultList();
         return resultList.toArray(JoinWordUser[]::new);
     }
+
+    @Override
+    public JoinWordUser[] pickListForQuiz(Long userId) {
+        String query = "select jwu from JoinWordUser as jwu join fetch jwu.word where jwu.user.id = :userId " +
+                "order by jwu.updatedAt desc limit 10";
+
+        List<JoinWordUser> joinWordUserList = this.em.createQuery(query, JoinWordUser.class)
+                .setParameter("userId", userId)
+                .getResultList();
+
+        return joinWordUserList.toArray(JoinWordUser[]::new);
+    }
+
 }

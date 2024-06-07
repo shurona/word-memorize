@@ -77,7 +77,6 @@ public class JoinWordUserService {
         String[] ids = new String[joinWordUsers.length];
 
         for (int idx = 0; idx < joinWordUsers.length; idx++) {
-            // TODO: 확인
             ids[idx] = joinWordUsers[idx].getWord().getUid();
         }
         Word[] wordByIds = this.wordService.getWordByIds(ids);
@@ -95,5 +94,17 @@ public class JoinWordUserService {
 
         return output;
     }
+
+    /*
+     * 최근 10개 단어 뽑아오기
+     * TODO: 7만 최근 단어 3개는 랜덤으로 추출
+     */
+    public JoinWordUser[] pickWordsForQuiz(Long userId) {
+        return this.joinWordRepository.pickListForQuiz(userId);
+    }
+
+//    public JoinWordUser getWordUserWithWord(JoinWordUser joinWordUser) {
+//
+//    }
 
 }

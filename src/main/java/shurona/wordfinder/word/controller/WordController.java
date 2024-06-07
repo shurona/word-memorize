@@ -110,9 +110,6 @@ public class WordController {
             Model model,
             @SessionAttribute(value = SessionConst.LOGIN_USER) Long userId
     ) {
-
-        System.out.println("userId = " + userId);
-
         WordListForm[] userWordList = this.joinWordUserService.getUserWordList(userId);
 
         model.addAttribute("words", userWordList);

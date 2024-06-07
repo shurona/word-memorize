@@ -7,6 +7,7 @@ import shurona.wordfinder.word.domain.Word;
 public interface JoinWordRepository {
 
     JoinWordUser findById(String id);
+
     // 유저와 단어 연결
     JoinWordUser saveUserWord(User user, Word word);
 
@@ -14,5 +15,8 @@ public interface JoinWordRepository {
     JoinWordUser[] userOwnedWordList(Long userId);
 
     JoinWordUser[] joinWordList();
+
+    JoinWordUser[] pickListForQuiz(Long userId);
+
 
 }

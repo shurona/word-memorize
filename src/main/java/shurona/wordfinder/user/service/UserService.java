@@ -20,8 +20,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User
-    login(String loginId, String password) {
+    public User login(String loginId, String password) {
         //
         Optional<User> login = this.userRepository.login(loginId, password);
 

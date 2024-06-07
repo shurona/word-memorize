@@ -5,10 +5,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shurona.wordfinder.word.domain.Word;
 import shurona.wordfinder.word.repository.word.WordRepository;
+import shurona.wordfinder.word.repository.word.repodto.RandWordMeaningDto;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class WordService {
     private final WordRepository wordRepository;
 
@@ -33,6 +36,10 @@ public class WordService {
         return this.wordRepository.findWordsByIds(wordIds);
     }
     //
+
+    public List<RandWordMeaningDto> findRandomWordMeaning(String wordId) {
+        return this.wordRepository.findRandomWordMeaning(wordId);
+    }
 
 
     /**

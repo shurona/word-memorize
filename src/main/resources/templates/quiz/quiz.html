@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>랜덤 단어 선택</title>
+    <link th:href="@{/css/bootstrap.min.css}"
+            href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .field-error {
+        border-color: #dc3545;
+        color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<div class = "container mt-5">
+    <h1>단어의 뜻을 골라보세요</h1>
+    <div class="d-flex justify-content-end mb-3" >
+        <a th:href="@{/quiz/intro}" type="button" class="btn btn-dark float-right">퀴즈 홈으로</a>
+    </div>
+    <div class="list-group">
+        <form th:action="@{/quiz/problem/{id}(id=${quiz.quizSetId})}" th:object="${quiz}" method="post" class="needs-validation">
+            <div class="mb-3">
+                <label for="sequenceDisplay" class="form-label">순서 </label>
+                <input type="hidden" th:field="*{sequence}" />
+                <input type="text" id="sequenceDisplay" class="form-control" required readonly th:value="${quiz.sequence + 1}" />
+            </div>
+            <div class="mb-3">
+                <label for="word" class="form-label">단어 </label>
+                <input type="text" id="word" th:field="*{word}" class="form-control" required readonly/>
+            </div>
+            <div class="mb-3">뜻을 골라주세요</div>
+            <div th:each="meaning, meaningStat : *{meaningList}">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="${meaningStat.index}"
+                           th:id="${meaningStat.index}" th:field="*{selectedAnswer}" th:value="${meaningStat.index}" />
+                    <label class="form-check-label" th:for="${meaningStat.index}" th:text="${meaning}">Meaning</label>
+                    <input type="hidden" th:field="*{meaningList[__${meaningStat.index}__]}" />
+                </div>
+            </div>
+            <div class="field-error" th:errors="*{selectedAnswer}"></div>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">제출</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

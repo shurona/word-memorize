@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>랜덤 단어 선택</title>
+    <link th:href="@{/css/bootstrap.min.css}"
+            href="../css/bootstrap.min.css" rel="stylesheet">
+<!--    <script>-->
+<!--        function postToQuiz(){-->
+<!--            let form = document.createElement('form');-->
+<!--            form.method = 'POST';-->
+<!--            form.action = '/quiz';-->
+<!--            document.body.appendChild(form);-->
+<!--            form.submit();-->
+<!--        }-->
+<!--    </script>-->
+</head>
+<body>
+    <div class = "container mt-5">
+        <h1>단어 퀴즈</h1>
+        <div class="list-group">
+            <form action="/quiz/generate" method="post" class="mb-2">
+                <button type="submit" class="list-group-item list-group-item-action btn btn-link">퀴즈 생성</button>
+            </form>
+            <a href="/quiz/list" class="list-group-item list-group-item-action mb-3">기존 퀴즈 목록 보기</a>
+        </div>
+    </div>
+</body>
+</html>

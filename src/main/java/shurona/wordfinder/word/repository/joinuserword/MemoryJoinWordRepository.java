@@ -18,7 +18,7 @@ public class MemoryJoinWordRepository implements JoinWordRepository{
 
     @Override
     public JoinWordUser saveUserWord(User user, Word word) {
-        JoinWordUser joinWordUser = new JoinWordUser(user, word, LocalDateTime.now(), LocalDateTime.now());
+        JoinWordUser joinWordUser = new JoinWordUser(user, word);
         String newId = UUID.randomUUID().toString();
         joinWordUser.setId(newId);
         store.put(newId, joinWordUser);
@@ -43,8 +43,18 @@ public class MemoryJoinWordRepository implements JoinWordRepository{
         return storeUuids.stream().map(store::get).toArray(JoinWordUser[]::new);
     }
 
+
     public void clearStore() {
         store.clear();
+    }
+
+    /*
+    여기서 부터 미구현
+     */
+
+    @Override
+    public JoinWordUser[] pickListForQuiz(Long userId) {
+        return new JoinWordUser[0];
     }
 
 }
