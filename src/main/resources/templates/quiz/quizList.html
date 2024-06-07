@@ -26,7 +26,7 @@
         <tr th:each="dt, stat : ${quiz}">
             <td th:text="${stat.count}">Index</td>
             <td th:text="${dt.process}">Example Process</td>
-            <td th:text="${dt.dateTime}">Example Date</td>
+            <td th:text="${#temporals.format(dt.dateTime, 'yyyy-MM-dd HH:mm')}">Example Date</td>
             <td>
                 <div th:if="${dt.process} == 10">
                     <a th:href="@{/quiz/result/{id}(id=${dt.id})}" class="btn btn-primary btn-sm">상세보기</a>

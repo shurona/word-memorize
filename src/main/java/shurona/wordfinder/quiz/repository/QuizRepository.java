@@ -6,6 +6,7 @@ import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.word.domain.Word;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface QuizRepository {
     // QuizSet detail 저장
@@ -16,4 +17,6 @@ public interface QuizRepository {
     public QuizDetail findQuizDetailById(Long id);
 
     public List<QuizSet> findQuizSetList(int pageNumber, int len, Long userId);
+
+    public Optional<QuizSet> findRecentQuizSet(Long userId);
 }

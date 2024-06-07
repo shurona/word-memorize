@@ -14,7 +14,9 @@ import shurona.wordfinder.word.repository.word.repodto.RandWordMeaningDto;
 import shurona.wordfinder.word.service.JoinWordUserService;
 import shurona.wordfinder.word.service.WordService;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -82,6 +84,15 @@ public class QuizService {
 
 
         return this.quizRepository.findQuizSetList(pageNumber, len, userId);
+    }
+
+    public boolean checkRecentGenerateQuizSet(Long userId) {
+        Optional<QuizSet> recentQuizSet = this.quizRepository.findRecentQuizSet(userId);
+
+        // 처음 만드는 경우이므로 패스
+        return recentQuizSet.map(quizSet -> LocalDateTime.now().isAfter(quizSet.getCreatedAt().plusHours(12))).orElse(true);
+
+        // 최근 날짜 비교
     }
 
 }

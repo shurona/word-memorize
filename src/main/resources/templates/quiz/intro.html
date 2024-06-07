@@ -18,6 +18,12 @@
 <body>
     <div class = "container mt-5">
         <h1>단어 퀴즈</h1>
+        <div th:if="${errors}">
+            <div class="alert alert-danger" role="alert"
+                th:each="err : ${errors}" th:text="${err.defaultMessage}">
+                This is a danger alert—check it out!
+            </div>
+        </div>
         <div class="d-flex justify-content-end mb-3" >
             <a th:href="@{/}" type="button" class="btn btn-dark float-right">홈으로</a>
         </div>

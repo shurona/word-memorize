@@ -93,7 +93,28 @@ class QuizServiceTest {
 
         // id는 앞이 더 커야 한다.
         assertThat(quizSetList.get(0).getId()).isGreaterThan(quizSetListTwo.get(0).getId());
+    }
 
+    @Test
+    void 퀴즈생성여부_확인() {
+        // given
+        User user = new User("nickname", "loginId", "password");
+        Word word = new Word("word", "meaning");
+        this.userRepository.save(user);
+        this.wordRepository.save(word);
+        JoinWordUser joinWordUser = joinWordRepository.saveUserWord(user, word);
+        QuizDetail quizDetail = QuizDetail.createQuizDetail(0, 0, joinWordUser, "f", "s");
+        for (int i = 0; i < 20; i++) {
+            QuizSet quizSet = QuizSet.createQuizSet(user, new QuizDetail[]{quizDetail});
+            this.quizRepository.saveQuizSet(quizSet);
+        }
 
+        // when
+        boolean existGen = this.quizService.checkRecentGenerateQuizSet(user.getId());
+        boolean firstGen = this.quizService.checkRecentGenerateQuizSet(200L);
+
+        // then
+        assertThat(firstGen).isEqualTo(true);
+        assertThat(existGen).isEqualTo(false);
     }
 }

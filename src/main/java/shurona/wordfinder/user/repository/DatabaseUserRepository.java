@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 //@Repository
+// 수동 빈 등록
 public class DatabaseUserRepository implements UserRepository {
 
     @PersistenceContext
@@ -16,7 +17,6 @@ public class DatabaseUserRepository implements UserRepository {
     @Override
     public User save(User user) {
         em.persist(user);
-
         return findById(user.getId());
     }
 

@@ -10,6 +10,7 @@ import shurona.wordfinder.word.domain.Word;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class DatabaseQuizRepository implements QuizRepository {
@@ -56,4 +57,14 @@ public class DatabaseQuizRepository implements QuizRepository {
                 .setMaxResults(len)
                 .getResultList();
     }
+
+    @Override
+    public Optional<QuizSet> findRecentQuizSet(Long userId) {
+        String query = "select quiz from QuizSet as quiz where quiz.user.id = :userId order by quiz.createdAt desc";
+        return this.em.createQuery(query, QuizSet.class)
+                .setParameter("userId", userId)
+                .setMaxResults(1)
+                .getResultList().stream().findAny();
+    }
+
 }

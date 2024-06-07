@@ -19,6 +19,8 @@ import shurona.wordfinder.user.common.SessionConst;
 import shurona.wordfinder.word.domain.Word;
 import shurona.wordfinder.word.service.WordService;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,17 +38,35 @@ public class QuizController {
     }
 
     @GetMapping("intro")
-    public String quizWord() {
+    public String quizWord(
+//            @ModelAttribute("user") Long user
+    ) {
         return "quiz/intro";
     }
 
     @PostMapping("generate")
     public String generateQuiz(
             @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) Long userId,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            @ModelAttribute("quiz") QuizAnswerForm quizForm,
+            BindingResult bindingResult,
+            Model model
     ) {
 
-        //TODO: 하루에 한 번 만들 수 있다.
+        boolean generateAble = this.quizService.checkRecentGenerateQuizSet(userId);
+
+        if (!generateAble) {
+            List<QuizSet> quizSetList = this.quizService.getQuizSetList(0, 1, userId);
+            QuizSet quizSet = quizSetList.get(0);
+            bindingResult.reject("fastCreate", "퀴즈는 12시간에 한 번 만들 수 있습니다. \n" +
+                    "생성 가능 시간 : " + quizSet.getCreatedAt().plusHours(12).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "quiz/intro";
+        }
+
 
         this.log.info("생성중...");
         Long quizSetId = this.quizService.generateQuizSet(userId);
@@ -67,11 +87,11 @@ public class QuizController {
     ) {
 
         if (quizForm.getSelectedAnswer() == null) {
-//            bindingResult.rejectValue("nickname", "dup","중복 닉네임입니다.");
             bindingResult.rejectValue("selectedAnswer", "not-selected", "답이 선택되지 않았습니다.");
         }
 
         if (bindingResult.hasErrors()) {
+            quizForm.setQuizSetId(quizSetId);
             return "quiz/quiz";
         }
 
