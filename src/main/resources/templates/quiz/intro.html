@@ -18,6 +18,9 @@
 <body>
     <div class = "container mt-5">
         <h1>단어 퀴즈</h1>
+        <div class="d-flex justify-content-end mb-3" >
+            <a th:href="@{/}" type="button" class="btn btn-dark float-right">홈으로</a>
+        </div>
         <div class="list-group">
             <form action="/quiz/generate" method="post" class="mb-2">
                 <button type="submit" class="list-group-item list-group-item-action btn btn-link">퀴즈 생성</button>

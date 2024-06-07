@@ -17,7 +17,6 @@ import shurona.wordfinder.quiz.dto.QuizResultForm;
 import shurona.wordfinder.quiz.service.QuizService;
 import shurona.wordfinder.user.common.SessionConst;
 import shurona.wordfinder.word.domain.Word;
-import shurona.wordfinder.word.repository.word.repodto.RandWordMeaningDto;
 import shurona.wordfinder.word.service.WordService;
 
 import java.util.ArrayList;
@@ -50,10 +49,10 @@ public class QuizController {
         //TODO: 하루에 한 번 만들 수 있다.
 
         this.log.info("생성중...");
-//        Long quizSetId = this.quizService.generateQuizSet(userId);
+        Long quizSetId = this.quizService.generateQuizSet(userId);
 
 
-        redirectAttributes.addAttribute("id", 1L);
+        redirectAttributes.addAttribute("id", quizSetId);
 
         return "redirect:/quiz/problem/{id}";
     }
@@ -179,6 +178,11 @@ public class QuizController {
         // 유저와 quizSet 정보가 불일치 하면 밴
         if (quizInfo == null || !Objects.equals(quizInfo.getUser().getId(), userId)) {
             return "/";
+        }
+
+        // 현재 시퀀스가 맞지 않으면 돌려보낸다.
+        if (quizInfo.getCurrentSequence() != 10) {
+            return "quiz/intro";
         }
 
         // quiz Detail 정보

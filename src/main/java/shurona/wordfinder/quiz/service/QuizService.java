@@ -1,7 +1,6 @@
 package shurona.wordfinder.quiz.service;
 
 
-import org.hibernate.mapping.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,8 +39,6 @@ public class QuizService {
 
         JoinWordUser[] joinWordUsers = this.joinWordUserService.pickWordsForQuiz(userId);
 
-        System.out.println("==================================== 페치 =============================================");
-
         QuizDetail[] details = new QuizDetail[joinWordUsers.length];
         for (int sequence = 0; sequence < 10; sequence++) {
             // TODO: 효율적으로 개선
@@ -68,8 +65,6 @@ public class QuizService {
 
         QuizDetail quizDetail = this.quizRepository.findQuizDetailById(quizInfo.getQuizDetails().get(currentSequence).getId());
 
-
-        System.out.println(quizDetail.getAnswerLoc() + " : " + selectedAnswer);
         // 정답이면 true로 변경
         if (quizDetail.getAnswerLoc() == selectedAnswer) {
             quizDetail.goodAnswer();
