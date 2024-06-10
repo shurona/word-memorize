@@ -12,6 +12,7 @@ import shurona.wordfinder.word.dto.WordListForm;
 import shurona.wordfinder.word.repository.joinuserword.JoinWordRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class JoinWordUserService {
 
     private final WordService wordService;

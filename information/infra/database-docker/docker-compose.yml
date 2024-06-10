@@ -1,0 +1,17 @@
+version: "3.3"
+
+services:
+  wordfinder-local:
+    image: postgres:15.7
+    environment:
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "127.0.0.1:55532:5432"
+    restart: always
+    volumes:
+      - ./generate-database.sh:/docker-entrypoint-initdb.d/generate-database.sh
+      - g3chain_db_data:/var/lib/postgresql
+
+volumes:
+  g3chain_db_data:

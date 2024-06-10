@@ -1,6 +1,7 @@
 package shurona.wordfinder;
 
 import org.hibernate.cfg.Environment;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,8 @@ import shurona.wordfinder.user.repository.DatabaseUserRepository;
 import shurona.wordfinder.user.repository.MemoryUserRepository;
 import shurona.wordfinder.user.repository.UserRepository;
 import shurona.wordfinder.user.service.UserService;
+
+import javax.sql.DataSource;
 
 
 @Configuration
@@ -27,7 +30,7 @@ public class SpringConfig implements WebMvcConfigurer {
 
     //    @Bean
     public UserService userService() {
-        return new UserService(new MemoryUserRepository());
+        return new UserService(userRepository());
     }
 //
     @Bean
@@ -42,4 +45,6 @@ public class SpringConfig implements WebMvcConfigurer {
     public TestDataInit testDataInit() {
         return new TestDataInit(this.userRepository());
     }
+
+
 }

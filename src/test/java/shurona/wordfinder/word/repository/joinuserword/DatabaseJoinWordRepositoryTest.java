@@ -64,12 +64,9 @@ class DatabaseJoinWordRepositoryTest {
             }
         }
 
-        System.out.println("유저 아이디 : " + userOne.getId());
         // when
         JoinWordUser[] joinWordUsers = this.joinWordRepository.userOwnedWordList(userOne.getId());
 
-        System.out.print("정보를 달라 : ");
-        System.out.println(joinWordUsers[0].getWord());
 
         // then
         assertThat(joinWordUsers.length).isEqualTo(20);
