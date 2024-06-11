@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# 스크립트 관련
+yarn.lock
+**/node_modules
