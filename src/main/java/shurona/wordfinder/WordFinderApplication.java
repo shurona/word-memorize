@@ -13,7 +13,7 @@ public class WordFinderApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(WordFinderApplication.class, args);
 
-		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(WordFinderApplication.class);
+//		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(WordFinderApplication.class);
 //		for (String beanName : ac.getBeanDefinitionNames()) {
 //			BeanDefinition beanDefinition = ac.getBeanDefinition(beanName);
 //
