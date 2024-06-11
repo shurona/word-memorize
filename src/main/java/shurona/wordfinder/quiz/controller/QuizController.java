@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import shurona.wordfinder.quiz.domain.QuizDetail;
@@ -17,6 +18,8 @@ import shurona.wordfinder.quiz.dto.QuizResultForm;
 import shurona.wordfinder.quiz.service.QuizService;
 import shurona.wordfinder.user.common.SessionConst;
 import shurona.wordfinder.word.domain.Word;
+import shurona.wordfinder.word.dto.WordListForm;
+import shurona.wordfinder.word.service.JoinWordUserService;
 import shurona.wordfinder.word.service.WordService;
 
 import java.time.LocalDateTime;
@@ -29,12 +32,14 @@ import java.util.Objects;
 @RequestMapping("quiz")
 public class QuizController {
     private final QuizService quizService;
+    private final JoinWordUserService joinWordUserService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    QuizController(QuizService quizService) {
+    QuizController(JoinWordUserService joinWordUserService,  QuizService quizService) {
         this.quizService = quizService;
+        this.joinWordUserService = joinWordUserService;
     }
 
     @GetMapping("intro")
@@ -53,6 +58,14 @@ public class QuizController {
             Model model
     ) {
 
+        WordListForm[] userWordList = this.joinWordUserService.getUserWordList(userId);
+
+        if (userWordList.length < 11) {
+            bindingResult.reject("nonEnough", "단어를 최소 10개를 만들어주세요 \n" +
+                    "현재 단어 갯수 : " + userWordList.length);
+        }
+
+
         boolean generateAble = this.quizService.checkRecentGenerateQuizSet(userId);
 
         if (!generateAble) {
@@ -66,7 +79,6 @@ public class QuizController {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "quiz/intro";
         }
-
 
         this.log.info("생성중...");
         Long quizSetId = this.quizService.generateQuizSet(userId);

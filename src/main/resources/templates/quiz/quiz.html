@@ -10,6 +10,30 @@
         border-color: #dc3545;
         color: #dc3545;
         }
+        label {
+            width: 100%;
+        }
+        .card-input-element {
+            display: none;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .card-wrapper {
+            margin: 1px;
+        }
+        .card-input {
+            margin: 1px;
+            padding: 0px;
+        }
+        .card-input:hover {
+            cursor: pointer;
+        }
+        .card-input-element:checked + .card-input {
+             box-shadow: 0 0 1px 1px #2ecc71;
+        }
+
     </style>
 </head>
 <body>
@@ -30,12 +54,18 @@
                 <input type="text" id="word" th:field="*{word}" class="form-control" required readonly/>
             </div>
             <div class="mb-3">뜻을 골라주세요</div>
-            <div th:each="meaning, meaningStat : *{meaningList}">
+            <div class="card-container">
+            <div th:each="meaning, meaningStat : *{meaningList}" class="card-wrapper">
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="${meaningStat.index}"
-                           th:id="${meaningStat.index}" th:field="*{selectedAnswer}" th:value="${meaningStat.index}" />
-                    <label class="form-check-label" th:for="${meaningStat.index}" th:text="${meaning}">Meaning</label>
-                    <input type="hidden" th:field="*{meaningList[__${meaningStat.index}__]}" />
+                        <label>
+                            <input type="radio" checked class="card-input-element"
+                                   th:id="${meaningStat.index}" th:field="*{selectedAnswer}" th:value="${meaningStat.index}" />
+                            <div class="card card-default card-input">
+                                <div class="card-header" th:text="${meaning}">단어 뜻</div>
+                                <input type="hidden" th:field="*{meaningList[__${meaningStat.index}__]}" />
+                            </div>
+                        </label>
+                    </div>
                 </div>
             </div>
             <div class="field-error" th:errors="*{selectedAnswer}"></div>
