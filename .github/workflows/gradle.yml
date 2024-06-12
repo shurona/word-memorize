@@ -61,7 +61,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build output
-          path: ./downloaded-artifact
+          path: |
+            build/libs/
+            information/pm2-setting/
+#          path: ./downloaded-artifact
       - name: Check current folder
         run: ls
       - name: Deploy to ec2
