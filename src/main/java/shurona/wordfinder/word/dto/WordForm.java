@@ -1,13 +1,17 @@
 package shurona.wordfinder.word.dto;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 public class WordForm {
     @NotEmpty
+    @Size(max = 20, message = "최대 20글자까지 입력가능합니다.")
     private String nickname;
     @NotEmpty
+    @Size(max = 20, message = "최대 20글자까지 입력가능합니다.")
     private String word;
     @NotEmpty
+    @Size(max = 20, message = "최대 20글자까지 입력가능합니다.")
     private String meaning;
 
     public String getNickname() {

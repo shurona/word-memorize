@@ -1,15 +1,18 @@
 package shurona.wordfinder.user.controller.dto;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
 
 public class UserForm {
     @NotEmpty
+    @Size(max = 10, message = "최대 10글자까지 입력가능합니다.")
     private String nickname;
 
     @NotEmpty
+    @Size(max = 10, message = "최대 10글자까지 입력가능합니다.")
     private String loginId;
 
     @NotEmpty
+    @Size(max = 20, message = "최대 20글자까지 입력가능합니다.")
     private String password;
 
     public UserForm() {
