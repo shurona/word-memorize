@@ -1,7 +1,7 @@
 {
     "apps": [{
         "name" : "word-memory-server",
-        "script": "Java",
+        "script": "java",
         "args" : [
             "-jar",
             "../../build/libs/wordfinder-0.0.1.jar"

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import shurona.wordfinder.common.PasswdToHash;
 import shurona.wordfinder.user.controller.dto.UserForm;
 import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.user.service.UserService;
@@ -60,7 +61,7 @@ public class UserController {
             return "user/createUserForm";
         }
 
-        Long userId = this.userService.join(form.getNickname(), form.getLoginId(), form.getPassword());
+        Long userId = this.userService.join(form.getNickname(), form.getLoginId(), PasswdToHash.doProcess(form.getPassword()));
 
         return "redirect:/";
     }

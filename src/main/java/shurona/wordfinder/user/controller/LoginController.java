@@ -2,6 +2,7 @@ package shurona.wordfinder.user.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import shurona.wordfinder.common.PasswdToHash;
 import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.user.common.SessionConst;
 import shurona.wordfinder.user.controller.dto.LoginForm;
 import shurona.wordfinder.user.service.UserService;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 @Controller
 public class LoginController {
@@ -38,7 +44,8 @@ public class LoginController {
             HttpServletRequest request,
             @RequestParam(defaultValue = "/") String redirectURL
     ) {
-        User loginUser = this.userService.login(form.getLoginId(), form.getPassword());
+
+        User loginUser = this.userService.login(form.getLoginId(), PasswdToHash.doProcess(form.getPassword()));
 
         if (loginUser == null) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
