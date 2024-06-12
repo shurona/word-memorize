@@ -73,4 +73,6 @@ jobs:
           chmod 600 private_key.pem
           scp -i private_key.pem -o StrictHostKeyChecking=no downloaded-artifact/build/libs/wordfinder-0.0.1.jar ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}}:/home/${{secrets.EC2_USER}}/workspace/
           scp -i private_key.pem -o StrictHostKeyChecking=no downloaded-artifact/information/pm2-setting/server.json ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}}:/home/${{secrets.EC2_USER}}/workspace/
+          ssh -i private_key.pem -o StrictHostKeyChecking=no ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}} "nohup pm2 restart /home/${{secrets.EC2_USER}}/workspace/server.json > app.log 2>&1 &"
           rm -f private_key.pem
+          ls
