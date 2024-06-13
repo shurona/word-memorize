@@ -128,13 +128,13 @@ public class WordController {
         Word word = this.wordService.getWordById(uuid);
 
         if (word == null) {
-            return "/word/wordList";
+            return "word/wordList";
         }
 
         form.setWord(word.getWord());
         form.setWordId(word.getUid());
         form.setMeaning(word.getMeaning());
-        return "/word/editWord";
+        return "word/editWord";
     }
 
     @PostMapping("/word/edit/{id}")
@@ -150,7 +150,7 @@ public class WordController {
         }
 
         if (bindingResult.hasErrors()) {
-            return "/word/editWord";
+            return "word/editWord";
         }
 
         // 수정 진행
