@@ -9,6 +9,13 @@ name: Java CI with Gradle
 
 on:
   push:
+    paths:
+      - src/**
+      - .github/**
+      - gradlew
+      - build.gradle
+      - gradlew.bat
+      - settings.gradle
     branches: [ "main" ]
 
 jobs:
@@ -75,4 +82,3 @@ jobs:
           scp -i private_key.pem -o StrictHostKeyChecking=no downloaded-artifact/information/pm2-setting/server.json ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}}:/home/${{secrets.EC2_USER}}/workspace/
           ssh -i private_key.pem -o StrictHostKeyChecking=no ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}} "nohup pm2 restart /home/${{secrets.EC2_USER}}/workspace/server.json > app.log 2>&1 &"
           rm -f private_key.pem
-          ls
