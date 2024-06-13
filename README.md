@@ -13,12 +13,15 @@
 
 ---
 
-### Dev
-```dev install location```
+### Dev Build
+```./gradlew build```
 
 ### production
-```production install location```
+Github Action으로 배포 진행
 
-## Env 정보
+## 사용 Stack
+- Java jdk 17
+- Gradle
+- Sql
 
 
