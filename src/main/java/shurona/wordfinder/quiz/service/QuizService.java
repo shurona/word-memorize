@@ -56,6 +56,10 @@ public class QuizService {
 
         this.quizRepository.saveQuizSet(quizSet);
 
+        // update Join User Word UpdateAt
+        for (JoinWordUser joinWordUser : joinWordUsers) {
+            joinWordUser.updateDataWhenCreateQuiz();
+        }
         return quizSet.getId();
     }
 

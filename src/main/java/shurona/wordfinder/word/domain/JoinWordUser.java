@@ -55,6 +55,13 @@ public class JoinWordUser extends DateInfoEntity {
         return this.user;
     }
 
+    /*
+    도메인 로직
+     */
+    public void updateDataWhenCreateQuiz() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
 
     @Override
     public String toString() {
