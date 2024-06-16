@@ -1,5 +1,7 @@
 package shurona.wordfinder.custom.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
@@ -12,6 +14,9 @@ import java.util.*;
 
 @Service
 public class ConnectionTestService {
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     private static class DeeplRequestDto {
         private String[] text;
         private String target_lang;
@@ -107,12 +112,11 @@ public class ConnectionTestService {
     public String getProperty(String word) {
 
         String base64ApiKey = this.environment.getProperty("deepl.api.key");
-
         String url = this.environment.getProperty("deepl.api.url");
 
         // 내부적 오류 발생 시 stop
         if (url == null || base64ApiKey == null) {
-
+            this.log.error("Env가 제대로 들어오지 않습니다.");
             return null;
         }
 
