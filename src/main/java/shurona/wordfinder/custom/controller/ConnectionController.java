@@ -37,7 +37,7 @@ public class ConnectionController {
             return ApiResponse.createFail("Translate fail");
         }
 
-        return ApiResponse.createSuccess(new TranslateResponseDto(output, "meaning"));
+        return ApiResponse.createSuccess(new TranslateResponseDto(word, output));
     }
 
 }
