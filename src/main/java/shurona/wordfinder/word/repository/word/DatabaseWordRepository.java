@@ -19,9 +19,9 @@ public class DatabaseWordRepository implements WordRepository{
     EntityManager em;
 
     @Override
-    public Word save(Word word) {
+    public String save(Word word) {
         this.em.persist(word);
-        return word;
+        return word.getUid();
     }
 
     @Override

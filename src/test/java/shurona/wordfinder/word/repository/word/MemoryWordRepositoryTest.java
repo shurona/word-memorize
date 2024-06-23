@@ -23,7 +23,8 @@ class MemoryWordRepositoryTest {
         word.setUid(uid);
 
         // when
-        Word output = this.wordRepository.save(word);
+        String wordId = this.wordRepository.save(word);
+        Word output = this.wordRepository.findWordById(wordId).get();
 
         // then
         // 저장에서 갖고 온 값 하고 넣어준 값이 같은 지 확인한다.
@@ -38,7 +39,8 @@ class MemoryWordRepositoryTest {
         for (int i = 1; i <= 100; i++) {
             Word word = new Word("Word" + i, "단어");
 
-            Word afterSaved = this.wordRepository.save(word);
+            String afterSavedWordId = this.wordRepository.save(word);
+            Word afterSaved = this.wordRepository.findWordById(afterSavedWordId).get();
             uuidArray.add(afterSaved.getUid());
 
         }
@@ -58,8 +60,7 @@ class MemoryWordRepositoryTest {
         // 저장을 먼저 한다.
         for (int i = 1; i <= 100; i++) {
             Word word = new Word("Word" + i, "단어");
-
-            Word afterSaved = this.wordRepository.save(word);
+            this.wordRepository.save(word);
         }
 
         // when
@@ -78,8 +79,8 @@ class MemoryWordRepositoryTest {
         for (int i = 1; i <= 100; i++) {
             Word word = new Word("Word" + i, "안녕");
 
-            Word afterSaved = this.wordRepository.save(word);
-            uuidArray.add(afterSaved.getUid());
+            String wordId = this.wordRepository.save(word);
+            uuidArray.add(wordId);
         }
 
         // when

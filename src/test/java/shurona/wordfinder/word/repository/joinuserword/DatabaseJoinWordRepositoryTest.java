@@ -36,7 +36,8 @@ class DatabaseJoinWordRepositoryTest {
     public void 저장_조회() {
         // given
         User user = this.userRepository.save(new User("nickname", "loginId", "password"));
-        Word word = this.wordRepository.save(new Word("wd", "meaning"));
+        String wordId = this.wordRepository.save(new Word("wd", "meaning"));
+        Word word = this.wordRepository.findWordById(wordId).get();
 
         // when
         JoinWordUser joinWordUser = this.joinWordRepository.saveUserWord(user, word);
@@ -54,7 +55,8 @@ class DatabaseJoinWordRepositoryTest {
         // given
         User userOne = this.userRepository.save(new User("nicknameOne", "loginId", "password"));
         User userTwo = this.userRepository.save(new User("nicknameTwo", "loginId", "password"));
-        Word word = this.wordRepository.save(new Word("wd", "meaning"));
+        String wordId = this.wordRepository.save(new Word("wd", "meaning"));
+        Word word = this.wordRepository.findWordById(wordId).get();
         for (int i = 0; i < 30; i++) {
             // TODO: Bulk 저장 되나
             if (i >= 20) {
@@ -78,7 +80,8 @@ class DatabaseJoinWordRepositoryTest {
         Word[] wordList = new Word[10];
         User[] userList = new User[10];
         for (int i = 0; i < 10; i++) {
-            wordList[i] = this.wordRepository.save(new Word("word " + i, "mn" + i));
+            String wordId = this.wordRepository.save(new Word("word " + i, "mn" + i));
+            wordList[i] = this.wordRepository.findWordById(wordId).get();
             userList[i] = this.userRepository.save(new User("nicknameTwo", "loginId", "password"));
         }
 

@@ -10,11 +10,11 @@ public class MemoryWordRepository implements WordRepository {
         private static final Map<String, Word> store = new HashMap<>();
 
     @Override
-    public Word save(Word word) {
+    public String save(Word word) {
         String wordId = UUID.randomUUID().toString();
         word.setUid(wordId);
         store.put(wordId, word);
-        return store.get(wordId);
+        return store.get(wordId).getUid();
     }
 
     @Override

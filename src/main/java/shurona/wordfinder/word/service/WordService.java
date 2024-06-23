@@ -8,6 +8,7 @@ import shurona.wordfinder.word.repository.word.WordRepository;
 import shurona.wordfinder.word.repository.word.repodto.RandWordMeaningDto;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -49,7 +50,14 @@ public class WordService {
     public Word saveWord(String wordInfo, String wordMeaning) {
         // 단어 정보 저장
         Word newWord = new Word(wordInfo, wordMeaning);
-        return this.wordRepository.save(newWord);
+        String wordId = this.wordRepository.save(newWord);
+
+        Optional<Word> word = this.wordRepository.findWordById(wordId);
+        boolean present = word.isPresent();
+        if (!present) {
+            throw new NoSuchElementException("Internal Server error");
+        }
+        return word.get();
     }
 
 

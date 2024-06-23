@@ -28,7 +28,8 @@ class DatabaseWordRepositoryTest {
 
         //when
         Word newWord = new Word(wordInfo, meaning);
-        Word saved = this.wordRepository.save(newWord);
+        String savedWordId= this.wordRepository.save(newWord);
+        Word saved = this.wordRepository.findWordById(savedWordId).get();
 
         //then
         assertThat(saved.getUid()).isNotEqualTo(null);
@@ -42,7 +43,7 @@ class DatabaseWordRepositoryTest {
         String wordInfo = "hello";
         String meaning = "안녕";
         Word newWord = new Word(wordInfo, meaning);
-        Word saved = this.wordRepository.save(newWord);
+        this.wordRepository.save(newWord);
 
         //when
         Word existWord = this.wordRepository.findWordByWord(wordInfo);
@@ -60,7 +61,8 @@ class DatabaseWordRepositoryTest {
         String wordInfo = "hello";
         String meaning = "안녕";
         Word newWord = new Word(wordInfo, meaning);
-        Word saved = this.wordRepository.save(newWord);
+        String savedWordId = this.wordRepository.save(newWord);
+        Word saved = this.wordRepository.findWordById(savedWordId).get();
         // when
 
         Word wordById = this.wordRepository.findWordById(saved.getUid()).orElse(null);
@@ -78,8 +80,8 @@ class DatabaseWordRepositoryTest {
         String meaning = "안녕";
         String[] ids = new String[10];
         for (int i = 0; i < 10; i++) {
-            Word save = this.wordRepository.save(new Word(wordInfo + " " + i, meaning));
-            ids[i] = save.getUid();
+            String savedId = this.wordRepository.save(new Word(wordInfo + " " + i, meaning));
+            ids[i] = savedId;
         }
         // when
         Word[] wordsByIds = this.wordRepository.findWordsByIds(ids);
@@ -96,7 +98,8 @@ class DatabaseWordRepositoryTest {
         String wordInfo = "hello";
         String meaning = "안녕";
         String changeMeaning = "안녕하세요";
-        Word now = this.wordRepository.save(new Word(wordInfo, meaning));
+        String nowId = this.wordRepository.save(new Word(wordInfo, meaning));
+        Word now = this.wordRepository.findWordById(nowId).get();
         // when
         this.wordRepository.editMeaning(now.getUid(), changeMeaning);
 
