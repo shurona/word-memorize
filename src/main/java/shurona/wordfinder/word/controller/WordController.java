@@ -55,6 +55,11 @@ public class WordController {
             @SessionAttribute(value = SessionConst.LOGIN_USER) Long userId,
             RedirectAttributes redirectAttributes
     ) {
+
+        if (bindingResult.hasErrors()) {
+            return "word/registerWord";
+        }
+
         // checkWord
         Word wordInfo = this.wordService.getWordByWordInfo(wordForm.getWord());
 

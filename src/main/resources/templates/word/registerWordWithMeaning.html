@@ -4,6 +4,12 @@
     <meta charset="utf-8">
     <title>Submit Word</title>
     <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .field-error {
+        border-color: #dc3545;
+        color: #dc3545;
+        }
+    </style>
 </head>
 <body class="bg-light">
 <div class="container mt-5">
@@ -16,6 +22,7 @@
         <div class="mb-3">
             <label for="word" class="form-label">Word:</label>
             <input type="text" id="word"  th:field="*{word}" class="form-control" required />
+            <div class="field-error" th:errors="*{word}"></div>
             <div class="invalid-feedback">
                 Please enter a word.
             </div>
