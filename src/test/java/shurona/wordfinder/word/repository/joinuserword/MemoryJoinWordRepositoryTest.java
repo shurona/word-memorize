@@ -35,7 +35,9 @@ class MemoryJoinWordRepositoryTest {
     void saveUserWord() {
         //given
         User userInfo = this.userRepository.save(new User("", "", ""));
-        Word wordInfo = this.wordRepository.save(new Word("word", "meaning"));
+        String wordId = this.wordRepository.save(new Word("word", "meaning"));
+
+        Word wordInfo = this.wordRepository.findWordById(wordId).get();
 
         //when
         JoinWordUser oneRelation = this.joinWordRepository.saveUserWord(userInfo, wordInfo);
@@ -56,7 +58,9 @@ class MemoryJoinWordRepositoryTest {
         User userThree = this.userRepository.save(new User("nickname3", "loginId3", "password3"));
         User[] userList = {userOne, userTwo, userThree};
 
-        Word wordInfo = this.wordRepository.save(new Word("", ""));
+        String wordId = this.wordRepository.save(new Word("", ""));
+        Word wordInfo = this.wordRepository.findWordById(wordId).get();
+
         long wishUserId = userOne.getId();
         for (int i = 0; i < 100; i++) {
             JoinWordUser output = this.joinWordRepository.saveUserWord(userList[i % 3], wordInfo);

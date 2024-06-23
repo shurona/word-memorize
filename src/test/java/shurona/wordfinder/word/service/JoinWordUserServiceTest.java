@@ -63,7 +63,8 @@ class JoinWordUserServiceTest {
         String wordUid = UUID.randomUUID().toString();
         Word exWord = new Word("Hello", "안녕");
         exWord.setUid(wordUid);
-        Word savedWord = this.wordRepository.save(exWord);
+        String savedWordId = this.wordRepository.save(exWord);
+        Word savedWord = this.wordRepository.findWordById(savedWordId).get();
 
         User userOne = this.userRepository.save(new User("nickname1", "loginId1", "password1"));
         User userTwo = this.userRepository.save(new User("nickname2", "loginId2", "password2"));

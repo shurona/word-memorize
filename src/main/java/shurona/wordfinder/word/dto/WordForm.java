@@ -1,6 +1,7 @@
 package shurona.wordfinder.word.dto;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class WordForm {
@@ -8,6 +9,7 @@ public class WordForm {
     @Size(max = 20, message = "최대 20글자까지 입력가능합니다.")
     private String nickname;
     @NotEmpty
+    @Pattern(regexp = "^[A-Za-z\\s]+$", message = "영어로 입력해주세요")
     @Size(max = 20, message = "최대 20글자까지 입력가능합니다.")
     private String word;
     @NotEmpty
@@ -27,7 +29,7 @@ public class WordForm {
     }
 
     public void setWord(String word) {
-        this.word = word;
+        this.word = word.strip();
     }
 
     public String getMeaning() {
@@ -35,7 +37,7 @@ public class WordForm {
     }
 
     public void setMeaning(String meaning) {
-        this.meaning = meaning;
+        this.meaning = meaning.strip();
     }
 
     @Override
