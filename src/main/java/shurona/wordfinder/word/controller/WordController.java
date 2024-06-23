@@ -1,5 +1,7 @@
 package shurona.wordfinder.word.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.user.common.SessionConst;
 import shurona.wordfinder.user.service.UserService;
+import shurona.wordfinder.word.domain.JoinWordUser;
 import shurona.wordfinder.word.domain.Word;
 import shurona.wordfinder.word.dto.ConnectWordForm;
 import shurona.wordfinder.word.dto.WordEditForm;
@@ -20,6 +23,8 @@ import shurona.wordfinder.word.service.WordService;
 
 @Controller
 public class WordController {
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final JoinWordUserService joinWordUserService;
     private final WordService wordService;
@@ -53,7 +58,8 @@ public class WordController {
             @Validated @ModelAttribute("word") ConnectWordForm wordForm,
             BindingResult bindingResult,
             @SessionAttribute(value = SessionConst.LOGIN_USER) Long userId,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            Model model
     ) {
 
         if (bindingResult.hasErrors()) {
@@ -68,7 +74,14 @@ public class WordController {
             return "redirect:/word-meaning";
         }
 
-        this.joinWordUserService.generate(userId, wordInfo.getWord(), wordInfo.getMeaning());
+        JoinWordUser check = this.joinWordUserService.generate(userId, wordInfo.getWord(), wordInfo.getMeaning());
+
+        if (check == null) {
+            bindingResult.reject("alreadyExist", "이미 저장한 단어입니다.");
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "word/registerWord";
+        }
+
         return "redirect:/words";
     }
 

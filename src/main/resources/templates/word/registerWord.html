@@ -14,6 +14,12 @@
 <body class="bg-light">
 <div class="container mt-5">
     <h1 class="mb-3">새로운 단어를 입력하세요</h1>
+    <div th:if="${errors}">
+        <div class="alert alert-warning" role="alert"
+             th:each="err : ${errors}" th:text="${err.defaultMessage}">
+            This is a danger alert—check it out!
+        </div>
+    </div>
     <form th:action="@{/word}" th:object="${word}" method="post" class="needs-validation">
         <div class="mb-3">
             <label for="nickname" class="form-label">Nickname:</label>

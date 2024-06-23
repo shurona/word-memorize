@@ -8,8 +8,7 @@ public interface JoinWordRepository {
 
     JoinWordUser findById(String id);
 
-    // 유저와 단어 연결
-    JoinWordUser saveUserWord(User user, Word word);
+    JoinWordUser findByUserWithWord(User user, Word word);
 
     // 유저에게 갖고 있는 단어 ids 목록을 갖고 온다.
     JoinWordUser[] userOwnedWordList(Long userId);
@@ -18,5 +17,6 @@ public interface JoinWordRepository {
 
     JoinWordUser[] pickListForQuiz(Long userId);
 
-
+    // 유저와 단어 연결
+    JoinWordUser saveUserWord(User user, Word word);
 }

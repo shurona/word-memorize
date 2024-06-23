@@ -33,7 +33,6 @@ public class JoinWordUserService {
      */
     @Transactional
     public JoinWordUser generate(Long userId, String wordInfo, String wordMeaning) {
-
         User userInfo = this.userService.findById(userId);
         // 이미 단어가 존재하는 지 확인 한다.
         Word foundWord = this.wordService.getWordByWordInfo(wordInfo);
@@ -42,6 +41,14 @@ public class JoinWordUserService {
         if (foundWord == null) {
             foundWord = this.wordService.saveWord(wordInfo, wordMeaning);
         }
+
+        // 이미 단어 쌍이 존재하는 지 확인한다.
+        JoinWordUser checkExist = this.joinWordRepository.findByUserWithWord(userInfo, foundWord);
+
+        if (checkExist != null) {
+            return null;
+        }
+
         return this.joinWordRepository.saveUserWord(userInfo, foundWord);
     }
 

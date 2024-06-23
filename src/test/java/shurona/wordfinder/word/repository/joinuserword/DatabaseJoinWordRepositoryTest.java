@@ -55,10 +55,14 @@ class DatabaseJoinWordRepositoryTest {
         // given
         User userOne = this.userRepository.save(new User("nicknameOne", "loginId", "password"));
         User userTwo = this.userRepository.save(new User("nicknameTwo", "loginId", "password"));
-        String wordId = this.wordRepository.save(new Word("wd", "meaning"));
-        Word word = this.wordRepository.findWordById(wordId).get();
+
+        String wordString = "wd";
+        String wordMeaning = "meaning";
+
         for (int i = 0; i < 30; i++) {
             // TODO: Bulk 저장 되나
+            String wordId = this.wordRepository.save(new Word(wordString + i, wordMeaning + i));
+            Word word = this.wordRepository.findWordById(wordId).get();
             if (i >= 20) {
                 this.joinWordRepository.saveUserWord(userTwo, word);
             } else {
@@ -68,7 +72,6 @@ class DatabaseJoinWordRepositoryTest {
 
         // when
         JoinWordUser[] joinWordUsers = this.joinWordRepository.userOwnedWordList(userOne.getId());
-
 
         // then
         assertThat(joinWordUsers.length).isEqualTo(20);
@@ -96,6 +99,25 @@ class DatabaseJoinWordRepositoryTest {
 
         // then
         assertThat(joinWordUsers.length).isEqualTo(10);
+    }
+
+    @Test
+    public void 단어_유저_검색() {
+        // given
+        User userInfo = this.userRepository.save(new User("nicknameOne", "loginId", "password"));
+        String wordId = this.wordRepository.save(new Word("wd", "meaning"));
+        String notSavedId = this.wordRepository.save(new Word("nonWd", "noMean"));
+        Word wordInfo = this.wordRepository.findWordById(wordId).get();
+        Word notSavedWord = this.wordRepository.findWordById(notSavedId).get();
+        this.joinWordRepository.saveUserWord(userInfo, wordInfo);
+
+        // when
+        JoinWordUser output = this.joinWordRepository.findByUserWithWord(userInfo, wordInfo);
+        JoinWordUser no = this.joinWordRepository.findByUserWithWord(userInfo, notSavedWord);
+
+        // then
+        assertThat(output.getWord().getWord()).isEqualTo(wordInfo.getWord());
+        assertThat(no).isEqualTo(null);
     }
 
 }

@@ -8,6 +8,11 @@ import shurona.wordfinder.user.domain.User;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name="join_word_user", uniqueConstraints = {
+        @UniqueConstraint(
+                name = "word_owned_unique",
+                columnNames = {"WORD_ID", "USER_ID"}
+        )})
 public class JoinWordUser extends DateInfoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
