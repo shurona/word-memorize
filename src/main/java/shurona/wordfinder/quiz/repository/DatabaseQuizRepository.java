@@ -18,10 +18,10 @@ public class DatabaseQuizRepository implements QuizRepository {
     EntityManager em;
 
     @Override
-    public QuizSet saveQuizSet(QuizSet quizSet) {
+    public Long saveQuizSet(QuizSet quizSet) {
         em.persist(quizSet);
 
-        return findQuizSetById(quizSet.getId());
+        return quizSet.getId();
     }
 
     @Override
