@@ -35,12 +35,16 @@ class DatabaseJoinWordRepositoryTest {
     @Test
     public void 저장_조회() {
         // given
-        User user = this.userRepository.save(new User("nickname", "loginId", "password"));
+        Long userId = this.userRepository.save(new User("nickname", "loginId", "password"));
+        User user = this.userRepository.findById(userId);
+
         String wordId = this.wordRepository.save(new Word("wd", "meaning"));
         Word word = this.wordRepository.findWordById(wordId).get();
 
         // when
-        JoinWordUser joinWordUser = this.joinWordRepository.saveUserWord(user, word);
+        String joinWordUserId = this.joinWordRepository.saveUserWord(user, word);
+        JoinWordUser joinWordUser = this.joinWordRepository.findById(joinWordUserId);
+
         JoinWordUser joinById = this.joinWordRepository.findById(joinWordUser.getId());
 
 
@@ -53,8 +57,11 @@ class DatabaseJoinWordRepositoryTest {
     @Test
     public void 유저보유_목록() {
         // given
-        User userOne = this.userRepository.save(new User("nicknameOne", "loginId", "password"));
-        User userTwo = this.userRepository.save(new User("nicknameTwo", "loginId", "password"));
+        Long userOneId = this.userRepository.save(new User("nicknameOne", "loginId", "password"));
+        Long userTwoId = this.userRepository.save(new User("nicknameTwo", "loginId", "password"));
+
+        User userOne = this.userRepository.findById(userOneId);
+        User userTwo = this.userRepository.findById(userTwoId);
 
         String wordString = "wd";
         String wordMeaning = "meaning";
@@ -85,7 +92,9 @@ class DatabaseJoinWordRepositoryTest {
         for (int i = 0; i < 10; i++) {
             String wordId = this.wordRepository.save(new Word("word " + i, "mn" + i));
             wordList[i] = this.wordRepository.findWordById(wordId).get();
-            userList[i] = this.userRepository.save(new User("nicknameTwo", "loginId", "password"));
+
+            Long userId = this.userRepository.save(new User("nicknameTwo", "loginId", "password"));
+            userList[i] = this.userRepository.findById(userId);
         }
 
 
@@ -104,7 +113,9 @@ class DatabaseJoinWordRepositoryTest {
     @Test
     public void 단어_유저_검색() {
         // given
-        User userInfo = this.userRepository.save(new User("nicknameOne", "loginId", "password"));
+        Long userInfoId = this.userRepository.save(new User("nicknameOne", "loginId", "password"));
+        User userInfo = this.userRepository.findById(userInfoId);
+
         String wordId = this.wordRepository.save(new Word("wd", "meaning"));
         String notSavedId = this.wordRepository.save(new Word("nonWd", "noMean"));
         Word wordInfo = this.wordRepository.findWordById(wordId).get();

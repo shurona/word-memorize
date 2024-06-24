@@ -49,7 +49,8 @@ public class JoinWordUserService {
             return null;
         }
 
-        return this.joinWordRepository.saveUserWord(userInfo, foundWord);
+        String jwuId = this.joinWordRepository.saveUserWord(userInfo, foundWord);
+        return this.joinWordRepository.findById(jwuId);
     }
 
     // 유저가 입력간 단어 목록 갖고 오기

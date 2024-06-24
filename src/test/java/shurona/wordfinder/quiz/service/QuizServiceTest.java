@@ -74,7 +74,8 @@ class QuizServiceTest {
         Word word = new Word("word", "meaning");
         this.userRepository.save(user);
         this.wordRepository.save(word);
-        JoinWordUser joinWordUser = joinWordRepository.saveUserWord(user, word);
+        String idInfo = joinWordRepository.saveUserWord(user, word);
+        JoinWordUser joinWordUser = joinWordRepository.findById(idInfo);
         QuizDetail quizDetail = QuizDetail.createQuizDetail(0, 0, joinWordUser, "f", "s");
         for (int i = 0; i < 20; i++) {
             QuizSet quizSet = QuizSet.createQuizSet(user, new QuizDetail[]{quizDetail});
@@ -102,7 +103,8 @@ class QuizServiceTest {
         Word word = new Word("word", "meaning");
         this.userRepository.save(user);
         this.wordRepository.save(word);
-        JoinWordUser joinWordUser = joinWordRepository.saveUserWord(user, word);
+        String joinWordUserId = joinWordRepository.saveUserWord(user, word);
+        JoinWordUser joinWordUser = joinWordRepository.findById(joinWordUserId);
         QuizDetail quizDetail = QuizDetail.createQuizDetail(0, 0, joinWordUser, "f", "s");
         for (int i = 0; i < 20; i++) {
             QuizSet quizSet = QuizSet.createQuizSet(user, new QuizDetail[]{quizDetail});

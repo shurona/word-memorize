@@ -18,5 +18,5 @@ public interface JoinWordRepository {
     JoinWordUser[] pickListForQuiz(Long userId);
 
     // 유저와 단어 연결
-    JoinWordUser saveUserWord(User user, Word word);
+    String saveUserWord(User user, Word word);
 }

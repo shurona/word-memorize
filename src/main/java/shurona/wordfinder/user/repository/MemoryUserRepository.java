@@ -13,11 +13,11 @@ public class MemoryUserRepository implements UserRepository{
     private Long idSequence = 0L;
 
     @Override
-    public User save(User user) {
+    public Long save(User user) {
         user.setId(++idSequence);
 
         store.put(user.getId(), user);
-        return user;
+        return user.getId();
     }
 
     @Override

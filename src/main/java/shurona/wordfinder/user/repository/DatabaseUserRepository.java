@@ -16,9 +16,9 @@ public class DatabaseUserRepository implements UserRepository {
     EntityManager em;
 
     @Override
-    public User save(User user) {
+    public Long save(User user) {
         em.persist(user);
-        return findById(user.getId());
+        return user.getId();
     }
 
     @Override

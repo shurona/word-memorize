@@ -17,12 +17,12 @@ public class MemoryJoinWordRepository implements JoinWordRepository{
     }
 
     @Override
-    public JoinWordUser saveUserWord(User user, Word word) {
+    public String saveUserWord(User user, Word word) {
         JoinWordUser joinWordUser = new JoinWordUser(user, word);
         String newId = UUID.randomUUID().toString();
         joinWordUser.setId(newId);
         store.put(newId, joinWordUser);
-        return store.get(newId);
+        return store.get(newId).getId();
     }
 
     @Override

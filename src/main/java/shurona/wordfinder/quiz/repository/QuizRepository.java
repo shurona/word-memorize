@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface QuizRepository {
     // QuizSet detail 저장
-    public QuizSet saveQuizSet(QuizSet quizSet);
+    public Long saveQuizSet(QuizSet quizSet);
 
     public QuizSet findQuizSetById(Long id);
 

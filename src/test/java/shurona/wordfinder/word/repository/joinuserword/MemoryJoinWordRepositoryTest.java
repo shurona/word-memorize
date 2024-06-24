@@ -34,13 +34,15 @@ class MemoryJoinWordRepositoryTest {
     @Test
     void saveUserWord() {
         //given
-        User userInfo = this.userRepository.save(new User("", "", ""));
-        String wordId = this.wordRepository.save(new Word("word", "meaning"));
+        Long userInfoId = this.userRepository.save(new User("", "", ""));
+        User userInfo = this.userRepository.findById(userInfoId);
 
+        String wordId = this.wordRepository.save(new Word("word", "meaning"));
         Word wordInfo = this.wordRepository.findWordById(wordId).get();
 
         //when
-        JoinWordUser oneRelation = this.joinWordRepository.saveUserWord(userInfo, wordInfo);
+        String oneRelationId = this.joinWordRepository.saveUserWord(userInfo, wordInfo);
+        JoinWordUser oneRelation = this.joinWordRepository.findById(oneRelationId);
 
         //then
         assertThat(userInfo.getId()).isEqualTo(oneRelation.getUser().getId());
@@ -53,9 +55,14 @@ class MemoryJoinWordRepositoryTest {
         //given
         ArrayList<JoinWordUser> userWithWordList = new ArrayList<>();
 
-        User userOne = this.userRepository.save(new User("nickname1", "loginId1", "password1"));
-        User userTwo = this.userRepository.save(new User("nickname2", "loginId2", "password2"));
-        User userThree = this.userRepository.save(new User("nickname3", "loginId3", "password3"));
+        Long userOneId = this.userRepository.save(new User("nickname1", "loginId1", "password1"));
+        Long userTwoId = this.userRepository.save(new User("nickname2", "loginId2", "password2"));
+        Long userThreeId = this.userRepository.save(new User("nickname3", "loginId3", "password3"));
+
+        User userOne = this.userRepository.findById(userOneId);
+        User userTwo = this.userRepository.findById(userTwoId);
+        User userThree = this.userRepository.findById(userThreeId);
+
         User[] userList = {userOne, userTwo, userThree};
 
         String wordId = this.wordRepository.save(new Word("", ""));
@@ -63,7 +70,8 @@ class MemoryJoinWordRepositoryTest {
 
         long wishUserId = userOne.getId();
         for (int i = 0; i < 100; i++) {
-            JoinWordUser output = this.joinWordRepository.saveUserWord(userList[i % 3], wordInfo);
+            String outputId = this.joinWordRepository.saveUserWord(userList[i % 3], wordInfo);
+            JoinWordUser output = this.joinWordRepository.findById(outputId);
             if (i % 3 == wishUserId - 1) {
                 userWithWordList.add(output);
             }
