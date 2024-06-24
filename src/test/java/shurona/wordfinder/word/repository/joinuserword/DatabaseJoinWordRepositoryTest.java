@@ -40,7 +40,9 @@ class DatabaseJoinWordRepositoryTest {
         Word word = this.wordRepository.findWordById(wordId).get();
 
         // when
-        JoinWordUser joinWordUser = this.joinWordRepository.saveUserWord(user, word);
+        String joinWordUserId = this.joinWordRepository.saveUserWord(user, word);
+        JoinWordUser joinWordUser = this.joinWordRepository.findById(joinWordUserId);
+
         JoinWordUser joinById = this.joinWordRepository.findById(joinWordUser.getId());
 
 

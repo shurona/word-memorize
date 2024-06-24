@@ -73,10 +73,10 @@ public class DatabaseJoinWordRepository implements JoinWordRepository{
         Save 파트
          ======================================================================*/
     @Override
-    public JoinWordUser saveUserWord(User user, Word word){
+    public String saveUserWord(User user, Word word){
         JoinWordUser joinWordUser = new JoinWordUser(user, word);
         this.em.persist(joinWordUser);
-        return joinWordUser;
+        return joinWordUser.getId();
     }
 
 }

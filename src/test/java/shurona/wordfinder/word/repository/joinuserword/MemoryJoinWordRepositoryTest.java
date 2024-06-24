@@ -40,7 +40,8 @@ class MemoryJoinWordRepositoryTest {
         Word wordInfo = this.wordRepository.findWordById(wordId).get();
 
         //when
-        JoinWordUser oneRelation = this.joinWordRepository.saveUserWord(userInfo, wordInfo);
+        String oneRelationId = this.joinWordRepository.saveUserWord(userInfo, wordInfo);
+        JoinWordUser oneRelation = this.joinWordRepository.findById(oneRelationId);
 
         //then
         assertThat(userInfo.getId()).isEqualTo(oneRelation.getUser().getId());
@@ -63,7 +64,8 @@ class MemoryJoinWordRepositoryTest {
 
         long wishUserId = userOne.getId();
         for (int i = 0; i < 100; i++) {
-            JoinWordUser output = this.joinWordRepository.saveUserWord(userList[i % 3], wordInfo);
+            String outputId = this.joinWordRepository.saveUserWord(userList[i % 3], wordInfo);
+            JoinWordUser output = this.joinWordRepository.findById(outputId);
             if (i % 3 == wishUserId - 1) {
                 userWithWordList.add(output);
             }

@@ -74,7 +74,8 @@ class JoinWordUserServiceTest {
         ArrayList<JoinWordUser> userWithWordList = new ArrayList<>();
         long wishUserId = userOne.getId();
         for (int i = 0; i < 100; i++) {
-            JoinWordUser output = this.joinWordRepository.saveUserWord(userList[i % 3], savedWord);
+            String outputId = this.joinWordRepository.saveUserWord(userList[i % 3], savedWord);
+            JoinWordUser output = this.joinWordRepository.findById(outputId);
             if (i % 3 == wishUserId - 1) {
                 userWithWordList.add(output);
             }
