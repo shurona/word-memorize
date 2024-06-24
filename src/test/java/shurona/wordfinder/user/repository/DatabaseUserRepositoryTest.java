@@ -29,7 +29,8 @@ class DatabaseUserRepositoryTest {
         User user = new User(nickName, "test", "password");
 
         //when
-        User save = this.userRepository.save(user);
+        Long saveId = this.userRepository.save(user);
+        User save = this.userRepository.findById(saveId);
 
         //then
         assertThat(nickName).isEqualTo(save.getNickname());
@@ -62,10 +63,8 @@ class DatabaseUserRepositoryTest {
         User user = new User(nickName, "test", "password");
 
         //when
-        User save = this.userRepository.save(user);
-
+        this.userRepository.save(user);
         Optional<User> byNickname = this.userRepository.findByNickname(nickName);
-
         User user1 = byNickname.orElse(null);
 
         //then
@@ -84,7 +83,7 @@ class DatabaseUserRepositoryTest {
         String password = "passwd";
         User user = new User(nickName, loginId, password);
 
-        User saved = this.userRepository.save(user);
+        this.userRepository.save(user);
 
         //when
         User checkLoginUser = this.userRepository.login(loginId, password).orElse(null);

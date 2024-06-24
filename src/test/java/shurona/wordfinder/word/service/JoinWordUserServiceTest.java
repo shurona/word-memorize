@@ -45,7 +45,8 @@ class JoinWordUserServiceTest {
     @Test
     void generateTest() {
         // given
-        User user = this.userRepository.save(new User("nick", "log", "passwd"));
+        Long userId = this.userRepository.save(new User("nick", "log", "passwd"));
+        User user = this.userRepository.findById(userId);
         String wordInfo = "HelloWorld";
         String wordMeaning = "안녕";
 
@@ -66,9 +67,14 @@ class JoinWordUserServiceTest {
         String savedWordId = this.wordRepository.save(exWord);
         Word savedWord = this.wordRepository.findWordById(savedWordId).get();
 
-        User userOne = this.userRepository.save(new User("nickname1", "loginId1", "password1"));
-        User userTwo = this.userRepository.save(new User("nickname2", "loginId2", "password2"));
-        User userThree = this.userRepository.save(new User("nickname3", "loginId3", "password3"));
+        Long userOneId = this.userRepository.save(new User("nickname1", "loginId1", "password1"));
+        Long userTwoId = this.userRepository.save(new User("nickname2", "loginId2", "password2"));
+        Long userThreeId = this.userRepository.save(new User("nickname3", "loginId3", "password3"));
+
+        User userOne = this.userRepository.findById(userOneId);
+        User userTwo = this.userRepository.findById(userTwoId);
+        User userThree = this.userRepository.findById(userThreeId);
+
         User[] userList = {userOne, userTwo, userThree};
 
         ArrayList<JoinWordUser> userWithWordList = new ArrayList<>();

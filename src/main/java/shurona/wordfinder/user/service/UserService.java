@@ -41,8 +41,7 @@ public class UserService {
     @Transactional
     public Long join(String nickName, String loginId, String password) {
         User user = new User(nickName, loginId, password);
-        user = userRepository.save(user);
-        return user.getId();
+        return userRepository.save(user);
     }
 
     public User findById(Long id) {

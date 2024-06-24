@@ -5,7 +5,7 @@ import shurona.wordfinder.user.domain.User;
 import java.util.Optional;
 
 public interface UserRepository {
-    User save(User user);
+    Long save(User user);
 
     User findById(Long userId);
 

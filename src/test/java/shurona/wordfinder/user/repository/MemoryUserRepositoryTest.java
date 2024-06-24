@@ -14,10 +14,12 @@ class MemoryUserRepositoryTest {
     void save() {
 
         User userOne = new User();
-        User one = userRepository.save(userOne);
+        Long oneId = userRepository.save(userOne);
+        User one = userRepository.findById(oneId);
 
         User userTwo = new User();
-        User two = userRepository.save(userTwo);
+        Long twoId = userRepository.save(userTwo);
+        User two = userRepository.findById(twoId);
 
         assertThat(one.getId()).isEqualTo(two.getId() - 1);
     }
@@ -26,7 +28,8 @@ class MemoryUserRepositoryTest {
     void findById() {
         User userOne = new User();
         userOne.setNickname("hello");
-        User one = userRepository.save(userOne);
+        Long oneId = userRepository.save(userOne);
+        User one = userRepository.findById(oneId);
 
         assertThat(one).isEqualTo(userRepository.findById(one.getId()));
     }
@@ -35,7 +38,8 @@ class MemoryUserRepositoryTest {
     void findByNickname() {
         User userOne = new User();
         userOne.setNickname("hello");
-        User one = userRepository.save(userOne);
+        Long oneId = userRepository.save(userOne);
+        User one = userRepository.findById(oneId);
         assertThat(one).isEqualTo(userRepository.findByNickname(one.getNickname()).get());
     }
 
