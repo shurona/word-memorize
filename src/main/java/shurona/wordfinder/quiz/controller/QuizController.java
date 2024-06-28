@@ -76,7 +76,7 @@ public class QuizController {
         }
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("errors", bindingResult.getAllErrors());
+            model.addAttribute("errors", bindingResult.getGlobalError());
             return "quiz/intro";
         }
 
