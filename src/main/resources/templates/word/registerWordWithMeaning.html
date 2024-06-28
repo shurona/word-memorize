@@ -14,6 +14,11 @@
 <body class="bg-light">
 <div class="container mt-5">
     <h1 class="mb-3">새로운 단어를 입력하세요</h1>
+    <div>
+        <p th:field="${word.remainCount}">
+            오늘 저장 남은 단어 갯수 : [[${word.remainCount}]]
+        </p>
+    </div>
     <form th:action="@{/word-meaning}" th:object="${word}" method="post" class="needs-validation">
         <div class="mb-3">
             <label for="nickname" class="form-label">Nickname:</label>
@@ -33,6 +38,9 @@
             <div class="invalid-feedback">
                 Please enter a meaning.
             </div>
+        </div>
+        <div>
+            <input type="hidden" th:field="*{remainCount}" />
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

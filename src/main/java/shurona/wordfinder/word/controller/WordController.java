@@ -20,6 +20,8 @@ import shurona.wordfinder.word.dto.WordForm;
 import shurona.wordfinder.word.dto.WordListForm;
 import shurona.wordfinder.word.service.JoinWordUserService;
 import shurona.wordfinder.word.service.WordService;
+import shurona.wordfinder.word.utils.CacheWordLimit;
+import shurona.wordfinder.word.utils.MemoryCacheWordLimit;
 
 @Controller
 public class WordController {
@@ -29,12 +31,14 @@ public class WordController {
     private final JoinWordUserService joinWordUserService;
     private final WordService wordService;
     private final UserService userService;
+    private final CacheWordLimit cacheWordLimit;
 
     @Autowired
-    public WordController(JoinWordUserService joinWordUserService, WordService wordService, UserService userService) {
+    public WordController(JoinWordUserService joinWordUserService, WordService wordService, UserService userService, MemoryCacheWordLimit memoryCacheWordLimit) {
         this.joinWordUserService = joinWordUserService;
         this.wordService = wordService;
         this.userService = userService;
+        this.cacheWordLimit = memoryCacheWordLimit;
     }
 
     /**
@@ -46,8 +50,9 @@ public class WordController {
             Model model
     ) {
         User user = this.userService.findById(userId);
-        WordForm wordForm = new WordForm();
+        ConnectWordForm wordForm = new ConnectWordForm();
         wordForm.setNickname(user.getNickname());
+        wordForm.setRemainCount(this.cacheWordLimit.checkCount(userId));
         model.addAttribute("word", wordForm);
 
         return "word/registerWord";
@@ -61,14 +66,21 @@ public class WordController {
             RedirectAttributes redirectAttributes,
             Model model
     ) {
+        // check remain count
+        int remainCount = this.cacheWordLimit.checkCount(userId);
+        if (remainCount <= 0) {
+            bindingResult.reject("remainZero", "하루에 단어는 12개 저장가능합니다");
+        }
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getGlobalError());
             return "word/registerWord";
         }
 
         // checkWord
         Word wordInfo = this.wordService.getWordByWordInfo(wordForm.getWord());
 
+        // 단어가 없으면 의미 입력으로 redirect
         if (wordInfo == null) {
             redirectAttributes.addAttribute("word", wordForm.getWord());
             return "redirect:/word-meaning";
@@ -82,6 +94,8 @@ public class WordController {
             return "word/registerWord";
         }
 
+        // 넘기기 전에 단어 횟수 차감
+        this.cacheWordLimit.useWordCount(userId);
         return "redirect:/words";
     }
 
@@ -100,6 +114,7 @@ public class WordController {
         WordForm wordForm = new WordForm();
         wordForm.setNickname(user.getNickname());
         wordForm.setWord(word);
+        wordForm.setRemainCount(this.cacheWordLimit.checkCount(userId));
         model.addAttribute("word", wordForm);
 
         return "word/registerWordWithMeaning";
@@ -109,14 +124,23 @@ public class WordController {
     public String registerWordWithMeaning(
             @Validated @ModelAttribute("word") WordForm wordForm,
             BindingResult bindingResult,
-            @SessionAttribute(value = SessionConst.LOGIN_USER) Long userId
+            @SessionAttribute(value = SessionConst.LOGIN_USER) Long userId,
+            Model model
     ) {
+        // check remain count
+        int remainCount = this.cacheWordLimit.checkCount(userId);
+        if (remainCount <= 0) {
+            bindingResult.reject("remainZero", "하루에 단어는 12개 저장가능합니다");
+        }
+
         if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getGlobalError());
             return "word/registerWordWithMeaning";
         }
 
         this.joinWordUserService.generate(userId, wordForm.getWord(), wordForm.getMeaning());
-
+        // 넘기기 전에 단어 횟수 차감
+        this.cacheWordLimit.useWordCount(userId);
         return "redirect:/words";
     }
 

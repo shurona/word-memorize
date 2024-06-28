@@ -16,6 +16,8 @@ public class WordForm {
     @Size(max = 20, message = "최대 20글자까지 입력가능합니다.")
     private String meaning;
 
+    private Integer remainCount;
+
     public String getNickname() {
         return nickname;
     }
@@ -38,6 +40,14 @@ public class WordForm {
 
     public void setMeaning(String meaning) {
         this.meaning = meaning.strip();
+    }
+
+    public Integer getRemainCount() {
+        return remainCount;
+    }
+
+    public void setRemainCount(Integer remainCount) {
+        this.remainCount = remainCount;
     }
 
     @Override

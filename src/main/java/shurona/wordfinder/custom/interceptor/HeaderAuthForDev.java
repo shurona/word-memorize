@@ -3,6 +3,7 @@ package shurona.wordfinder.custom.interceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -12,6 +13,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
  */
 @Component
 public class HeaderAuthForDev implements HandlerInterceptor {
+//    @Value("${dev.test.header}")
+//    private String headerKey;
 
     private final Environment environment;
 
@@ -19,6 +22,7 @@ public class HeaderAuthForDev implements HandlerInterceptor {
     public HeaderAuthForDev(Environment environment) {
         this.environment = environment;
     }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String rcvHeaderKey = request.getHeader("my-test-key");
