@@ -8,10 +8,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.Arrays;
 
 // SpringBootApplication 안에 ComponentScan 들어있음
+@EnableScheduling
 @SpringBootApplication
 public class WordFinderApplication {
 	public static void main(String[] args) {

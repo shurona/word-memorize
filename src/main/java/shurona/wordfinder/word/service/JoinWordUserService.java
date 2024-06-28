@@ -77,33 +77,6 @@ public class JoinWordUserService {
         return output;
     }
 
-    /**
-     * User가 갖고 있는 단어 목록을 갖고 온다.
-     */
-    public WordListForm[] getUserWordList() {
-        JoinWordUser[] joinWordUsers = this.joinWordRepository.joinWordList();
-
-        String[] ids = new String[joinWordUsers.length];
-
-        for (int idx = 0; idx < joinWordUsers.length; idx++) {
-            ids[idx] = joinWordUsers[idx].getWord().getUid();
-        }
-        Word[] wordByIds = this.wordService.getWordByIds(ids);
-
-        WordListForm[] output = new WordListForm[wordByIds.length];
-
-        for (int index = 0; index < wordByIds.length ; index++) {
-            WordListForm wordListForm = new WordListForm();
-            wordListForm.setWordId(wordByIds[index].getUid());
-            wordListForm.setWord(wordByIds[index].getWord());
-            wordListForm.setMeaning(wordByIds[index].getMeaning());
-            output[index] = wordListForm;
-        }
-
-
-        return output;
-    }
-
     /*
      * 최근 10개 단어 뽑아오기
      * TODO: 7만 최근 단어 3개는 랜덤으로 추출
