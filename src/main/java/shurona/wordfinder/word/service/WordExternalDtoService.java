@@ -23,7 +23,7 @@ public class WordExternalDtoService {
         String output = this.connectionTestService.getProperty(word);
         if (output.equals(word)) {
             this.log.info("입력과 뜻이 같은 단어 {}  {}", word, output);
-            return output;
+            return null;
         }
         return output;
     }

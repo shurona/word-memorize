@@ -111,8 +111,6 @@ public class WordController {
                 meaningInfo = wordString;
                 wordEditInfo = WordEditStatus.EDITABLE;
             }
-//            redirectAttributes.addAttribute("word", wordForm.getWord());
-//            return "redirect:/word-meaning";
         } else {
             meaningInfo = wordInfo.getMeaning();
             wordString = wordInfo.getWord();
