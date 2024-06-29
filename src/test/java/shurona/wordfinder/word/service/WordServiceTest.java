@@ -3,6 +3,7 @@ package shurona.wordfinder.word.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import shurona.wordfinder.word.domain.Word;
+import shurona.wordfinder.word.domain.WordEditStatus;
 import shurona.wordfinder.word.repository.word.MemoryWordRepository;
 import shurona.wordfinder.word.repository.word.WordRepository;
 
@@ -25,7 +26,7 @@ class WordServiceTest {
         String newWord = "Yahoo";
         String meaning = "야후";
         //when
-        Word word = wordService.saveWord(newWord, meaning);
+        Word word = wordService.saveWord(newWord, meaning, WordEditStatus.COMPLETE);
         //then
         assertThat(word.getWord()).isEqualTo(newWord);
     }
@@ -36,7 +37,7 @@ class WordServiceTest {
 
     @Test
     void getWordById() {
-        this.wordService.saveWord("hello", "안녕");
+        this.wordService.saveWord("hello", "안녕", WordEditStatus.COMPLETE);
 
         Word word1 = this.wordService.getWordByWordInfo("hello");
         Word word2 = this.wordService.getWordById(word1.getUid());
@@ -49,7 +50,7 @@ class WordServiceTest {
     @Test
     void 단어_의미_수정() {
         //given
-        Word word = this.wordService.saveWord("hello", "안녕");
+        Word word = this.wordService.saveWord("hello", "안녕", WordEditStatus.COMPLETE);
         assertThat(word.getMeaning()).isEqualTo("안녕");
 
         //when

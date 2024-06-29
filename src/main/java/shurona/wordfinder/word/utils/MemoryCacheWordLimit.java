@@ -53,6 +53,15 @@ public class MemoryCacheWordLimit implements CacheWordLimit{
         return this.DAILY_MAX_COUNT - countDate.getCount();
     }
 
+    public int rollBackCount(Long userId) {
+        CountWithDate countDate = cacheStore.getOrDefault(this.KEY_PREFIX + userId, null);
+        if (countDate == null) {
+            return -1;
+        }
+        countDate.increaseCount();
+        return this.DAILY_MAX_COUNT - countDate.getCount();
+    }
+
     private static class CountWithDate {
         private LocalDateTime createdTime;
         private  int count;
@@ -71,7 +80,11 @@ public class MemoryCacheWordLimit implements CacheWordLimit{
         }
 
         public void increaseCount() {
-            this.count +=1;
+            this.count += 1;
+        }
+
+        public void decreaseCount() {
+            this.count -= 1;
         }
     }
 

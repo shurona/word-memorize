@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shurona.wordfinder.word.domain.Word;
+import shurona.wordfinder.word.domain.WordEditStatus;
 import shurona.wordfinder.word.repository.word.WordRepository;
 import shurona.wordfinder.word.repository.word.repodto.RandWordMeaningDto;
 
@@ -47,9 +48,10 @@ public class WordService {
      * save
      */
     @Transactional
-    public Word saveWord(String wordInfo, String wordMeaning) {
+    public Word saveWord(String wordInfo, String wordMeaning, WordEditStatus editStatus) {
         // 단어 정보 저장
         Word newWord = new Word(wordInfo, wordMeaning);
+        newWord.editWordStatus(editStatus);
         String wordId = this.wordRepository.save(newWord);
 
         Optional<Word> word = this.wordRepository.findWordById(wordId);

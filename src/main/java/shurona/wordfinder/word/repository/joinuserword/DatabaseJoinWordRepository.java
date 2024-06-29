@@ -11,8 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public class DatabaseJoinWordRepository implements JoinWordRepository{
-
+public class DatabaseJoinWordRepository implements JoinWordRepository {
     @PersistenceContext
     EntityManager em;
 
@@ -24,13 +23,13 @@ public class DatabaseJoinWordRepository implements JoinWordRepository{
     public JoinWordUser findById(String id) {
         return this.em.find(JoinWordUser.class, id);
     }
-    @Override
-    public JoinWordUser findByUserWithWord(User user, Word word) {
-        String query = "select jwu from JoinWordUser as jwu where jwu.user.id = :userId and jwu.word.id = :wordId";
 
+    @Override
+    public JoinWordUser findByUserWithWord(Long userId, String wordUid) {
+        String query = "select jwu from JoinWordUser as jwu where jwu.user.id = :userId and jwu.word.id = :wordId";
         List<JoinWordUser> joinWordUserList = this.em.createQuery(query, JoinWordUser.class)
-                .setParameter("userId", user.getId())
-                .setParameter("wordId", word.getUid())
+                .setParameter("userId", userId)
+                .setParameter("wordId", wordUid)
                 .getResultList();
 
         if (joinWordUserList.isEmpty()) {
@@ -73,7 +72,7 @@ public class DatabaseJoinWordRepository implements JoinWordRepository{
         Save 파트
          ======================================================================*/
     @Override
-    public String saveUserWord(User user, Word word){
+    public String saveUserWord(User user, Word word) {
         JoinWordUser joinWordUser = new JoinWordUser(user, word);
         this.em.persist(joinWordUser);
         return joinWordUser.getId();

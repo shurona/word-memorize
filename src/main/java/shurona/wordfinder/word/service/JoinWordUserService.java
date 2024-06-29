@@ -8,6 +8,7 @@ import shurona.wordfinder.user.repository.UserRepository;
 import shurona.wordfinder.user.service.UserService;
 import shurona.wordfinder.word.domain.JoinWordUser;
 import shurona.wordfinder.word.domain.Word;
+import shurona.wordfinder.word.domain.WordEditStatus;
 import shurona.wordfinder.word.dto.WordListForm;
 import shurona.wordfinder.word.repository.joinuserword.JoinWordRepository;
 
@@ -26,27 +27,27 @@ public class JoinWordUserService {
         this.joinWordRepository = joinWordRepository;
     }
 
+    public boolean checkWordUserSet(Long userId, String wordInfo) {
+        Word foundWord = this.wordService.getWordByWordInfo(wordInfo);
+        if(foundWord == null) return false;
+        JoinWordUser checkExist = this.joinWordRepository.findByUserWithWord(userId, foundWord.getUid());
+        return checkExist != null;
+    }
+
     /**
      * 유저가 입력한 단어 생성
      * @param userId 유저 아이디
      * @param wordInfo 단어 ex> name <= 이름
      */
     @Transactional
-    public JoinWordUser generate(Long userId, String wordInfo, String wordMeaning) {
+    public JoinWordUser generate(Long userId, String wordInfo, String wordMeaning, WordEditStatus editStatus) {
         User userInfo = this.userService.findById(userId);
         // 이미 단어가 존재하는 지 확인 한다.
         Word foundWord = this.wordService.getWordByWordInfo(wordInfo);
 
         // 단어가 없는 경우 저장을 한다.
         if (foundWord == null) {
-            foundWord = this.wordService.saveWord(wordInfo, wordMeaning);
-        }
-
-        // 이미 단어 쌍이 존재하는 지 확인한다.
-        JoinWordUser checkExist = this.joinWordRepository.findByUserWithWord(userInfo, foundWord);
-
-        if (checkExist != null) {
-            return null;
+            foundWord = this.wordService.saveWord(wordInfo, wordMeaning, editStatus);
         }
 
         String jwuId = this.joinWordRepository.saveUserWord(userInfo, foundWord);
@@ -71,6 +72,7 @@ public class JoinWordUserService {
             wordListForm.setWordId(wordByIds[index].getUid());
             wordListForm.setWord(wordByIds[index].getWord());
             wordListForm.setMeaning(wordByIds[index].getMeaning());
+            wordListForm.setStatus(wordByIds[index].getStatus());
             wordListForm.setUserId(userId);
             output[index] = wordListForm;
         }

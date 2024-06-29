@@ -1,18 +1,11 @@
 @startuml db schema
 
 object "메모할 것" as memoTemp {
-    - 현재 적히지 않은 클래스
-    # Banner
-    # BlackList
-    # Cache
-    # ChromeExtension
-    # Glx *
-    # WebService
-
+    메모내용
 }
 
 entity "User" as user {
-    * id : number <<generated>>
+    * user_id : number <<generated>>
     --
 
     loginId: String
@@ -25,7 +18,7 @@ entity "User" as user {
 }
 
 entity "UserWord" as userword {
-  * id : UUID <<generated>>
+  * user_word_id : UUID <<generated>>
   --
 
   --
@@ -34,15 +27,45 @@ entity "UserWord" as userword {
 }
 
 entity "Word" as word {
-  * id : UUID <<generated>>
+  * word_id : UUID <<generated>>
   --
+    word: String
+    meaning: String
 
   --
   * created_at: Date
   * updated_at: Date
 }
 
+entity "Quiz Set" as quizset {
+    * quiz_set_id : number <<generated>>
+    --
+    user_id: User
+    currenct_sequence: Number
+
+    --
+    * created_at: Date
+    * updated_at: Date
+}
+
+entity "Quiz detail" as quizdetail {
+    * quiz_detail_id : number <<generated>>
+    --
+    word_id: Word
+    sequence: Number
+    isCorrect: Boolean
+    received_answer: String
+    --
+    * created_at: Date
+    * updated_at: Date
+}
+
 user ||--|{ userword
 userword }|--||word
+
+user ||--|{ quizset
+quizset ||--|{ quizdetail
+
+quizdetail ||--|{ word
 
 @enduml

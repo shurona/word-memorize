@@ -77,7 +77,8 @@ public class DatabaseWordRepository implements WordRepository{
 
     @Override
     public void editMeaning(String id, String meaning) {
-        String query = "update Word as word set word.meaning = :meaning where word.uid = :id";
+        String query = "update Word as word set word.meaning = :meaning, word.status = 'COMPLETE'" +
+                " where word.uid = :id";
         this.em.createQuery(query)
             .setParameter("meaning", meaning)
             .setParameter("id", id)

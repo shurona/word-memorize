@@ -1,46 +1,49 @@
 package shurona.wordfinder.word.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 import shurona.wordfinder.user.domain.User;
-import shurona.wordfinder.user.repository.MemoryUserRepository;
 import shurona.wordfinder.user.repository.UserRepository;
 import shurona.wordfinder.user.service.UserService;
 import shurona.wordfinder.word.domain.JoinWordUser;
 import shurona.wordfinder.word.domain.Word;
+import shurona.wordfinder.word.domain.WordEditStatus;
 import shurona.wordfinder.word.dto.WordListForm;
 import shurona.wordfinder.word.repository.joinuserword.JoinWordRepository;
-import shurona.wordfinder.word.repository.joinuserword.MemoryJoinWordRepository;
-import shurona.wordfinder.word.repository.word.MemoryWordRepository;
 import shurona.wordfinder.word.repository.word.WordRepository;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+//@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+@Sql(scripts = {"/resetTable.sql"}, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@ActiveProfiles("test")
+@Transactional
 class JoinWordUserServiceTest {
+    @Autowired
     private JoinWordUserService joinWordUserService;
+    @Autowired
     private WordRepository wordRepository;
+    @Autowired
     private JoinWordRepository joinWordRepository;
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
     private UserService userService;
-
-    @BeforeEach
-    public void beforeEach() {
-        this.wordRepository = new MemoryWordRepository();
-        this.userRepository = new MemoryUserRepository();
-        this.joinWordRepository = new MemoryJoinWordRepository();
-        this.joinWordUserService = new JoinWordUserService(
-                new WordService(
-                        this.wordRepository
-                ),
-                new UserService(
-                        this.userRepository
-                ),
-                this.joinWordRepository
-        );
-    }
 
     @Test
     void generateTest() {
@@ -51,7 +54,7 @@ class JoinWordUserServiceTest {
         String wordMeaning = "안녕";
 
         // when
-        JoinWordUser userWithWord = this.joinWordUserService.generate(user.getId(), wordInfo, wordMeaning);
+        JoinWordUser userWithWord = this.joinWordUserService.generate(user.getId(), wordInfo, wordMeaning, WordEditStatus.COMPLETE);
 
         // then
         assertThat(userWithWord.getUser().getId()).isEqualTo(user.getId());
@@ -59,15 +62,28 @@ class JoinWordUserServiceTest {
     }
 
     @Test
+    void checkExist() {
+        // given
+        Long userId = this.userRepository.save(new User("nick2", "log", "passwd"));
+        User user = this.userRepository.findById(userId);
+        String savedWordId = this.wordRepository.save(new Word("Hello", "안녕"));
+        Word savedWord = this.wordRepository.findWordById(savedWordId).get();
+        this.joinWordRepository.saveUserWord(user, savedWord);
+
+        // when
+        boolean exist = this.joinWordUserService.checkWordUserSet(userId, savedWord.getWord());
+        boolean nonExist = this.joinWordUserService.checkWordUserSet(2L, savedWord.getWord());
+
+        // then
+        assertThat(exist).isTrue();
+        assertThat(nonExist).isFalse();
+    }
+
+    @Test
     void getUserWordList() {
         // given
-        String wordUid = UUID.randomUUID().toString();
-        Word exWord = new Word("Hello", "안녕");
-        exWord.setUid(wordUid);
-        String savedWordId = this.wordRepository.save(exWord);
-        Word savedWord = this.wordRepository.findWordById(savedWordId).get();
-
-        Long userOneId = this.userRepository.save(new User("nickname1", "loginId1", "password1"));
+        User firstUser = new User("nickname1", "loginId1", "password1");
+        Long userOneId = this.userRepository.save(firstUser);
         Long userTwoId = this.userRepository.save(new User("nickname2", "loginId2", "password2"));
         Long userThreeId = this.userRepository.save(new User("nickname3", "loginId3", "password3"));
 
@@ -80,9 +96,11 @@ class JoinWordUserServiceTest {
         ArrayList<JoinWordUser> userWithWordList = new ArrayList<>();
         long wishUserId = userOne.getId();
         for (int i = 0; i < 100; i++) {
+            String savedWordId = this.wordRepository.save(new Word("Hello " + i, "안녕"));
+            Word savedWord = this.wordRepository.findWordById(savedWordId).get();
             String outputId = this.joinWordRepository.saveUserWord(userList[i % 3], savedWord);
             JoinWordUser output = this.joinWordRepository.findById(outputId);
-            if (i % 3 == wishUserId - 1) {
+            if (i % 3 == wishUserId - userOneId) {
                 userWithWordList.add(output);
             }
         }

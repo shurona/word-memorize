@@ -1,6 +1,7 @@
 package shurona.wordfinder.word.domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
 import shurona.wordfinder.common.DateInfoEntity;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,10 @@ public class Word extends DateInfoEntity {
     private String word;
 
     private String meaning;
+
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'COMPLETE'")
+    private WordEditStatus status;
 
     public Word() {
 
@@ -46,8 +51,15 @@ public class Word extends DateInfoEntity {
         return meaning;
     }
 
+    public WordEditStatus getStatus() {return status;}
+
+
     public void editMeaning(String meaning) {
         this.meaning = meaning;
+    }
+
+    public void editWordStatus(WordEditStatus status) {
+        this.status = status;
     }
 
     @Override
