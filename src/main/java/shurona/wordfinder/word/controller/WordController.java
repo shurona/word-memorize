@@ -9,16 +9,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import shurona.wordfinder.custom.service.ConnectionTestService;
 import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.user.common.SessionConst;
 import shurona.wordfinder.user.service.UserService;
 import shurona.wordfinder.word.domain.JoinWordUser;
 import shurona.wordfinder.word.domain.Word;
+import shurona.wordfinder.word.domain.WordEditStatus;
 import shurona.wordfinder.word.dto.ConnectWordForm;
 import shurona.wordfinder.word.dto.WordEditForm;
 import shurona.wordfinder.word.dto.WordForm;
 import shurona.wordfinder.word.dto.WordListForm;
 import shurona.wordfinder.word.service.JoinWordUserService;
+import shurona.wordfinder.word.service.WordExternalDtoService;
 import shurona.wordfinder.word.service.WordService;
 import shurona.wordfinder.word.utils.CacheWordLimit;
 import shurona.wordfinder.word.utils.MemoryCacheWordLimit;
@@ -33,12 +36,15 @@ public class WordController {
     private final UserService userService;
     private final CacheWordLimit cacheWordLimit;
 
+    private final WordExternalDtoService wordExternalDtoService;
+
     @Autowired
-    public WordController(JoinWordUserService joinWordUserService, WordService wordService, UserService userService, MemoryCacheWordLimit memoryCacheWordLimit) {
+    public WordController(JoinWordUserService joinWordUserService, WordService wordService, UserService userService, MemoryCacheWordLimit memoryCacheWordLimit, WordExternalDtoService wordExternalDtoService) {
         this.joinWordUserService = joinWordUserService;
         this.wordService = wordService;
         this.userService = userService;
         this.cacheWordLimit = memoryCacheWordLimit;
+        this.wordExternalDtoService = wordExternalDtoService;
     }
 
     /**
@@ -72,30 +78,47 @@ public class WordController {
             bindingResult.reject("remainZero", "하루에 단어는 12개 저장가능합니다");
         }
 
+
+        boolean check = this.joinWordUserService.checkWordUserSet(userId, wordForm.getWord());
+        if (check) {
+            bindingResult.reject("alreadyExist", "이미 저장한 단어입니다.");
+        }
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getGlobalError());
             return "word/registerWord";
         }
 
+        //==== 조회 및 접근 제어 로직 완료 후 로직 시작
+
+        // 넘기기 전에 단어 횟수 차감 후 시작
+        this.cacheWordLimit.useWordCount(userId);
+
         // checkWord
         Word wordInfo = this.wordService.getWordByWordInfo(wordForm.getWord());
 
-        // 단어가 없으면 의미 입력으로 redirect
+        // Init variable
+        String meaningInfo;
+        String wordString;
+        WordEditStatus wordEditInfo = WordEditStatus.COMPLETE;
+
+        // 단어가 없으면 뜻을 갖고 온다.
         if (wordInfo == null) {
-            redirectAttributes.addAttribute("word", wordForm.getWord());
-            return "redirect:/word-meaning";
+            meaningInfo = this.wordExternalDtoService.getMeaningInfo(wordForm.getWord());
+            wordString = wordForm.getWord();
+            // 뜻을 잘못 갖고오면 수정할 수 있게 해준다.
+            if (meaningInfo == null) {
+                meaningInfo = wordString;
+                wordEditInfo = WordEditStatus.EDITABLE;
+            }
+//            redirectAttributes.addAttribute("word", wordForm.getWord());
+//            return "redirect:/word-meaning";
+        } else {
+            meaningInfo = wordInfo.getMeaning();
+            wordString = wordInfo.getWord();
         }
 
-        JoinWordUser check = this.joinWordUserService.generate(userId, wordInfo.getWord(), wordInfo.getMeaning());
-
-        if (check == null) {
-            bindingResult.reject("alreadyExist", "이미 저장한 단어입니다.");
-            model.addAttribute("errors", bindingResult.getAllErrors());
-            return "word/registerWord";
-        }
-
-        // 넘기기 전에 단어 횟수 차감
-        this.cacheWordLimit.useWordCount(userId);
+        this.joinWordUserService.generate(userId, wordString, meaningInfo, wordEditInfo);
         return "redirect:/words";
     }
 
@@ -138,7 +161,7 @@ public class WordController {
             return "word/registerWordWithMeaning";
         }
 
-        this.joinWordUserService.generate(userId, wordForm.getWord(), wordForm.getMeaning());
+        this.joinWordUserService.generate(userId, wordForm.getWord(), wordForm.getMeaning(), WordEditStatus.COMPLETE);
         // 넘기기 전에 단어 횟수 차감
         this.cacheWordLimit.useWordCount(userId);
         return "redirect:/words";
@@ -178,6 +201,13 @@ public class WordController {
         form.setMeaning(word.getMeaning());
         return "word/editWord";
     }
+
+//    @PostMapping("/word/edit-request")
+//    public String requestEdit() {
+//
+//
+//        return "word/wordList";
+//    }
 
     @PostMapping("/word/edit/{id}")
     public String wordEdit(

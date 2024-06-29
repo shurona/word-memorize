@@ -123,12 +123,11 @@ class DatabaseJoinWordRepositoryTest {
         this.joinWordRepository.saveUserWord(userInfo, wordInfo);
 
         // when
-        JoinWordUser output = this.joinWordRepository.findByUserWithWord(userInfo, wordInfo);
-        JoinWordUser no = this.joinWordRepository.findByUserWithWord(userInfo, notSavedWord);
+        JoinWordUser output = this.joinWordRepository.findByUserWithWord(userInfo.getId(), wordInfo.getUid());
+        JoinWordUser no = this.joinWordRepository.findByUserWithWord(userInfo.getId(), notSavedWord.getUid());
 
         // then
         assertThat(output.getWord().getWord()).isEqualTo(wordInfo.getWord());
         assertThat(no).isEqualTo(null);
     }
-
 }

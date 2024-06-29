@@ -58,7 +58,7 @@ public class MemoryJoinWordRepository implements JoinWordRepository{
     }
 
     @Override
-    public JoinWordUser findByUserWithWord(User user, Word word) {
+    public JoinWordUser findByUserWithWord(Long userId, String wordUid) {
         return null;
     }
 }

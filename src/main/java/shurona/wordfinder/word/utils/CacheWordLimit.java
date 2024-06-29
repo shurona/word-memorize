@@ -10,4 +10,9 @@ public interface CacheWordLimit {
      * 현재 남은 count를 확인해 본다.
      */
     public int checkCount(Long userId);
+
+    /**
+     * 필요에 따라서 카운트를 1 증가시킨다.
+     */
+    public int rollBackCount(Long userId);
 }

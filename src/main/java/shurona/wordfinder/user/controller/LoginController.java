@@ -42,9 +42,8 @@ public class LoginController {
             @Validated @ModelAttribute("loginForm") LoginForm form,
             BindingResult bindingResult,
             HttpServletRequest request,
-            @RequestParam(defaultValue = "/") String redirectURL
+            @RequestParam(value = "redirectURL", defaultValue = "/") String redirectURL
     ) {
-
         User loginUser = this.userService.login(form.getLoginId(), PasswdToHash.doProcess(form.getPassword()));
 
         if (loginUser == null) {

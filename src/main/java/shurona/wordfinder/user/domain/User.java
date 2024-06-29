@@ -7,9 +7,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "_User")
-@SequenceGenerator(name = "user_id_seq", allocationSize = 1)
+//@SequenceGenerator(name = "user_id_seq", sequenceName = "USER_SEQ_ID", allocationSize = 1)
 public class User extends DateInfoEntity {
     @Id
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "USER_ID")
     private Long id;

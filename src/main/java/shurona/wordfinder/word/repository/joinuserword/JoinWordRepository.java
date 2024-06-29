@@ -8,7 +8,7 @@ public interface JoinWordRepository {
 
     JoinWordUser findById(String id);
 
-    JoinWordUser findByUserWithWord(User user, Word word);
+    JoinWordUser findByUserWithWord(Long userId, String wordUid);
 
     // 유저에게 갖고 있는 단어 ids 목록을 갖고 온다.
     JoinWordUser[] userOwnedWordList(Long userId);
