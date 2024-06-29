@@ -215,12 +215,12 @@ public class WordController {
     ) {
         Word wordInfo = this.wordService.getWordById(id);
 
-        if (!wordInfo.getWord().equals(form.getWord())) {
+        if (!wordInfo.getWord().equals(form.getWord()) || !wordInfo.getStatus().equals(WordEditStatus.EDITABLE)) {
             bindingResult.reject("wrongWord", "잘못된 수정 접근 입니다.");
         }
 
         if (bindingResult.hasErrors()) {
-            return "word/editWord";
+            return "redirect:/words";
         }
 
         // 수정 진행
