@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="container mt-5">
-    <div th:insert="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
     <h1>나만의 단어장</h1>
     <h3 th:text="${user.nickname + '님 안녕하세요'}">안녕하세요</h3>
     <div class="list-group">

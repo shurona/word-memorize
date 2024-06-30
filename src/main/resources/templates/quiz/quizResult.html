@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="container mt-5">
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
     <h1 class="mb-4">퀴즈 결과</h1>
     <div class="d-flex justify-content-end mb-3" >
         <a th:href="@{/quiz/intro}" type="button" class="btn btn-dark float-right">홈으로</a>

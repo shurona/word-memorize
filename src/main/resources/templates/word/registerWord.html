@@ -14,7 +14,7 @@
 </head>
 <body class="bg-light">
 <div class="container mt-5">
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
     <h1 class="mb-3">새로운 단어를 입력하세요</h1>
     <div th:if="${errors}">
         <div class="alert alert-warning" role="alert"
