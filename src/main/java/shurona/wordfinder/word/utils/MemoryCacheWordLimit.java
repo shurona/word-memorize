@@ -58,7 +58,7 @@ public class MemoryCacheWordLimit implements CacheWordLimit{
         if (countDate == null) {
             return -1;
         }
-        countDate.increaseCount();
+        countDate.decreaseCount();
         return this.DAILY_MAX_COUNT - countDate.getCount();
     }
 

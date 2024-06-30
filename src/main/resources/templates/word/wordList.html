@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <title>Word List</title>
     <!-- Bootstrap CSS from local path -->
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/my-style.css}" href="../css/my-style.css" rel="stylesheet">
 </head>
 <body>
 <div class="container mt-5">
+    <div th:replace="fragments/header :: header"></div>
     <h1 class="mb-4">Words</h1>
     <div class="d-flex justify-content-end mb-3" >
         <a th:href="@{/word}" type="button" class="btn btn-secondary me-2 float-right">단어 추가</a>

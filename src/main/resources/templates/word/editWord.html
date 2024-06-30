@@ -5,9 +5,11 @@
     <title>Edit word</title>
     <link th:href="@{/css/bootstrap.min.css}"
             href="../css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/my-style.css}" href="../css/my-style.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 <div class="container mt-5">
+    <div th:replace="fragments/header :: header"></div>
     <h1 class="mb-3">단어의 의미를 수정하세요</h1>
     <form th:action="@{/word/edit/{id}(id=${form.wordId})}" th:object="${form}" method="post" class="needs-validation">
         <div class="mb-3">

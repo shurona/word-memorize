@@ -5,6 +5,7 @@
     <title>랜덤 단어 선택</title>
     <link th:href="@{/css/bootstrap.min.css}"
             href="../css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/my-style.css}" href="../css/my-style.css" rel="stylesheet">
     <style>
         .field-error {
         border-color: #dc3545;
@@ -38,6 +39,7 @@
 </head>
 <body>
 <div class = "container mt-5">
+    <div th:replace="fragments/header :: header"></div>
     <h1>단어의 뜻을 골라보세요</h1>
     <div class="d-flex justify-content-end mb-3" >
         <a th:href="@{/quiz/intro}" type="button" class="btn btn-dark float-right">퀴즈 홈으로</a>

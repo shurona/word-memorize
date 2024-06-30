@@ -5,6 +5,7 @@
     <title>랜덤 단어 선택</title>
     <link th:href="@{/css/bootstrap.min.css}"
             href="../css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/my-style.css}" href="../css/my-style.css" rel="stylesheet">
 <!--    <script>-->
 <!--        function postToQuiz(){-->
 <!--            let form = document.createElement('form');-->
@@ -17,6 +18,7 @@
 </head>
 <body>
     <div class = "container mt-5">
+        <div th:replace="fragments/header :: header"></div>
         <h1>단어 퀴즈</h1>
         <div th:if="${errors}">
             <div class="alert alert-danger" role="alert"
