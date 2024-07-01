@@ -104,12 +104,21 @@ public class WordController {
 
         // 단어가 없으면 뜻을 갖고 온다.
         if (wordInfo == null) {
-            meaningInfo = this.wordExternalDtoService.getMeaningInfo(wordForm.getWord());
-            wordString = wordForm.getWord();
-            // 뜻을 잘못 갖고오면 수정할 수 있게 해준다.
-            if (meaningInfo == null) {
-                meaningInfo = wordString;
-                wordEditInfo = WordEditStatus.EDITABLE;
+            try {
+                meaningInfo = this.wordExternalDtoService.getMeaningInfo(wordForm.getWord());
+                wordString = wordForm.getWord();
+                // 뜻을 잘못 갖고오면 수정할 수 있게 해준다.
+                if (meaningInfo == null) {
+                    meaningInfo = wordString;
+                    wordEditInfo = WordEditStatus.EDITABLE;
+                }
+            } catch (Exception e) {
+                // 여기서 오류 발생 시 카운트 롤백
+                this.cacheWordLimit.rollBackCount(userId);
+                this.log.error("Error occur during get meaning info from deepl {}", e.getMessage());
+                bindingResult.reject("deeplError", "에러가 발생하였습니다. 반복되면 개발자에 문의주세요");
+                model.addAttribute("errors", bindingResult.getGlobalError());
+                return "word/registerWord";
             }
         } else {
             meaningInfo = wordInfo.getMeaning();
@@ -148,20 +157,12 @@ public class WordController {
             @SessionAttribute(value = SessionConst.LOGIN_USER) Long userId,
             Model model
     ) {
-        // check remain count
-        int remainCount = this.cacheWordLimit.checkCount(userId);
-        if (remainCount <= 0) {
-            bindingResult.reject("remainZero", "하루에 단어는 12개 저장가능합니다");
-        }
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getGlobalError());
             return "word/registerWordWithMeaning";
         }
 
         this.joinWordUserService.generate(userId, wordForm.getWord(), wordForm.getMeaning(), WordEditStatus.COMPLETE);
-        // 넘기기 전에 단어 횟수 차감
-        this.cacheWordLimit.useWordCount(userId);
         return "redirect:/words";
     }
 
