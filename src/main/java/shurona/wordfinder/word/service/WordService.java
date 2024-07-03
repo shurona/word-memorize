@@ -37,8 +37,10 @@ public class WordService {
     public Word[] getWordByIds(String[] wordIds) {
         return this.wordRepository.findWordsByIds(wordIds);
     }
-    //
 
+    /**
+     * 최근 작성 7개 및 랜덤 3개
+     */
     public List<RandWordMeaningDto> findRandomWordMeaning(String wordId) {
         return this.wordRepository.findRandomWordMeaning(wordId);
     }

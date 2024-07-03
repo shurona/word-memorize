@@ -15,7 +15,9 @@ public interface JoinWordRepository {
 
     JoinWordUser[] joinWordList();
 
-    JoinWordUser[] pickListForQuiz(Long userId);
+    JoinWordUser[] pickListForQuiz(Long userId, int offset, int limit);
+
+    JoinWordUser[] pickRandomForQuiz(Long userId, int offset, int limit);
 
     // 유저와 단어 연결
     String saveUserWord(User user, Word word);

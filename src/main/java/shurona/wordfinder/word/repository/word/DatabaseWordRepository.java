@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class DatabaseWordRepository implements WordRepository{
-
+public class DatabaseWordRepository implements WordRepository {
     @PersistenceContext
     EntityManager em;
 
@@ -66,11 +65,12 @@ public class DatabaseWordRepository implements WordRepository{
             if (count == 3) {
                 break;
             }
+            // 답으로 선정된 뜻은 제외되어야 한다.
             if (randWordMeaningDto.getWordId().equals(exceptWordId)) {
                 continue;
             }
             output.add(randWordMeaningDto);
-            count+=1;
+            count += 1;
         }
         return output;
     }

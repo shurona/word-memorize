@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import shurona.wordfinder.user.domain.User;
@@ -14,11 +15,12 @@ import shurona.wordfinder.word.domain.JoinWordUser;
 import shurona.wordfinder.word.domain.Word;
 import shurona.wordfinder.word.repository.word.DatabaseWordRepository;
 
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
+@Sql(scripts = {"/resetTable.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
@@ -129,5 +131,35 @@ class DatabaseJoinWordRepositoryTest {
         // then
         assertThat(output.getWord().getWord()).isEqualTo(wordInfo.getWord());
         assertThat(no).isEqualTo(null);
+    }
+
+    @Test
+    public void 퀴즈일부_랜덤겟_확인() {
+        // given
+        Long userOneId = this.userRepository.save(new User("nicknameOne", "loginId", "password"));
+
+        User userOne = this.userRepository.findById(userOneId);
+
+        String wordString = "wd";
+        String wordMeaning = "meaning";
+
+        for (int i = 0; i < 15; i++) {
+            String wordId = this.wordRepository.save(new Word(wordString + i, wordMeaning + i));
+            Word word = this.wordRepository.findWordById(wordId).get();
+            this.joinWordRepository.saveUserWord(userOne, word);
+        }
+
+        // when
+        JoinWordUser[] except = this.joinWordRepository.pickListForQuiz(userOneId, 0, 7);
+        JoinWordUser[] needList = this.joinWordRepository.pickRandomForQuiz(userOneId, 7, 3);
+//        ArrayList<JoinWordUser> convertList = new ArrayList<>(List.of(needList));
+
+        // then
+        int i = 0;
+        for (JoinWordUser nd : needList) {
+            for (JoinWordUser ex : except) {
+                assertThat(nd.getId()).isNotEqualTo(ex.getId());
+            }
+        }
     }
 }

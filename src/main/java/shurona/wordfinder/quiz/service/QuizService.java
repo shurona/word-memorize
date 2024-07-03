@@ -43,7 +43,6 @@ public class QuizService {
 
         QuizDetail[] details = new QuizDetail[joinWordUsers.length];
         for (int sequence = 0; sequence < 10; sequence++) {
-            // TODO: 효율적으로 개선
             // 단어 갖고 오기
             List<RandWordMeaningDto> randomWordMeaning = this.wordService.findRandomWordMeaning(joinWordUsers[sequence].getWord().getUid());
             int answerLoc = (int)(Math.random() * 10) % 3;
@@ -54,9 +53,10 @@ public class QuizService {
         // quizSet 생성
         QuizSet quizSet = QuizSet.createQuizSet(userInfo, details);
 
+        // 이후로 저장
         this.quizRepository.saveQuizSet(quizSet);
 
-        // update Join User Word UpdateAt
+//         update Join User Word UpdateAt
         for (JoinWordUser joinWordUser : joinWordUsers) {
             joinWordUser.updateDataWhenCreateQuiz();
         }

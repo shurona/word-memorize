@@ -12,6 +12,11 @@ import shurona.wordfinder.word.domain.WordEditStatus;
 import shurona.wordfinder.word.dto.WordListForm;
 import shurona.wordfinder.word.repository.joinuserword.JoinWordRepository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 public class JoinWordUserService {
@@ -80,11 +85,20 @@ public class JoinWordUserService {
     }
 
     /*
-     * 최근 10개 단어 뽑아오기
-     * TODO: 7만 최근 단어 3개는 랜덤으로 추출
+     * 최근 7개  3개는 랜덤
      */
     public JoinWordUser[] pickWordsForQuiz(Long userId) {
-        return this.joinWordRepository.pickListForQuiz(userId);
+        int recentLimit = 7;
+        int notRecentSize = 3;
+        // 최근 7개 단어를 불러온다.
+        JoinWordUser[] selectedRecentList = this.joinWordRepository.pickListForQuiz(userId, 0, recentLimit);
+
+        JoinWordUser[] selectRandom = this.joinWordRepository.pickRandomForQuiz(userId, recentLimit, notRecentSize);
+
+        // 결과 리스트 초기화
+        List<JoinWordUser> combineQuiz = new ArrayList<>(Arrays.asList(selectedRecentList));
+        combineQuiz.addAll(Arrays.asList(selectRandom).subList(0, 3));
+        return combineQuiz.toArray(JoinWordUser[]::new);
     }
 
 //    public JoinWordUser getWordUserWithWord(JoinWordUser joinWordUser) {

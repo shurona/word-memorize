@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.word.domain.JoinWordUser;
 import shurona.wordfinder.word.domain.Word;
+import shurona.wordfinder.word.service.JoinWordUserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -57,20 +58,39 @@ public class DatabaseJoinWordRepository implements JoinWordRepository {
     }
 
     @Override
-    public JoinWordUser[] pickListForQuiz(Long userId) {
+    public JoinWordUser[] pickListForQuiz(Long userId, int offset, int limit) {
         String query = "select jwu from JoinWordUser as jwu join fetch jwu.word where jwu.user.id = :userId " +
-                "order by jwu.updatedAt desc limit 10";
+                "order by jwu.updatedAt desc";
 
         List<JoinWordUser> joinWordUserList = this.em.createQuery(query, JoinWordUser.class)
                 .setParameter("userId", userId)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
                 .getResultList();
 
         return joinWordUserList.toArray(JoinWordUser[]::new);
     }
 
+    @Override
+    public JoinWordUser[] pickRandomForQuiz(Long userId, int offset, int limit) {
+        String query = "select jwu from JoinWordUser as jwu " +
+                "where jwu.id in " +
+                "(select j.id from JoinWordUser as j where j.user.id = :userId order by j.updatedAt desc offset :offset)"
+                + "order by random()";
+
+//        String query = "select jwu from JoinWordUser as jwu where jwu.user.id = :userId order by jwu.updatedAt";
+
+        List<JoinWordUser> joinWordUserList = this.em.createQuery(query, JoinWordUser.class)
+                .setParameter("userId", userId)
+                .setParameter("offset", offset)
+                .setMaxResults(limit)
+                .getResultList();
+        return joinWordUserList.toArray(JoinWordUser[]::new);
+    }
+
     /* ======================================================================
-        Save 파트
-         ======================================================================*/
+            Save 파트
+             ======================================================================*/
     @Override
     public String saveUserWord(User user, Word word) {
         JoinWordUser joinWordUser = new JoinWordUser(user, word);
