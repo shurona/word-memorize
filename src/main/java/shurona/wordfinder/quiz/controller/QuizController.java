@@ -17,6 +17,7 @@ import shurona.wordfinder.quiz.dto.QuizListForm;
 import shurona.wordfinder.quiz.dto.QuizResultForm;
 import shurona.wordfinder.quiz.service.QuizService;
 import shurona.wordfinder.user.common.SessionConst;
+import shurona.wordfinder.user.session.UserSession;
 import shurona.wordfinder.word.domain.Word;
 import shurona.wordfinder.word.dto.WordListForm;
 import shurona.wordfinder.word.service.JoinWordUserService;
@@ -51,14 +52,14 @@ public class QuizController {
 
     @PostMapping("generate")
     public String generateQuiz(
-            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) Long userId,
+            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) UserSession userSession,
             RedirectAttributes redirectAttributes,
             @ModelAttribute("quiz") QuizAnswerForm quizForm,
             BindingResult bindingResult,
             Model model
     ) {
 
-        WordListForm[] userWordList = this.joinWordUserService.getUserWordList(userId);
+        WordListForm[] userWordList = this.joinWordUserService.getUserWordList(userSession.getUserId());
 
         if (userWordList.length < 11) {
             bindingResult.reject("nonEnough", "단어를 최소 10개를 만들어주세요 \n" +
@@ -66,10 +67,10 @@ public class QuizController {
         }
 
 
-        boolean generateAble = this.quizService.checkRecentGenerateQuizSet(userId);
+        boolean generateAble = this.quizService.checkRecentGenerateQuizSet(userSession.getUserId());
 
         if (!generateAble) {
-            List<QuizSet> quizSetList = this.quizService.getQuizSetList(0, 1, userId);
+            List<QuizSet> quizSetList = this.quizService.getQuizSetList(0, 1, userSession.getUserId());
             QuizSet quizSet = quizSetList.get(0);
             bindingResult.reject("fastCreate", "퀴즈는 12시간에 한 번 만들 수 있습니다. \n" +
                     "생성 가능 시간 : " + quizSet.getCreatedAt().plusHours(12).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
@@ -81,7 +82,7 @@ public class QuizController {
         }
 
         this.log.info("생성중...");
-        Long quizSetId = this.quizService.generateQuizSet(userId);
+        Long quizSetId = this.quizService.generateQuizSet(userSession.getUserId());
 
 
         redirectAttributes.addAttribute("id", quizSetId);
@@ -91,7 +92,7 @@ public class QuizController {
 
     @PostMapping("problem/{id}")
     public String checkAnswer(
-            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) Long userId,
+            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) UserSession userSession,
             @PathVariable("id") Long quizSetId,
             @ModelAttribute("quiz") QuizAnswerForm quizForm,
             BindingResult bindingResult,
@@ -109,7 +110,7 @@ public class QuizController {
 
         QuizSet quizInfo = this.quizService.getQuizInfo(quizSetId);
 
-        if (quizInfo == null || !Objects.equals(quizInfo.getUser().getId(), userId)) {
+        if (quizInfo == null || !Objects.equals(quizInfo.getUser().getId(), userSession.getUserId())) {
             return "quiz/intro";
         }
 
@@ -127,13 +128,13 @@ public class QuizController {
 
     @GetMapping("problem/{id}")
     public String provideUserQuiz(
-            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) Long userId,
+            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) UserSession userSession,
             @PathVariable("id") Long quizSetId,
             Model model
     ) {
         QuizSet quizInfo = this.quizService.getQuizInfo(quizSetId);
 
-        if (quizInfo == null || !Objects.equals(quizInfo.getUser().getId(), userId)) {
+        if (quizInfo == null || !Objects.equals(quizInfo.getUser().getId(), userSession.getUserId())) {
             return "quiz/intro";
         }
 
@@ -177,11 +178,11 @@ public class QuizController {
 
     @GetMapping("list")
     public String quizList(
-            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) Long userId,
+            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) UserSession userSession,
             Model model
     ) {
 
-        List<QuizSet> quizSetList = this.quizService.getQuizSetList(0, 20, userId);
+        List<QuizSet> quizSetList = this.quizService.getQuizSetList(0, 20, userSession.getUserId());
 
 
         List<QuizListForm> quizListFormList = new ArrayList<>();
@@ -200,7 +201,7 @@ public class QuizController {
 
     @GetMapping("result/{id}")
     public String quizResult(
-            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) Long userId,
+            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) UserSession userSession,
             @PathVariable("id") Long quizId,
             Model model
     ) {
@@ -208,7 +209,7 @@ public class QuizController {
         QuizSet quizInfo = this.quizService.getQuizInfo(quizId);
 
         // 유저와 quizSet 정보가 불일치 하면 밴
-        if (quizInfo == null || !Objects.equals(quizInfo.getUser().getId(), userId)) {
+        if (quizInfo == null || !Objects.equals(quizInfo.getUser().getId(), userSession.getUserId())) {
             return "/";
         }
 

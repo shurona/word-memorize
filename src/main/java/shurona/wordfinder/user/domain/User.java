@@ -1,6 +1,7 @@
 package shurona.wordfinder.user.domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
 import shurona.wordfinder.common.DateInfoEntity;
 
 import java.time.LocalDateTime;
@@ -21,20 +22,24 @@ public class User extends DateInfoEntity {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'NORMAL'")
+    private UserRole role;
+
     public User() {
     }
 
     /**
-     * @param nickname
-     * @param loginId
-     * @param password
+     * 유저 생성
      */
     public User(String nickname, String loginId, String password) {
         this.nickname = nickname;
         this.loginId = loginId;
 
-        // TODO: 해쉬로 저장해야 한다.
         this.password = password;
+
+        // role 설정 => 멤버십 업그레이드일 때 변경을 한다.
+        this.role = UserRole.NORMAL;
 
         // 날짜 저장
         this.createdAt = LocalDateTime.now();
@@ -63,6 +68,10 @@ public class User extends DateInfoEntity {
 
     public String getPassword() {
         return password;
+    }
+
+    public UserRole getRole() {
+        return role;
     }
 
     @Override

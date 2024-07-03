@@ -9,10 +9,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import shurona.wordfinder.custom.service.ConnectionTestService;
 import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.user.common.SessionConst;
 import shurona.wordfinder.user.service.UserService;
+import shurona.wordfinder.user.session.UserSession;
 import shurona.wordfinder.word.domain.JoinWordUser;
 import shurona.wordfinder.word.domain.Word;
 import shurona.wordfinder.word.domain.WordEditStatus;
@@ -52,13 +52,13 @@ public class WordController {
      */
     @GetMapping("/word")
     public String wordForm(
-            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) Long userId,
+            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) UserSession userSession,
             Model model
     ) {
-        User user = this.userService.findById(userId);
+        User user = this.userService.findById(userSession.getUserId());
         ConnectWordForm wordForm = new ConnectWordForm();
         wordForm.setNickname(user.getNickname());
-        wordForm.setRemainCount(this.cacheWordLimit.checkCount(userId));
+        wordForm.setRemainCount(this.cacheWordLimit.checkCount(userSession.getUserId()));
         model.addAttribute("word", wordForm);
 
         return "word/registerWord";
@@ -68,18 +68,18 @@ public class WordController {
     public String registerWord(
             @Validated @ModelAttribute("word") ConnectWordForm wordForm,
             BindingResult bindingResult,
-            @SessionAttribute(value = SessionConst.LOGIN_USER) Long userId,
+            @SessionAttribute(value = SessionConst.LOGIN_USER) UserSession userSession,
             RedirectAttributes redirectAttributes,
             Model model
     ) {
         // check remain count
-        int remainCount = this.cacheWordLimit.checkCount(userId);
+        int remainCount = this.cacheWordLimit.checkCount(userSession.getUserId());
         if (remainCount <= 0) {
             bindingResult.reject("remainZero", "하루에 단어는 12개 저장가능합니다");
         }
 
 
-        boolean check = this.joinWordUserService.checkWordUserSet(userId, wordForm.getWord());
+        boolean check = this.joinWordUserService.checkWordUserSet(userSession.getUserId(), wordForm.getWord());
         if (check) {
             bindingResult.reject("alreadyExist", "이미 저장한 단어입니다.");
         }
@@ -92,7 +92,7 @@ public class WordController {
         //==== 조회 및 접근 제어 로직 완료 후 로직 시작
 
         // 넘기기 전에 단어 횟수 차감 후 시작
-        this.cacheWordLimit.useWordCount(userId);
+        this.cacheWordLimit.useWordCount(userSession.getUserId());
 
         // checkWord
         Word wordInfo = this.wordService.getWordByWordInfo(wordForm.getWord());
@@ -114,7 +114,7 @@ public class WordController {
                 }
             } catch (Exception e) {
                 // 여기서 오류 발생 시 카운트 롤백
-                this.cacheWordLimit.rollBackCount(userId);
+                this.cacheWordLimit.rollBackCount(userSession.getUserId());
                 this.log.error("Error occur during get meaning info from deepl {}", e.getMessage());
                 bindingResult.reject("deeplError", "에러가 발생하였습니다. 반복되면 개발자에 문의주세요");
                 model.addAttribute("errors", bindingResult.getGlobalError());
@@ -125,7 +125,7 @@ public class WordController {
             wordString = wordInfo.getWord();
         }
 
-        this.joinWordUserService.generate(userId, wordString, meaningInfo, wordEditInfo);
+        this.joinWordUserService.generate(userSession.getUserId(), wordString, meaningInfo, wordEditInfo);
         return "redirect:/words";
     }
 
@@ -136,15 +136,15 @@ public class WordController {
      */
     @GetMapping("/word-meaning")
     public String wordWithMeaningForm(
-            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) Long userId,
+            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) UserSession userSession,
             @RequestParam("word") String word,
             Model model
     ) {
-        User user = this.userService.findById(userId);
+        User user = this.userService.findById(userSession.getUserId());
         WordForm wordForm = new WordForm();
         wordForm.setNickname(user.getNickname());
         wordForm.setWord(word);
-        wordForm.setRemainCount(this.cacheWordLimit.checkCount(userId));
+        wordForm.setRemainCount(this.cacheWordLimit.checkCount(userSession.getUserId()));
         model.addAttribute("word", wordForm);
 
         return "word/registerWordWithMeaning";
@@ -154,7 +154,7 @@ public class WordController {
     public String registerWordWithMeaning(
             @Validated @ModelAttribute("word") WordForm wordForm,
             BindingResult bindingResult,
-            @SessionAttribute(value = SessionConst.LOGIN_USER) Long userId,
+            @SessionAttribute(value = SessionConst.LOGIN_USER) UserSession userSession,
             Model model
     ) {
         if (bindingResult.hasErrors()) {
@@ -162,7 +162,7 @@ public class WordController {
             return "word/registerWordWithMeaning";
         }
 
-        this.joinWordUserService.generate(userId, wordForm.getWord(), wordForm.getMeaning(), WordEditStatus.COMPLETE);
+        this.joinWordUserService.generate(userSession.getUserId(), wordForm.getWord(), wordForm.getMeaning(), WordEditStatus.COMPLETE);
         return "redirect:/words";
     }
 
@@ -172,9 +172,9 @@ public class WordController {
     @GetMapping("/words")
     public String wordList(
             Model model,
-            @SessionAttribute(value = SessionConst.LOGIN_USER) Long userId
+            @SessionAttribute(value = SessionConst.LOGIN_USER) UserSession userSession
     ) {
-        WordListForm[] userWordList = this.joinWordUserService.getUserWordList(userId);
+        WordListForm[] userWordList = this.joinWordUserService.getUserWordList(userSession.getUserId());
 
         model.addAttribute("words", userWordList);
 

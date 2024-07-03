@@ -15,6 +15,7 @@ import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.user.common.SessionConst;
 import shurona.wordfinder.user.controller.dto.LoginForm;
 import shurona.wordfinder.user.service.UserService;
+import shurona.wordfinder.user.session.UserSession;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -51,7 +52,8 @@ public class LoginController {
             return "user/login/loginForm";
         }
         HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_USER, loginUser.getId());
+        UserSession userSession = UserSession.createUserSession(loginUser.getId(), loginUser.getRole());
+        session.setAttribute(SessionConst.LOGIN_USER, userSession);
 
         return "redirect:" + redirectURL;
     }
