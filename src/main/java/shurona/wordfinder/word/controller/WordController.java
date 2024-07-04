@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.user.common.SessionConst;
+import shurona.wordfinder.user.domain.UserRole;
 import shurona.wordfinder.user.service.UserService;
 import shurona.wordfinder.user.session.UserSession;
 import shurona.wordfinder.word.domain.JoinWordUser;
@@ -72,27 +73,29 @@ public class WordController {
             RedirectAttributes redirectAttributes,
             Model model
     ) {
-        // check remain count
-        int remainCount = this.cacheWordLimit.checkCount(userSession.getUserId());
-        if (remainCount <= 0) {
-            bindingResult.reject("remainZero", "하루에 단어는 12개 저장가능합니다");
+        // ADMIN이 아니면 단어 갯수 확인
+        if (!userSession.getRole().equals(UserRole.ADMIN)) {
+            // check remain count
+            int remainCount = this.cacheWordLimit.checkCount(userSession.getUserId());
+            if (remainCount <= 0) {
+                bindingResult.reject("remainZero", "하루에 단어는 12개 저장가능합니다");
+            }
         }
 
-
-        boolean check = this.joinWordUserService.checkWordUserSet(userSession.getUserId(), wordForm.getWord());
-        if (check) {
-            bindingResult.reject("alreadyExist", "이미 저장한 단어입니다.");
-        }
+        checkWordDuplication(wordForm, bindingResult, userSession);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getGlobalError());
             return "word/registerWord";
         }
 
-        //==== 조회 및 접근 제어 로직 완료 후 로직 시작
+        // ADMIN이 아니면 차감한다.
+        if (!userSession.getRole().equals(UserRole.ADMIN)) {
+            // 넘기기 전에 단어 횟수 차감 후 시작
+            this.cacheWordLimit.useWordCount(userSession.getUserId());
+        }
 
-        // 넘기기 전에 단어 횟수 차감 후 시작
-        this.cacheWordLimit.useWordCount(userSession.getUserId());
+        //==== 조회 및 접근 제어 로직 완료 후 로직 시작
 
         // checkWord
         Word wordInfo = this.wordService.getWordByWordInfo(wordForm.getWord());
@@ -128,8 +131,6 @@ public class WordController {
         this.joinWordUserService.generate(userSession.getUserId(), wordString, meaningInfo, wordEditInfo);
         return "redirect:/words";
     }
-
-
 
     /**
      * 단어 저장 Form
@@ -227,5 +228,15 @@ public class WordController {
         // 수정 진행
         this.wordService.updateMeaning(wordInfo.getUid(), form.getMeaning());
         return "redirect:/words";
+    }
+
+    /**
+     * 접근 제어 메서드
+     */
+    private void checkWordDuplication(ConnectWordForm wordForm, BindingResult bindingResult, UserSession userSession) {
+        boolean check = this.joinWordUserService.checkWordUserSet(userSession.getUserId(), wordForm.getWord());
+        if (check) {
+            bindingResult.reject("alreadyExist", "이미 저장한 단어입니다.");
+        }
     }
 }
