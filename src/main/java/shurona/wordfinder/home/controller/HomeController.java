@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.user.common.SessionConst;
 import shurona.wordfinder.user.service.UserService;
+import shurona.wordfinder.user.session.UserSession;
 
 @Controller
 public class HomeController {
@@ -21,14 +22,14 @@ public class HomeController {
 
     @GetMapping("/")
     public String homeLoginResolver(
-            @SessionAttribute(name= SessionConst.LOGIN_USER, required = false) Long userId,
+            @SessionAttribute(name= SessionConst.LOGIN_USER, required = false) UserSession userSession,
             Model model
     ) {
-        if (userId == null) {
+        if (userSession == null) {
             return "home";
         }
 
-        User user = userService.findById(userId);
+        User user = userService.findById(userSession.getUserId());
         model.addAttribute("user", user);
         return "loginHome";
     }
