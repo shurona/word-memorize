@@ -11,16 +11,18 @@ entity "User" as user {
     loginId: String
     password : String
     nickname : String
+    role: Role
 
     --
     * created_at: Date
     * updated_at: Date
 }
 
-entity "UserWord" as userword {
+entity "JoinWordUser" as userword {
   * user_word_id : UUID <<generated>>
   --
-
+    visible: boolean
+    lastSelectedQuiz: Date
   --
   * created_at: Date
   * updated_at: Date
@@ -31,7 +33,7 @@ entity "Word" as word {
   --
     word: String
     meaning: String
-
+    status: WordEditStatus
   --
   * created_at: Date
   * updated_at: Date
@@ -60,8 +62,25 @@ entity "Quiz detail" as quizdetail {
     * updated_at: Date
 }
 
+' enum
+enum "Role" as role {
+  ADMIN
+  MEMBER
+  NORMAL
+}
+
+enum "WordEditStatus" as wordEditStatus {
+  EDITABLE
+  COMPLETE
+  REQUEST
+  DONE
+}
+
 user ||--|{ userword
 userword }|--||word
+
+word <- wordEditStatus
+user <- role
 
 user ||--|{ quizset
 quizset ||--|{ quizdetail
