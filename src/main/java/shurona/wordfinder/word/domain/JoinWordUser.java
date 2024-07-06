@@ -27,6 +27,9 @@ public class JoinWordUser extends DateInfoEntity {
     @JoinColumn(name = "USER_ID")
     private User user;
 
+    private Boolean visible;
+
+    private LocalDateTime lastSelectedQuiz;
 
     public JoinWordUser() {
         //
@@ -35,6 +38,9 @@ public class JoinWordUser extends DateInfoEntity {
     public JoinWordUser(User user, Word word) {
         this.user= user;
         this.word = word;
+
+        this.visible = true;
+        this.lastSelectedQuiz = LocalDateTime.now();
 
         // 날짜 지정
         this.createdAt = LocalDateTime.now();;
@@ -60,11 +66,23 @@ public class JoinWordUser extends DateInfoEntity {
         return this.user;
     }
 
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public LocalDateTime getLastSelectedQuiz() {
+        return lastSelectedQuiz;
+    }
+
     /*
-    도메인 로직
+        도메인 로직
+     */
+
+    /**
+     * 퀴즈에 선택된 경우 날짜를 오늘로 업데이트 해준다.
      */
     public void updateDataWhenCreateQuiz() {
-        this.updatedAt = LocalDateTime.now();
+        this.lastSelectedQuiz = LocalDateTime.now();
     }
 
 

@@ -60,7 +60,7 @@ public class DatabaseJoinWordRepository implements JoinWordRepository {
     @Override
     public JoinWordUser[] pickListForQuiz(Long userId, int offset, int limit) {
         String query = "select jwu from JoinWordUser as jwu join fetch jwu.word where jwu.user.id = :userId " +
-                "order by jwu.updatedAt desc";
+                "order by jwu.lastSelectedQuiz desc";
 
         List<JoinWordUser> joinWordUserList = this.em.createQuery(query, JoinWordUser.class)
                 .setParameter("userId", userId)
@@ -75,7 +75,7 @@ public class DatabaseJoinWordRepository implements JoinWordRepository {
     public JoinWordUser[] pickRandomForQuiz(Long userId, int offset, int limit) {
         String query = "select jwu from JoinWordUser as jwu " +
                 "where jwu.id in " +
-                "(select j.id from JoinWordUser as j where j.user.id = :userId order by j.updatedAt desc offset :offset)"
+                "(select j.id from JoinWordUser as j where j.user.id = :userId order by j.lastSelectedQuiz desc offset :offset)"
                 + "order by random()";
 
 //        String query = "select jwu from JoinWordUser as jwu where jwu.user.id = :userId order by jwu.updatedAt";
