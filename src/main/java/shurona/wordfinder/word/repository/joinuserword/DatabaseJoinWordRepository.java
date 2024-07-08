@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.word.domain.JoinWordUser;
 import shurona.wordfinder.word.domain.Word;
-import shurona.wordfinder.word.service.JoinWordUserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,8 +24,16 @@ public class DatabaseJoinWordRepository implements JoinWordRepository {
         return this.em.find(JoinWordUser.class, id);
     }
 
+    public List<JoinWordUser> findListByIds(List<String> ids) {
+        String query = "select jwu from JoinWordUser as jwu where jwu.uid in :ids";
+        return this.em.createQuery(query, JoinWordUser.class)
+                .setParameter("ids", ids)
+                .getResultList();
+    }
+
     @Override
     public JoinWordUser findByUserWithWord(Long userId, String wordUid) {
+        // visible 검사는 안함
         String query = "select jwu from JoinWordUser as jwu where jwu.user.id = :userId and jwu.word.id = :wordId";
         List<JoinWordUser> joinWordUserList = this.em.createQuery(query, JoinWordUser.class)
                 .setParameter("userId", userId)
@@ -41,7 +48,7 @@ public class DatabaseJoinWordRepository implements JoinWordRepository {
 
     @Override
     public JoinWordUser[] userOwnedWordList(Long userId) {
-        String query = "select jwu from JoinWordUser as jwu where jwu.user.id = :userId";
+        String query = "select jwu from JoinWordUser as jwu where jwu.user.id = :userId and jwu.visible = true";
 
         List<JoinWordUser> joinWordUserList = this.em.createQuery(query, JoinWordUser.class)
                 .setParameter("userId", userId)
@@ -52,14 +59,14 @@ public class DatabaseJoinWordRepository implements JoinWordRepository {
 
     @Override
     public JoinWordUser[] joinWordList() {
-        String query = "select jwu from JoinWordUser as jwu";
+        String query = "select jwu from JoinWordUser as jwu where jwu.visible = true";
         List<JoinWordUser> resultList = this.em.createQuery(query, JoinWordUser.class).getResultList();
         return resultList.toArray(JoinWordUser[]::new);
     }
 
     @Override
     public JoinWordUser[] pickListForQuiz(Long userId, int offset, int limit) {
-        String query = "select jwu from JoinWordUser as jwu join fetch jwu.word where jwu.user.id = :userId " +
+        String query = "select jwu from JoinWordUser as jwu join fetch jwu.word where jwu.user.id = :userId and jwu.visible = true " +
                 "order by jwu.lastSelectedQuiz desc";
 
         List<JoinWordUser> joinWordUserList = this.em.createQuery(query, JoinWordUser.class)
@@ -75,7 +82,8 @@ public class DatabaseJoinWordRepository implements JoinWordRepository {
     public JoinWordUser[] pickRandomForQuiz(Long userId, int offset, int limit) {
         String query = "select jwu from JoinWordUser as jwu " +
                 "where jwu.id in " +
-                "(select j.id from JoinWordUser as j where j.user.id = :userId order by j.lastSelectedQuiz desc offset :offset)"
+                "(select j.id from JoinWordUser as j where j.user.id = :userId and j.visible = true " +
+                "order by j.lastSelectedQuiz desc offset :offset)"
                 + "order by random()";
 
 //        String query = "select jwu from JoinWordUser as jwu where jwu.user.id = :userId order by jwu.updatedAt";

@@ -66,4 +66,9 @@ public class MemoryJoinWordRepository implements JoinWordRepository{
     public JoinWordUser[] pickRandomForQuiz(Long userId, int offset, int limit) {
         return new JoinWordUser[0];
     }
+
+    @Override
+    public List<JoinWordUser> findListByIds(List<String> ids) {
+        return null;
+    }
 }

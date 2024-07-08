@@ -84,7 +84,8 @@ public class JoinWordUserService {
         return output;
     }
 
-    /*
+    /**
+     * quiz를 위한 단어들을 선택한다.
      * 최근 7개  3개는 랜덤
      */
     public JoinWordUser[] pickWordsForQuiz(Long userId) {
@@ -101,8 +102,22 @@ public class JoinWordUserService {
         return combineQuiz.toArray(JoinWordUser[]::new);
     }
 
-//    public JoinWordUser getWordUserWithWord(JoinWordUser joinWordUser) {
-//
-//    }
+    /**
+     * 유저가 입력한 단어를 숨기기
+     */
+    @Transactional
+    public void hideWordsByUser(JoinWordUser[] joinWordUserList) {
+        // get joinWordUser by ids
+        List<String> joinWordUserIds = new ArrayList<>();
+        for (JoinWordUser joinWordUser : joinWordUserList) {
+            joinWordUserIds.add(joinWordUser.getId());
+        }
+
+        List<JoinWordUser> jwuList = this.joinWordRepository.findListByIds(joinWordUserIds);
+
+        for (JoinWordUser joinWordUser : jwuList) {
+            joinWordUser.hideWordVisible();
+        }
+    }
 
 }

@@ -24,6 +24,7 @@ import shurona.wordfinder.word.repository.joinuserword.JoinWordRepository;
 import shurona.wordfinder.word.repository.word.WordRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -113,5 +114,30 @@ class JoinWordUserServiceTest {
         for (WordListForm joinWordUser : userWordList) {
             assertThat(joinWordUser.getUserId()).isEqualTo(wishUserId);
         }
+    }
+
+    @Test
+    public void 단어숨기기_확인() {
+        // given
+        User firstUser = new User("nickname", "loginId", "password1");
+        Long userOneId = this.userRepository.save(firstUser);
+        User userOne = this.userRepository.findById(userOneId);
+
+        List<String> jwuIds = new ArrayList<>();
+        // 단어 100개 저장
+        for (int i = 0; i < 20; i++) {
+            String savedWordId = this.wordRepository.save(new Word("Hello " + i, "안녕"));
+            Word savedWord = this.wordRepository.findWordById(savedWordId).get();
+            String outputId = this.joinWordRepository.saveUserWord(userOne, savedWord);
+            jwuIds.add(outputId);
+        }
+
+        // when
+        JoinWordUser jwuOne = this.joinWordRepository.findById(jwuIds.get(0));
+        jwuOne.hideWordVisible();
+        JoinWordUser[] jwuList = this.joinWordRepository.userOwnedWordList(userOneId);
+
+        // then
+        assertThat(jwuList.length).isEqualTo(19);
     }
 }
