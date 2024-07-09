@@ -65,6 +65,10 @@ public class JoinWordUserService {
         return this.joinWordRepository.findById(jwuId);
     }
 
+    public JoinWordUser findJwuByUserIdAndWordId(Long userId, String wordUid) {
+        return this.joinWordRepository.findByUserWithWord(userId, wordUid);
+    }
+
     /**
      * 숨긴 단어를 제외한 유저가 저장한 단어 갯수
      */

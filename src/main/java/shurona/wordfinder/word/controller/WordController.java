@@ -236,13 +236,13 @@ public class WordController {
             @SessionAttribute(value = SessionConst.LOGIN_USER) UserSession userSession
     ) {
         // 단어 확인
-        Word wordInfo = this.wordService.getWordById(wordUid);
-        if (wordInfo == null) {
+        JoinWordUser jwuInfo = this.joinWordUserService.findJwuByUserIdAndWordId(userSession.getUserId(), wordUid);
+        if (jwuInfo == null || !jwuInfo.getVisible()) {
             return "redirect:/words";
         }
 
         // 만약 비 소유 단어면 단어 목록 화면으로 돌아간다.
-        boolean isWrite = this.joinWordUserService.checkWordUserSet(userSession.getUserId(), wordInfo.getWord());
+        boolean isWrite = this.joinWordUserService.checkWordUserSet(userSession.getUserId(), jwuInfo.getWord().getWord());
         if (!isWrite) {
             return "redirect:/words";
         }

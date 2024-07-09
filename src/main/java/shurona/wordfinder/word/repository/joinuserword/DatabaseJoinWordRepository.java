@@ -34,7 +34,8 @@ public class DatabaseJoinWordRepository implements JoinWordRepository {
     @Override
     public JoinWordUser findByUserWithWord(Long userId, String wordUid) {
         // visible 검사는 안함
-        String query = "select jwu from JoinWordUser as jwu where jwu.user.id = :userId and jwu.word.id = :wordId";
+        String query = "select jwu from JoinWordUser as jwu join fetch jwu.word " +
+                "where jwu.user.id = :userId and jwu.word.id = :wordId";
         List<JoinWordUser> joinWordUserList = this.em.createQuery(query, JoinWordUser.class)
                 .setParameter("userId", userId)
                 .setParameter("wordId", wordUid)
