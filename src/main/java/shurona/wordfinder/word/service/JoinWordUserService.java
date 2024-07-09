@@ -1,5 +1,7 @@
 package shurona.wordfinder.word.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class JoinWordUserService {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private final WordService wordService;
     private final JoinWordRepository joinWordRepository;
     private final UserService userService;
@@ -32,6 +35,9 @@ public class JoinWordUserService {
         this.joinWordRepository = joinWordRepository;
     }
 
+    /**
+     * 유저가 해당 단어를 입력했는지 확인한다.
+     */
     public boolean checkWordUserSet(Long userId, String wordInfo) {
         Word foundWord = this.wordService.getWordByWordInfo(wordInfo);
         if(foundWord == null) return false;
@@ -106,15 +112,16 @@ public class JoinWordUserService {
      * 유저가 입력한 단어를 숨기기
      */
     @Transactional
-    public void hideWordsByUser(JoinWordUser[] joinWordUserList) {
+    public void hideWordsByUser(Long userId, String wordUid) {
+        JoinWordUser jwuInfo = this.joinWordRepository.findByUserWithWord(userId, wordUid);
         // get joinWordUser by ids
+        // 확장성을 위해 ids 목록으로 검색
         List<String> joinWordUserIds = new ArrayList<>();
-        for (JoinWordUser joinWordUser : joinWordUserList) {
-            joinWordUserIds.add(joinWordUser.getId());
-        }
-
+//        for (JoinWordUser joinWordUser : joinWordUserList) {
+//            joinWordUserIds.add(joinWordUser.getId());
+//        }
+        joinWordUserIds.add(jwuInfo.getId());
         List<JoinWordUser> jwuList = this.joinWordRepository.findListByIds(joinWordUserIds);
-
         for (JoinWordUser joinWordUser : jwuList) {
             joinWordUser.hideWordVisible();
         }
