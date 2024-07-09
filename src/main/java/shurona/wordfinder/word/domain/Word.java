@@ -22,6 +22,9 @@ public class Word extends DateInfoEntity {
     @ColumnDefault("'COMPLETE'")
     private WordEditStatus status;
 
+    @ColumnDefault(value = "0")
+    private Integer hideCount;
+
     public Word() {
 
     }
@@ -29,6 +32,7 @@ public class Word extends DateInfoEntity {
     public Word(String word, String meaning) {
         this.word = word;
         this.meaning = meaning;
+        this.hideCount = 0;
 
         // 날짜 생성
         this.createdAt = LocalDateTime.now();
@@ -53,6 +57,13 @@ public class Word extends DateInfoEntity {
 
     public WordEditStatus getStatus() {return status;}
 
+    public Integer getHideCount() {
+        return hideCount;
+    }
+
+    /*
+    도메인 로직 처리
+     */
 
     public void editMeaning(String meaning) {
         this.meaning = meaning;
@@ -60,6 +71,10 @@ public class Word extends DateInfoEntity {
 
     public void editWordStatus(WordEditStatus status) {
         this.status = status;
+    }
+
+    public void increaseHideCount() {
+        this.hideCount+=1;
     }
 
     @Override
