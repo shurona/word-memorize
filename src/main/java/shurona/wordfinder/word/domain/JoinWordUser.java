@@ -85,6 +85,12 @@ public class JoinWordUser extends DateInfoEntity {
         this.lastSelectedQuiz = LocalDateTime.now();
     }
 
+    /**
+     * 단어 visible false 처리
+     */
+    public void hideWordVisible() {
+        this.visible = false;
+    }
 
     @Override
     public String toString() {

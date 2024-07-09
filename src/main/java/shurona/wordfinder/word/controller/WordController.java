@@ -73,7 +73,7 @@ public class WordController {
             RedirectAttributes redirectAttributes,
             Model model
     ) {
-        // ADMIN이 아니면 단어 갯수 확인
+        // 하루에 저장할 수 있는 단어 넘었는지 체크
         if (!userSession.getRole().equals(UserRole.ADMIN)) {
             // check remain count
             int remainCount = this.cacheWordLimit.checkCount(userSession.getUserId());
@@ -230,8 +230,39 @@ public class WordController {
         return "redirect:/words";
     }
 
-    /**
+    @PostMapping("word/hide/{id}")
+    public String hideWord(
+            @PathVariable("id") String wordUid,
+            @SessionAttribute(value = SessionConst.LOGIN_USER) UserSession userSession
+    ) {
+        // 단어 확인
+        Word wordInfo = this.wordService.getWordById(wordUid);
+        if (wordInfo == null) {
+            return "redirect:/words";
+        }
+
+        // 만약 비 소유 단어면 단어 목록 화면으로 돌아간다.
+        boolean isWrite = this.joinWordUserService.checkWordUserSet(userSession.getUserId(), wordInfo.getWord());
+        if (!isWrite) {
+            return "redirect:/words";
+        }
+
+        try {
+            this.joinWordUserService.hideWordsByUser(userSession.getUserId(), wordUid);
+        } catch (Exception e) {
+            //
+            this.log.error("숨기는 중에 문제가 발견하였습니다. {}", e.getMessage());
+        }
+
+        return "redirect:/words";
+    }
+
+    /*
      * 접근 제어 메서드
+     */
+
+    /**
+     * 이미 저장한 단어 인지 확인
      */
     private void checkWordDuplication(ConnectWordForm wordForm, BindingResult bindingResult, UserSession userSession) {
         boolean check = this.joinWordUserService.checkWordUserSet(userSession.getUserId(), wordForm.getWord());

@@ -22,6 +22,7 @@
             <th scope="col">Word</th>
             <th scope="col">Meaning</th>
             <th scope="col">단어 수정</th>
+            <th scope="col">숨김 처리</th>
         </tr>
         </thead>
         <tbody>
@@ -40,9 +41,22 @@
 <!--                    <a th:href="@{/word/edit/{id}(id=${word.wordId})}" class="btn btn-info btn-sm">변경 요청</a>-->
 <!--                </div>-->
             </td>
+            <td>
+                <div>
+                    <form th:id="'word-hide-form-' + ${word.wordId}" th:action="@{/word/hide/{id}(id=${word.wordId})}"
+                          method="post" style="display: none;"></form>
+                    <button class="btn btn-info btn-sm" th:attr="data-form-id='word-hide-form-' + ${word.wordId}" onclick="submitHideForm(this)">숨기기</button>
+                </div>
+            </td>
         </tr>
         </tbody>
     </table>
 </div>
+<script>
+    function submitHideForm(button) {
+        let formId = button.getAttribute('data-form-id');
+        document.getElementById(formId).submit();
+    }
+</script>
 </body>
 </html>

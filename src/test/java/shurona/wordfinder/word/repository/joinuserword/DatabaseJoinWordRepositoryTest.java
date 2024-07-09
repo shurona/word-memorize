@@ -162,4 +162,44 @@ class DatabaseJoinWordRepositoryTest {
             }
         }
     }
+
+    @Test
+    void 갯수_갖고오기_테스트() {
+        // given
+        Long userOneId = this.userRepository.save(new User("nicknameOne", "loginId", "password"));
+
+        User userOne = this.userRepository.findById(userOneId);
+
+        int saveCount = 15;
+        int exCount = 3;
+
+        String wordString = "wd";
+        String wordMeaning = "meaning";
+
+        int zero = this.joinWordRepository.countWordUserByUserId(userOneId, true);
+
+        List<String> jwuIdList = new ArrayList<>();
+        for (int i = 0; i < saveCount; i++) {
+            String wordId = this.wordRepository.save(new Word(wordString + i, wordMeaning + i));
+            Word word = this.wordRepository.findWordById(wordId).get();
+            String jwuId = this.joinWordRepository.saveUserWord(userOne, word);
+            jwuIdList.add(jwuId);
+        }
+        // when
+        int getAll = this.joinWordRepository.countWordUserByUserId(userOneId, true);
+
+        for (int i = 0; i < exCount; i++) {
+            JoinWordUser jwuInfo = this.joinWordRepository.findById(jwuIdList.get(i));
+            jwuInfo.hideWordVisible();
+        }
+
+        int exHide = this.joinWordRepository.countWordUserByUserId(userOneId, true);
+        int getAllIncludeHide = this.joinWordRepository.countWordUserByUserId(userOneId, false);
+
+        // then
+        assertThat(zero).isEqualTo(0);
+        assertThat(getAll).isEqualTo(saveCount);
+        assertThat(exHide).isEqualTo(saveCount - exCount);
+        assertThat(getAllIncludeHide).isEqualTo(saveCount);
+    }
 }

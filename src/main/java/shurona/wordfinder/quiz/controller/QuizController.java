@@ -19,7 +19,6 @@ import shurona.wordfinder.quiz.service.QuizService;
 import shurona.wordfinder.user.common.SessionConst;
 import shurona.wordfinder.user.session.UserSession;
 import shurona.wordfinder.word.domain.Word;
-import shurona.wordfinder.word.dto.WordListForm;
 import shurona.wordfinder.word.service.JoinWordUserService;
 import shurona.wordfinder.word.service.WordService;
 
@@ -59,11 +58,10 @@ public class QuizController {
             Model model
     ) {
 
-        WordListForm[] userWordList = this.joinWordUserService.getUserWordList(userSession.getUserId());
-
-        if (userWordList.length < 11) {
+        int jwuLength = this.joinWordUserService.checkUserWordCount(userSession.getUserId(), true);
+        if (jwuLength < 11) {
             bindingResult.reject("nonEnough", "단어를 최소 10개를 만들어주세요 \n" +
-                    "현재 단어 갯수 : " + userWordList.length);
+                    "현재 단어 갯수 : " + jwuLength);
         }
 
 
@@ -81,7 +79,7 @@ public class QuizController {
             return "quiz/intro";
         }
 
-        this.log.info("생성중...");
+        this.log.info("생성중... 유저 : {}" , userSession.getUserId());
         Long quizSetId = this.quizService.generateQuizSet(userSession.getUserId());
 
 

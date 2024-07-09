@@ -29,7 +29,6 @@ public class WordService {
 
     public Word getWordById(String uuid) {
         Optional<Word> wordById = this.wordRepository.findWordById(uuid);
-
         return wordById.orElse(null);
     }
 
