@@ -29,6 +29,8 @@ public interface JoinWordRepository {
 
     JoinWordUser[] pickRandomForQuiz(Long userId, int offset, int limit);
 
+    int countWordUserByUserId(Long userId, boolean excludeHide);
+
     // 유저와 단어 연결
     String saveUserWord(User user, Word word);
 }

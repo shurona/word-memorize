@@ -71,4 +71,9 @@ public class MemoryJoinWordRepository implements JoinWordRepository{
     public List<JoinWordUser> findListByIds(List<String> ids) {
         return null;
     }
+
+    @Override
+    public int countWordUserByUserId(Long userId, boolean excludeHide) {
+        return 0;
+    }
 }

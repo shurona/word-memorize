@@ -65,7 +65,16 @@ public class JoinWordUserService {
         return this.joinWordRepository.findById(jwuId);
     }
 
-    // 유저가 입력간 단어 목록 갖고 오기
+    /**
+     * 숨긴 단어를 제외한 유저가 저장한 단어 갯수
+     */
+    public int checkUserWordCount(Long userId, boolean excludeHide) {
+        return this.joinWordRepository.countWordUserByUserId(userId, excludeHide);
+    }
+
+    /**
+     * 유저가 입력간 단어 목록 갖고 오기
+     */
     public WordListForm[] getUserWordList(Long userId) {
         JoinWordUser[] joinWordUsers = this.joinWordRepository.userOwnedWordList(userId);
         //
@@ -122,8 +131,10 @@ public class JoinWordUserService {
 //        }
         joinWordUserIds.add(jwuInfo.getId());
         List<JoinWordUser> jwuList = this.joinWordRepository.findListByIds(joinWordUserIds);
+        // 단어를 숨김 처리 후 count 증가
         for (JoinWordUser joinWordUser : jwuList) {
             joinWordUser.hideWordVisible();
+            joinWordUser.getWord().increaseHideCount();
         }
     }
 

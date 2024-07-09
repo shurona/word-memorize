@@ -96,6 +96,19 @@ public class DatabaseJoinWordRepository implements JoinWordRepository {
         return joinWordUserList.toArray(JoinWordUser[]::new);
     }
 
+    public int countWordUserByUserId(Long userId, boolean excludeHide) {
+        String query = "select count(jwu.id) from JoinWordUser as jwu " +
+                "where jwu.user.id = :userId ";
+
+        // 만약 hide를 포함하지 않으면
+        if (excludeHide) {
+            query += "and jwu.visible = true";
+        }
+
+        List<Long> resultList = this.em.createQuery(query, Long.class).setParameter("userId", userId).getResultList();
+        return resultList.get(0).intValue();
+    }
+
     /* ======================================================================
             Save 파트
              ======================================================================*/
