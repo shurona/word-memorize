@@ -55,7 +55,10 @@ public class DatabaseWordRepository implements WordRepository {
 
     @Override
     public List<RandWordMeaningDto> findRandomWordMeaning(String exceptWordId) {
-        String query = "select new shurona.wordfinder.word.repository.word.repodto.RandWordMeaningDto(w.uid, w.meaning) from Word w where w.hideCount = 0 order by random() limit 4";
+        String query = "select new shurona.wordfinder.word.repository.word.repodto.RandWordMeaningDto(w.uid, w.meaning) " +
+                "from Word w " +
+                "where w.id in " +
+                "(select jwu.word.id from JoinWordUser as jwu where jwu.visible = true order by random() limit 10)";
         List<RandWordMeaningDto> resultList = this.em.createQuery(query, RandWordMeaningDto.class).getResultList();
 
 

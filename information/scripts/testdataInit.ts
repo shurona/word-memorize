@@ -17,7 +17,7 @@ async function basic() {
 
         // 유저 하나 추가
         if(checkUser.rows.length == 0){
-            const createUserQuery = "insert into _user (user_id, login_id, nickname, password, created_at, updated_at) values (1, 'shrona', 'shrona', 'test!', now(), now())";
+            const createUserQuery = "insert into _user (user_id, login_id, nickname, password, created_at, updated_at) values (1, 'shrona', 'shrona', 'GIK5G39J1HnPHsLx7O4w0OU5LpY6IQkBW3FJv3Eq0bY=', now(), now())";
             const afterCreate =  await client.query(createUserQuery);
         }
 

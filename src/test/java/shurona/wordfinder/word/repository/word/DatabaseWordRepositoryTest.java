@@ -7,7 +7,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
+import shurona.wordfinder.user.domain.User;
+import shurona.wordfinder.user.repository.DatabaseUserRepository;
+import shurona.wordfinder.user.repository.UserRepository;
+import shurona.wordfinder.word.domain.JoinWordUser;
 import shurona.wordfinder.word.domain.Word;
+import shurona.wordfinder.word.repository.joinuserword.DatabaseJoinWordRepository;
+import shurona.wordfinder.word.repository.word.repodto.RandWordMeaningDto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,6 +28,10 @@ class DatabaseWordRepositoryTest {
 
     @Autowired
     private DatabaseWordRepository wordRepository;
+    @Autowired
+    private DatabaseUserRepository userRepository;
+    @Autowired
+    private DatabaseJoinWordRepository joinWordRepository;
 
     @Test
     public void 단어저장_조회() {
@@ -106,6 +119,41 @@ class DatabaseWordRepositoryTest {
         // then
         Word newMeaningWord = this.wordRepository.findWordByWord(wordInfo);
         assertThat(newMeaningWord.getMeaning()).isEqualTo(changeMeaning);
+    }
+
+    @Test
+    public void 랜덤단어_선택() {
+        // given
+        Long userOneId = this.userRepository.save(new User("nicknameOne", "loginId", "password"));
+
+        User userOne = this.userRepository.findById(userOneId);
+
+        String wordString = "wd";
+        String wordMeaning = "meaning";
+
+        List<String> wordIdList = new ArrayList<>();
+        List<String> jwuIdList = new ArrayList<>();
+        for (int i = 0; i < 15; i++) {
+            String wordId = this.wordRepository.save(new Word(wordString + i, wordMeaning + " " + i));
+            Word word = this.wordRepository.findWordById(wordId).get();
+            String jwuId = this.joinWordRepository.saveUserWord(userOne, word);
+            wordIdList.add(wordId);
+            jwuIdList.add(jwuId);
+        }
+
+        for (int i = 0; i < 10; i++) {
+            JoinWordUser jwuInfo = this.joinWordRepository.findById(jwuIdList.get(i));
+            jwuInfo.hideWordVisible();
+        }
+        // when
+        List<RandWordMeaningDto> randomWordMeaning = this.wordRepository.findRandomWordMeaning(wordIdList.get(0));
+
+        // then
+        assertThat(randomWordMeaning.size()).isEqualTo(3);
+        for (RandWordMeaningDto randWordMeaningDto : randomWordMeaning) {
+            String s = randWordMeaningDto.getMeaning().split(" ")[1];
+            assertThat(Integer.parseInt(s)).isGreaterThan(9);
+        }
     }
 
 }
