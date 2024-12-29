@@ -1,0 +1,25 @@
+# DataSource
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+    #url: jdbc:h2:tcp://localhost/~/Documents/java-workspace/spring-lecture/spring-jpa-basic/database/jpashop
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  # JPA/Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true;
+
+
+dev:
+  test:
+    header: test-header
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace

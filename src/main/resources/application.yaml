@@ -1,0 +1,31 @@
+server:
+  servlet:
+    session:
+      tracking-modes: cookie
+
+spring:
+  profiles:
+    active: ${ACTIVE}
+    # DataSource
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+
+
+# Auth key
+deepl:
+  api:
+    key: ${DEEPL_API_KEY}
+    url: https://api-free.deepl.com/v2/translate
+
+dev:
+  test:
+    header: ${MY_TEST_KEY}
+
+
+  
+
+
