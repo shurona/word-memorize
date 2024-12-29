@@ -1,5 +1,8 @@
 package shurona.wordfinder.user.repository;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import shurona.wordfinder.user.domain.User;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -88,7 +87,6 @@ class DatabaseUserRepositoryTest {
         //when
         User checkLoginUser = this.userRepository.login(loginId, password).orElse(null);
         User unknownUser = this.userRepository.login("udkdkd", password).orElse(null);
-
 
         //then
         if (checkLoginUser != null) {
