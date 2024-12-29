@@ -1,62 +1,68 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Word List</title>
-    <!-- Bootstrap CSS from local path -->
-    <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
-    <link th:href="@{/css/my-style.css}" href="../css/my-style.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Word List</title>
+  <!-- Bootstrap CSS from local path -->
+  <link href="../css/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link href="../css/my-style.css" rel="stylesheet" th:href="@{/css/my-style.css}">
 </head>
 <body>
 <div class="container mt-5">
-    <div th:replace="~{fragments/header :: header}"></div>
-    <h1 class="mb-4">Words</h1>
-    <div class="d-flex justify-content-end mb-3" >
-        <a th:href="@{/word}" type="button" class="btn btn-secondary me-2 float-right">단어 추가</a>
-        <a th:href="@{/}" type="button" class="btn btn-dark float-right">홈으로</a>
-    </div>
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Word</th>
-            <th scope="col">Meaning</th>
-            <th scope="col">단어 수정</th>
-            <th scope="col">숨김 처리</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="word, stat : ${words}">
-            <td th:text="${stat.count}">Index</td>
-            <td th:text="${word.word}">Example Word</td>
-            <td th:text="${word.meaning}">Example Meaning</td>
-            <td>
-                <div th:if="${#strings.equals(word.status, 'EDITABLE')}">
-                    <a th:href="@{/word/edit/{id}(id=${word.wordId})}" class="btn btn-primary btn-sm">수정</a>
-                </div>
-                <div th:if="${#strings.equals(word.status, 'REQUEST')}">
-                    <button class="btn btn-secondary btn-sm" disabled>변경 요청되었습니다.</button>
-                </div>
-<!--                <div th:if="${#strings.equals(word.status, 'COMPLETE')}">-->
-<!--                    <a th:href="@{/word/edit/{id}(id=${word.wordId})}" class="btn btn-info btn-sm">변경 요청</a>-->
-<!--                </div>-->
-            </td>
-            <td>
-                <div>
-                    <form th:id="'word-hide-form-' + ${word.wordId}" th:action="@{/word/hide/{id}(id=${word.wordId})}"
-                          method="post" style="display: none;"></form>
-                    <button class="btn btn-info btn-sm" th:attr="data-form-id='word-hide-form-' + ${word.wordId}" onclick="submitHideForm(this)">숨기기</button>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+  <div th:replace="~{fragments/header :: header}"></div>
+  <h1 class="mb-4">Words</h1>
+  <div class="d-flex justify-content-end mb-3">
+    <a class="btn btn-secondary me-2 float-right" th:href="@{/word}" type="button">단어 추가</a>
+    <a class="btn btn-dark float-right" th:href="@{/}" type="button">홈으로</a>
+  </div>
+  <table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Word</th>
+      <th scope="col">Meaning</th>
+      <th scope="col">단어 수정</th>
+      <th scope="col">숨김 처리</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="word, stat : ${words}">
+      <td th:text="${stat.count}">Index</td>
+      <td th:text="${word.word}">Example Word</td>
+      <td th:text="${word.meaning}">Example Meaning</td>
+      <td>
+        <a class="btn btn-primary btn-sm" th:href="@{/word/edit/{id}(id=${word.wordId})}">수정</a>
+        <!--        <div th:if="${#strings.equals(word.status, 'EDITABLE')}">-->
+        <!--          <a class="btn btn-primary btn-sm" th:href="@{/word/edit/{id}(id=${word.wordId})}">수정</a>-->
+        <!--        </div>-->
+        <!--        <div th:if="${#strings.equals(word.status, 'REQUEST')}">-->
+        <!--          <button class="btn btn-secondary btn-sm" disabled>변경 요청되었습니다.</button>-->
+        <!--        </div>-->
+        <!--                <div th:if="${#strings.equals(word.status, 'COMPLETE')}">-->
+        <!--                    <a th:href="@{/word/edit/{id}(id=${word.wordId})}" class="btn btn-info btn-sm">변경 요청</a>-->
+        <!--                </div>-->
+      </td>
+      <td>
+        <div>
+          <form method="post"
+                style="display: none;"
+                th:action="@{/word/hide/{id}(id=${word.wordId})}"
+                th:id="'word-hide-form-' + ${word.wordId}"></form>
+          <button class="btn btn-info btn-sm"
+                  onclick="submitHideForm(this)"
+                  th:attr="data-form-id='word-hide-form-' + ${word.wordId}">숨기기
+          </button>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>
 <script>
-    function submitHideForm(button) {
-        let formId = button.getAttribute('data-form-id');
-        document.getElementById(formId).submit();
-    }
+  function submitHideForm(button) {
+      let formId = button.getAttribute('data-form-id');
+      document.getElementById(formId).submit();
+  }
 </script>
 </body>
 </html>

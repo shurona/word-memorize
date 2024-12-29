@@ -7,10 +7,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.user.common.SessionConst;
+import shurona.wordfinder.user.domain.User;
 import shurona.wordfinder.user.domain.UserRole;
 import shurona.wordfinder.user.service.UserService;
 import shurona.wordfinder.user.session.UserSession;
@@ -40,7 +45,9 @@ public class WordController {
     private final WordExternalDtoService wordExternalDtoService;
 
     @Autowired
-    public WordController(JoinWordUserService joinWordUserService, WordService wordService, UserService userService, MemoryCacheWordLimit memoryCacheWordLimit, WordExternalDtoService wordExternalDtoService) {
+    public WordController(JoinWordUserService joinWordUserService, WordService wordService,
+        UserService userService, MemoryCacheWordLimit memoryCacheWordLimit,
+        WordExternalDtoService wordExternalDtoService) {
         this.joinWordUserService = joinWordUserService;
         this.wordService = wordService;
         this.userService = userService;
@@ -53,8 +60,8 @@ public class WordController {
      */
     @GetMapping("/word")
     public String wordForm(
-            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) UserSession userSession,
-            Model model
+        @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) UserSession userSession,
+        Model model
     ) {
         User user = this.userService.findById(userSession.getUserId());
         ConnectWordForm wordForm = new ConnectWordForm();
@@ -67,11 +74,11 @@ public class WordController {
 
     @PostMapping("/word")
     public String registerWord(
-            @Validated @ModelAttribute("word") ConnectWordForm wordForm,
-            BindingResult bindingResult,
-            @SessionAttribute(value = SessionConst.LOGIN_USER) UserSession userSession,
-            RedirectAttributes redirectAttributes,
-            Model model
+        @Validated @ModelAttribute("word") ConnectWordForm wordForm,
+        BindingResult bindingResult,
+        @SessionAttribute(value = SessionConst.LOGIN_USER) UserSession userSession,
+        RedirectAttributes redirectAttributes,
+        Model model
     ) {
         // 하루에 저장할 수 있는 단어 넘었는지 체크
         if (!userSession.getRole().equals(UserRole.ADMIN)) {
@@ -128,7 +135,8 @@ public class WordController {
             wordString = wordInfo.getWord();
         }
 
-        this.joinWordUserService.generate(userSession.getUserId(), wordString, meaningInfo, wordEditInfo);
+        this.joinWordUserService.generate(userSession.getUserId(), wordString, meaningInfo,
+            wordEditInfo);
         return "redirect:/words";
     }
 
@@ -137,9 +145,9 @@ public class WordController {
      */
     @GetMapping("/word-meaning")
     public String wordWithMeaningForm(
-            @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) UserSession userSession,
-            @RequestParam("word") String word,
-            Model model
+        @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) UserSession userSession,
+        @RequestParam("word") String word,
+        Model model
     ) {
         User user = this.userService.findById(userSession.getUserId());
         WordForm wordForm = new WordForm();
@@ -153,17 +161,18 @@ public class WordController {
 
     @PostMapping("/word-meaning")
     public String registerWordWithMeaning(
-            @Validated @ModelAttribute("word") WordForm wordForm,
-            BindingResult bindingResult,
-            @SessionAttribute(value = SessionConst.LOGIN_USER) UserSession userSession,
-            Model model
+        @Validated @ModelAttribute("word") WordForm wordForm,
+        BindingResult bindingResult,
+        @SessionAttribute(value = SessionConst.LOGIN_USER) UserSession userSession,
+        Model model
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getGlobalError());
             return "word/registerWordWithMeaning";
         }
 
-        this.joinWordUserService.generate(userSession.getUserId(), wordForm.getWord(), wordForm.getMeaning(), WordEditStatus.COMPLETE);
+        this.joinWordUserService.generate(userSession.getUserId(), wordForm.getWord(),
+            wordForm.getMeaning(), WordEditStatus.COMPLETE);
         return "redirect:/words";
     }
 
@@ -172,10 +181,11 @@ public class WordController {
      */
     @GetMapping("/words")
     public String wordList(
-            Model model,
-            @SessionAttribute(value = SessionConst.LOGIN_USER) UserSession userSession
+        Model model,
+        @SessionAttribute(value = SessionConst.LOGIN_USER) UserSession userSession
     ) {
-        WordListForm[] userWordList = this.joinWordUserService.getUserWordList(userSession.getUserId());
+        WordListForm[] userWordList = this.joinWordUserService.getUserWordList(
+            userSession.getUserId());
 
         model.addAttribute("words", userWordList);
 
@@ -189,7 +199,7 @@ public class WordController {
     public String wordEditForm(
         @PathVariable("id") String uuid,
         @ModelAttribute("form") WordEditForm form
-        ) {
+    ) {
         Word word = this.wordService.getWordById(uuid);
 
         if (word == null) {
@@ -211,18 +221,27 @@ public class WordController {
 
     @PostMapping("/word/edit/{id}")
     public String wordEdit(
-            @PathVariable("id") String id,
-            @ModelAttribute("form") WordEditForm form,
-            BindingResult bindingResult
+        @PathVariable("id") String id,
+        @ModelAttribute("form") WordEditForm form,
+        Model model,
+        BindingResult bindingResult
     ) {
         Word wordInfo = this.wordService.getWordById(id);
 
-        if (!wordInfo.getWord().equals(form.getWord()) || !wordInfo.getStatus().equals(WordEditStatus.EDITABLE)) {
+        // 단어가 비었거나 상태가 수정가능인지 확인한다.
+//        if (!wordInfo.getWord().equals(form.getWord()) || !wordInfo.getStatus()
+//            .equals(WordEditStatus.EDITABLE)) {
+//            bindingResult.reject("wrongWord", "잘못된 수정 접근 입니다.");
+//        }
+
+        // 단어가 비었는지만 확인한다.
+        if (!wordInfo.getWord().equals(form.getWord())) {
             bindingResult.reject("wrongWord", "잘못된 수정 접근 입니다.");
         }
-
+        
         if (bindingResult.hasErrors()) {
-            return "redirect:/words";
+            model.addAttribute("errors", bindingResult.getGlobalError());
+            return "word/editWord";
         }
 
         // 수정 진행
@@ -232,17 +251,19 @@ public class WordController {
 
     @PostMapping("word/hide/{id}")
     public String hideWord(
-            @PathVariable("id") String wordUid,
-            @SessionAttribute(value = SessionConst.LOGIN_USER) UserSession userSession
+        @PathVariable("id") String wordUid,
+        @SessionAttribute(value = SessionConst.LOGIN_USER) UserSession userSession
     ) {
         // 단어 확인
-        JoinWordUser jwuInfo = this.joinWordUserService.findJwuByUserIdAndWordId(userSession.getUserId(), wordUid);
+        JoinWordUser jwuInfo = this.joinWordUserService.findJwuByUserIdAndWordId(
+            userSession.getUserId(), wordUid);
         if (jwuInfo == null || !jwuInfo.getVisible()) {
             return "redirect:/words";
         }
 
         // 만약 비 소유 단어면 단어 목록 화면으로 돌아간다.
-        boolean isWrite = this.joinWordUserService.checkWordUserSet(userSession.getUserId(), jwuInfo.getWord().getWord());
+        boolean isWrite = this.joinWordUserService.checkWordUserSet(userSession.getUserId(),
+            jwuInfo.getWord().getWord());
         if (!isWrite) {
             return "redirect:/words";
         }
@@ -264,8 +285,10 @@ public class WordController {
     /**
      * 이미 저장한 단어 인지 확인
      */
-    private void checkWordDuplication(ConnectWordForm wordForm, BindingResult bindingResult, UserSession userSession) {
-        boolean check = this.joinWordUserService.checkWordUserSet(userSession.getUserId(), wordForm.getWord());
+    private void checkWordDuplication(ConnectWordForm wordForm, BindingResult bindingResult,
+        UserSession userSession) {
+        boolean check = this.joinWordUserService.checkWordUserSet(userSession.getUserId(),
+            wordForm.getWord());
         if (check) {
             bindingResult.reject("alreadyExist", "이미 저장한 단어입니다.");
         }
