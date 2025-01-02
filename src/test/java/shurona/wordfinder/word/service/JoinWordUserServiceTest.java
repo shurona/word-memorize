@@ -1,13 +1,13 @@
 package shurona.wordfinder.word.service;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import org.junit.jupiter.api.BeforeEach;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
@@ -23,11 +23,6 @@ import shurona.wordfinder.word.dto.WordListForm;
 import shurona.wordfinder.word.repository.joinuserword.JoinWordRepository;
 import shurona.wordfinder.word.repository.word.WordRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 //@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @Sql(scripts = {"/resetTable.sql"}, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
@@ -35,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @Transactional
 class JoinWordUserServiceTest {
+
     @Autowired
     private JoinWordUserService joinWordUserService;
     @Autowired
@@ -55,11 +51,13 @@ class JoinWordUserServiceTest {
         String wordMeaning = "안녕";
 
         // when
-        JoinWordUser userWithWord = this.joinWordUserService.generate(user.getId(), wordInfo, wordMeaning, WordEditStatus.COMPLETE);
+        JoinWordUser userWithWord = this.joinWordUserService.generate(user.getId(), wordInfo,
+            wordMeaning, WordEditStatus.COMPLETE);
 
         // then
         assertThat(userWithWord.getUser().getId()).isEqualTo(user.getId());
-        assertThat(this.wordRepository.findWordByWord(wordInfo).getUid()).isEqualTo(userWithWord.getWord().getUid());
+        assertThat(this.wordRepository.findWordByWord(wordInfo).getUid()).isEqualTo(
+            userWithWord.getWord().getUid());
     }
 
     @Test
@@ -112,7 +110,7 @@ class JoinWordUserServiceTest {
         // then
         assertThat(userWithWordList.size()).isEqualTo(userWordList.length);
         for (WordListForm joinWordUser : userWordList) {
-            assertThat(joinWordUser.getUserId()).isEqualTo(wishUserId);
+            assertThat(joinWordUser.userId()).isEqualTo(wishUserId);
         }
     }
 

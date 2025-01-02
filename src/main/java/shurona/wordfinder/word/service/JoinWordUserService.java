@@ -1,23 +1,20 @@
 package shurona.wordfinder.word.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shurona.wordfinder.user.domain.User;
-import shurona.wordfinder.user.repository.UserRepository;
 import shurona.wordfinder.user.service.UserService;
 import shurona.wordfinder.word.domain.JoinWordUser;
 import shurona.wordfinder.word.domain.Word;
 import shurona.wordfinder.word.domain.WordEditStatus;
 import shurona.wordfinder.word.dto.WordListForm;
 import shurona.wordfinder.word.repository.joinuserword.JoinWordRepository;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,7 +26,8 @@ public class JoinWordUserService {
     private final UserService userService;
 
     @Autowired
-    public JoinWordUserService(WordService wordService, UserService userService,  JoinWordRepository joinWordRepository) {
+    public JoinWordUserService(WordService wordService, UserService userService,
+        JoinWordRepository joinWordRepository) {
         this.userService = userService;
         this.wordService = wordService;
         this.joinWordRepository = joinWordRepository;
@@ -40,18 +38,23 @@ public class JoinWordUserService {
      */
     public boolean checkWordUserSet(Long userId, String wordInfo) {
         Word foundWord = this.wordService.getWordByWordInfo(wordInfo);
-        if(foundWord == null) return false;
-        JoinWordUser checkExist = this.joinWordRepository.findByUserWithWord(userId, foundWord.getUid());
+        if (foundWord == null) {
+            return false;
+        }
+        JoinWordUser checkExist = this.joinWordRepository.findByUserWithWord(userId,
+            foundWord.getUid());
         return checkExist != null;
     }
 
     /**
      * 유저가 입력한 단어 생성
-     * @param userId 유저 아이디
+     *
+     * @param userId   유저 아이디
      * @param wordInfo 단어 ex> name <= 이름
      */
     @Transactional
-    public JoinWordUser generate(Long userId, String wordInfo, String wordMeaning, WordEditStatus editStatus) {
+    public JoinWordUser generate(Long userId, String wordInfo, String wordMeaning,
+        WordEditStatus editStatus) {
         User userInfo = this.userService.findById(userId);
         // 이미 단어가 존재하는 지 확인 한다.
         Word foundWord = this.wordService.getWordByWordInfo(wordInfo);
@@ -91,29 +94,24 @@ public class JoinWordUserService {
 
         WordListForm[] output = new WordListForm[wordByIds.length];
 
-        for (int index = 0; index < wordByIds.length ; index++) {
-            WordListForm wordListForm = new WordListForm();
-            wordListForm.setWordId(wordByIds[index].getUid());
-            wordListForm.setWord(wordByIds[index].getWord());
-            wordListForm.setMeaning(wordByIds[index].getMeaning());
-            wordListForm.setStatus(wordByIds[index].getStatus());
-            wordListForm.setUserId(userId);
-            output[index] = wordListForm;
+        for (int index = 0; index < wordByIds.length; index++) {
+            output[index] = WordListForm.from(wordByIds[index], userId);
         }
         return output;
     }
 
     /**
-     * quiz를 위한 단어들을 선택한다.
-     * 최근 7개  3개는 랜덤
+     * quiz를 위한 단어들을 선택한다. 최근 7개  3개는 랜덤
      */
     public JoinWordUser[] pickWordsForQuiz(Long userId) {
         int recentLimit = 7;
         int notRecentSize = 3;
         // 최근 7개 단어를 불러온다.
-        JoinWordUser[] selectedRecentList = this.joinWordRepository.pickListForQuiz(userId, 0, recentLimit);
+        JoinWordUser[] selectedRecentList = this.joinWordRepository.pickListForQuiz(userId, 0,
+            recentLimit);
 
-        JoinWordUser[] selectRandom = this.joinWordRepository.pickRandomForQuiz(userId, recentLimit, notRecentSize);
+        JoinWordUser[] selectRandom = this.joinWordRepository.pickRandomForQuiz(userId, recentLimit,
+            notRecentSize);
 
         // 결과 리스트 초기화
         List<JoinWordUser> combineQuiz = new ArrayList<>(Arrays.asList(selectedRecentList));
