@@ -8,11 +8,12 @@ import jakarta.validation.constraints.Size;
  * 뜻 없이 단어만 입력받는 Form
  */
 public class ConnectWordForm {
+
     @NotEmpty
     private String nickname;
     @NotEmpty
     @Pattern(regexp = "^[A-Za-z\\s]+$", message = "영어로 입력해주세요.")
-    @Size(max = 20)
+    @Size(max = 50)
     private String word;
 
     private Integer remainCount;
