@@ -115,6 +115,39 @@ class JoinWordUserServiceTest {
     }
 
     @Test
+    void 단어_올_랜덤() {
+        // given
+        User firstUser = new User("nickname1", "loginId1", "password1");
+        Long userOneId = this.userRepository.save(firstUser);
+        Long userTwoId = this.userRepository.save(new User("nickname2", "loginId2", "password2"));
+        Long userThreeId = this.userRepository.save(new User("nickname3", "loginId3", "password3"));
+
+        User userOne = this.userRepository.findById(userOneId);
+        User userTwo = this.userRepository.findById(userTwoId);
+        User userThree = this.userRepository.findById(userThreeId);
+
+        User[] userList = {userOne, userTwo, userThree};
+
+        ArrayList<JoinWordUser> userWithWordList = new ArrayList<>();
+        long wishUserId = userOne.getId();
+        for (int i = 0; i < 100; i++) {
+            String savedWordId = this.wordRepository.save(new Word("Hello " + i, "안녕"));
+            Word savedWord = this.wordRepository.findWordById(savedWordId).get();
+            String outputId = this.joinWordRepository.saveUserWord(userList[i % 3], savedWord);
+            JoinWordUser output = this.joinWordRepository.findById(outputId);
+            if (i % 3 == wishUserId - userOneId) {
+                userWithWordList.add(output);
+            }
+        }
+
+        // when
+        JoinWordUser[] joinWordUsers = this.joinWordUserService.pickWordsAllRandom(userOneId);
+
+        // then
+        assertThat(joinWordUsers.length).isEqualTo(10);
+    }
+
+    @Test
     public void 단어숨기기_확인() {
         // given
         User firstUser = new User("nickname", "loginId", "password1");
