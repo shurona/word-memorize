@@ -39,7 +39,8 @@ public class QuizService {
     public Long generateQuizSet(Long userId) {
         User userInfo = this.userRepository.findById(userId);
 
-        JoinWordUser[] joinWordUsers = this.joinWordUserService.pickWordsForQuiz(userId);
+        // 어떻게 단어를 랜덤으로 갖고 올 지 골라라 AllRandom vs pickWordsForQuiz
+        JoinWordUser[] joinWordUsers = this.joinWordUserService.pickWordsAllRandom(userId);
 
 //        System.out.println("야후 : " + joinWordUsers.length);
 
@@ -48,6 +49,8 @@ public class QuizService {
             // 단어 갖고 오기
             List<RandWordMeaningDto> randomWordMeaning = this.wordService.findRandomWordMeaning(
                 joinWordUsers[sequence].getWord().getUid());
+
+            // 정답 위치를 랜덤으로 정한다
             int answerLoc = (int) (Math.random() * 10) % 3;
             details[sequence] = QuizDetail.createQuizDetail(
                 sequence, answerLoc, joinWordUsers[sequence], randomWordMeaning.get(0).getMeaning(),

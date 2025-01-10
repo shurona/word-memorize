@@ -120,6 +120,13 @@ public class JoinWordUserService {
     }
 
     /**
+     * 모든 단어를 랜덤으로 선택한다.
+     */
+    public JoinWordUser[] pickWordsAllRandom(Long userId) {
+        return this.joinWordRepository.pickRandomForQuiz(userId, 0, 10);
+    }
+
+    /**
      * 유저가 입력한 단어를 숨기기
      */
     @Transactional

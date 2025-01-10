@@ -44,6 +44,9 @@ public class QuizController {
         this.joinWordUserService = joinWordUserService;
     }
 
+    /**
+     * 정답 위치에 맞게 뜻 문제를 넣어주는 함수
+     */
     private static List<String> generateRandomList(QuizSet quizInfo, Word currentWord) {
         QuizDetail currentDetail = quizInfo.getQuizDetails().get(quizInfo.getCurrentSequence());
 

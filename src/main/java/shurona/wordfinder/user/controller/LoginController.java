@@ -23,8 +23,9 @@ import shurona.wordfinder.user.session.UserSession;
 @Controller
 public class LoginController {
 
+    //TODO: 외부에서 주입하도록 변경
+    private static final int LOGIN_SESSION_TIME = 60 * 60 * 2;
     private final Logger log = LoggerFactory.getLogger(getClass());
-
     private final UserService userService;
 
     @Autowired
@@ -56,7 +57,7 @@ public class LoginController {
         UserSession userSession = UserSession.createUserSession(loginUser.getId(),
             loginUser.getRole());
         //TODO: 로그인 시간 외부에서 주입하도록 수정
-        session.setMaxInactiveInterval(60 * 60 * 2);
+        session.setMaxInactiveInterval(LOGIN_SESSION_TIME);
         session.setAttribute(SessionConst.LOGIN_USER, userSession);
 
         return "redirect:" + redirectURL;
