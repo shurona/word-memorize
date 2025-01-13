@@ -1,45 +1,46 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>퀴즈 목록</title>
-    <!-- Bootstrap CSS from local path -->
-    <link th:href="@{/css/bootstrap.min.css}"
-          href="../css/bootstrap.min.css" rel="stylesheet">
-    <link th:href="@{/css/my-style.css}" href="../css/my-style.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>퀴즈 목록</title>
+  <!-- Bootstrap CSS from local path -->
+  <link href="../css/bootstrap.min.css"
+        rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link href="../css/my-style.css" rel="stylesheet" th:href="@{/css/my-style.css}">
 </head>
 <body>
 <div class="container mt-5">
-    <div th:replace="~{fragments/header :: header}"></div>
-    <h1 class="mb-4">생성한 퀴즈 목록</h1>
-    <div class="d-flex justify-content-end mb-3" >
-        <a th:href="@{/quiz/intro}" type="button" class="btn btn-dark float-right">홈으로</a>
-    </div>
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-        <tr>
-            <th scope="col">index</th>
-            <th scope="col">진행도</th>
-            <th scope="col">날짜</th>
-            <th scope="col">상세보기</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="dt, stat : ${quiz}">
-            <td th:text="${stat.count}">Index</td>
-            <td th:text="${dt.process}">Example Process</td>
-            <td th:text="${#temporals.format(dt.dateTime, 'yyyy-MM-dd HH:mm')}">Example Date</td>
-            <td>
-                <div th:if="${dt.process} == 10">
-                    <a th:href="@{/quiz/result/{id}(id=${dt.id})}" class="btn btn-primary btn-sm">상세보기</a>
-                </div>
-                <div th:unless="${dt.process} == 10">
-                    <a th:href="@{/quiz/problem/{id}(id=${dt.id})}" class="btn btn-primary btn-sm">문제 마저 풀러가기</a>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+  <div th:replace="~{fragments/header :: header}"></div>
+  <h1 class="mb-4">생성한 퀴즈 목록</h1>
+  <div class="d-flex justify-content-end mb-3">
+    <a class="btn btn-dark float-right" th:href="@{/quiz/intro}" type="button">홈으로</a>
+  </div>
+  <table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">index</th>
+      <th scope="col">진행도</th>
+      <th scope="col">날짜</th>
+      <th scope="col">상세보기</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="dt, stat : ${quiz}">
+      <td th:text="${stat.count}">Index</td>
+      <td th:text="${dt.process}">Example Process</td>
+      <td th:text="${#temporals.format(dt.dateTime, 'yyyy-MM-dd HH:mm')}">Example Date</td>
+      <td>
+        <div th:if="${dt.process} == 10">
+          <a class="btn btn-primary btn-sm" th:href="@{/quiz/result/{id}(id=${dt.id})}">상세보기</a>
+        </div>
+        <div th:unless="${dt.process} == 10">
+          <a class="btn btn-primary btn-sm" th:href="@{/quiz/problem/{id}(id=${dt.id})}">문제 마저
+            풀러가기</a>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>
 </body>
 </html>
