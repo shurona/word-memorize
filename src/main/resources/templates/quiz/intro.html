@@ -1,40 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>랜덤 단어 선택</title>
-    <link th:href="@{/css/bootstrap.min.css}"
-            href="../css/bootstrap.min.css" rel="stylesheet">
-    <link th:href="@{/css/my-style.css}" href="../css/my-style.css" rel="stylesheet">
-<!--    <script>-->
-<!--        function postToQuiz(){-->
-<!--            let form = document.createElement('form');-->
-<!--            form.method = 'POST';-->
-<!--            form.action = '/quiz';-->
-<!--            document.body.appendChild(form);-->
-<!--            form.submit();-->
-<!--        }-->
-<!--    </script>-->
+  <meta charset="UTF-8">
+  <title>랜덤 단어 선택</title>
+  <link href="../css/bootstrap.min.css"
+        rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link href="../css/my-style.css" rel="stylesheet" th:href="@{/css/my-style.css}">
+  <!--    <script>-->
+  <!--        function postToQuiz(){-->
+  <!--            let form = document.createElement('form');-->
+  <!--            form.method = 'POST';-->
+  <!--            form.action = '/quiz';-->
+  <!--            document.body.appendChild(form);-->
+  <!--            form.submit();-->
+  <!--        }-->
+  <!--    </script>-->
 </head>
 <body>
-    <div class = "container mt-5">
-        <div th:replace="~{fragments/header :: header}"></div>
-        <h1>단어 퀴즈</h1>
-        <div th:if="${errors}">
-            <div class="alert alert-danger" role="alert"
-                th:each="err : ${errors}" th:text="${err.defaultMessage}">
-                This is a danger alert—check it out!
-            </div>
-        </div>
-        <div class="d-flex justify-content-end mb-3" >
-            <a th:href="@{/}" type="button" class="btn btn-dark float-right">홈으로</a>
-        </div>
-        <div class="list-group">
-            <form action="/quiz/generate" method="post" class="mb-2">
-                <button type="submit" class="list-group-item list-group-item-action btn btn-link">퀴즈 생성</button>
-            </form>
-            <a href="/quiz/list" class="list-group-item list-group-item-action mb-3">기존 퀴즈 목록 보기</a>
-        </div>
+<div class="container mt-5">
+  <div th:replace="~{fragments/header :: header}"></div>
+  <h1>단어 퀴즈</h1>
+  <div th:if="${errors}">
+    <div class="alert alert-danger" role="alert"
+         th:each="err : ${errors}" th:text="${err.defaultMessage}">
+      This is a danger alert—check it out!
     </div>
+  </div>
+  <div class="d-flex justify-content-end mb-3">
+    <a class="btn btn-dark float-right" th:href="@{/}" type="button">홈으로</a>
+  </div>
+  <div class="list-group">
+    <form action="/quiz/generate" class="mb-2" method="post">
+      <button class="list-group-item list-group-item-action btn btn-link" type="submit">퀴즈 생성
+      </button>
+    </form>
+    <a class="list-group-item list-group-item-action mb-3" href="/quiz/list">기존 퀴즈 목록 보기</a>
+  </div>
+</div>
 </body>
 </html>

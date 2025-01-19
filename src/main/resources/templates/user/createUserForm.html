@@ -1,46 +1,49 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <title>회원가입</title>
-    <!-- Bootstrap CSS -->
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .field-error {
-        border-color: #dc3545;
-        color: #dc3545;
-        }
-    </style>
+  <meta charset="utf-8">
+  <title>회원가입</title>
+  <!-- Bootstrap CSS -->
+  <link href="../css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .field-error {
+    border-color: #dc3545;
+    color: #dc3545;
+    }
+  </style>
 </head>
 <body class="bg-light">
 <div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h4 class="card-title mb-4">회원가입</h4>
-                    <form th:action="@{/user/new}" th:object="${userForm}" method="post">
-                        <div class="mb-3">
-                            <label for="nickname" class="form-label">이름</label>
-                            <input type="text" class="form-control" id="nickname" th:field="*{nickname}" placeholder="이름을 입력하세요" required>
-                            <div class="field-error" th:errors="*{nickname}"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="loginId" class="form-label">로그인 ID</label>
-                            <input type="text" class="form-control" id="loginId" th:field="*{loginId}" placeholder="로그인 ID를 입력하세요" required>
-                            <div class="field-error" th:errors="*{loginId}"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">비밀번호</label>
-                            <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="비밀번호를 입력하세요" required>
-                            <div class="field-error" th:errors="*{password}"></div>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">등록</button>
-                    </form>
-                </div>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h4 class="card-title mb-4">회원가입</h4>
+          <form method="post" th:action="@{/user/new}" th:object="${userForm}">
+            <div class="mb-3">
+              <label class="form-label" for="nickname">이름</label>
+              <input class="form-control" id="nickname" placeholder="이름을 입력하세요" required
+                     th:field="*{nickname}" type="text">
+              <div class="field-error" th:errors="*{nickname}"></div>
             </div>
+            <div class="mb-3">
+              <label class="form-label" for="loginId">로그인 ID</label>
+              <input class="form-control" id="loginId" placeholder="로그인 ID를 입력하세요" required
+                     th:field="*{loginId}" type="text">
+              <div class="field-error" th:errors="*{loginId}"></div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="password">비밀번호</label>
+              <input class="form-control" id="password" placeholder="비밀번호를 입력하세요" required
+                     th:field="*{password}" type="password">
+              <div class="field-error" th:errors="*{password}"></div>
+            </div>
+            <button class="btn btn-primary w-100" type="submit">등록</button>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
 </div> <!-- /container -->
 </body>
 </html>

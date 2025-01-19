@@ -1,22 +1,22 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <title>나만의 단어장</title>
-    <!-- Bootstrap CSS from local path -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link th:href="@{/css/my-style.css}" href="./css/my-style.css" rel="stylesheet">
+  <meta charset="utf-8">
+  <title>나만의 단어장</title>
+  <!-- Bootstrap CSS from local path -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="./css/my-style.css" rel="stylesheet" th:href="@{/css/my-style.css}">
 </head>
 <body>
 <div class="container mt-5">
-    <div th:replace="~{fragments/header :: header}"></div>
-    <h1>나만의 단어장</h1>
-    <h3 th:text="${user.nickname + '님 안녕하세요'}">안녕하세요</h3>
-    <div class="list-group">
-        <a href="/word" class="list-group-item list-group-item-action">단어 저장</a>
-        <a href="/words" class="list-group-item list-group-item-action">단어 목록</a>
-        <a href="/quiz/intro" class="list-group-item list-group-item-action">랜덤 단어 선정</a>
-    </div>
+  <div th:replace="~{fragments/header :: header}"></div>
+  <h1>나만의 단어장</h1>
+  <h3 th:text="${user.nickname + '님 안녕하세요'}">안녕하세요</h3>
+  <div class="list-group">
+    <a class="list-group-item list-group-item-action" href="/word">단어 저장</a>
+    <a class="list-group-item list-group-item-action" href="/words">단어 목록</a>
+    <a class="list-group-item list-group-item-action" href="/quiz/intro">랜덤 단어 선정</a>
+  </div>
 </div> <!-- /container -->
 
 </body>
