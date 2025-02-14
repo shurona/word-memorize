@@ -25,7 +25,7 @@ public class WordExternalDtoService {
 //            throw new RuntimeException("사...살려줘");
 //        }
 
-        String output = this.wordExternalConnection.getProperty(word);
+        String output = this.wordExternalConnection.translateWord(word);
         if (output.equals(word)) {
             this.log.info("입력과 뜻이 같은 단어 {}  {}", word, output);
             return null;

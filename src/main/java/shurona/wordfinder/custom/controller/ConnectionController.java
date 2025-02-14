@@ -32,7 +32,7 @@ public class ConnectionController {
         HttpServletResponse response
     ) throws IOException {
         // strip 적용
-//        String output = this.connectionTestService.getProperty(word.strip());
+//        String output = this.wordExternalConnection.translateWord(word.strip());
         String output = null;
         if (output == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Input word is wrong");

@@ -1,71 +1,48 @@
 package shurona.wordfinder.custom.service;
 
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.util.StringUtils;
 import shurona.wordfinder.custom.dto.DeeplRequestDto;
 import shurona.wordfinder.custom.dto.DeeplResponseDto;
+import shurona.wordfinder.word.service.DeeplWordService;
 
 @Service
 public class WordExternalConnection {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    // 여기서 env 한 번 갖고 와 볼까
-    private final Environment environment;
+    private final DeeplWordService deeplWordService;
 
-    @Autowired
-    public WordExternalConnection(Environment environment) {
-        this.environment = environment;
+    public WordExternalConnection(DeeplWordService deeplWordService) {
+        this.deeplWordService = deeplWordService;
     }
 
-    public String getProperty(String word) {
-
-        String base64ApiKey = this.environment.getProperty("deepl.api.key");
-        String url = this.environment.getProperty("deepl.api.url");
-
-        // 내부적 오류 발생 시 stop
-        if (url == null || base64ApiKey == null) {
-            this.log.error("Env가 제대로 들어오지 않습니다.");
-            return null;
+    /**
+     * 주어진 단어를 번역합니다.
+     */
+    public String translateWord(String word) {
+        if (!StringUtils.hasText(word)) {
+            log.error("번역할 단어가 비어있습니다.");
+            throw new IllegalArgumentException("번역할 단어는 필수입니다.");
         }
 
-        // UTF-8 문자열로 변환
-        byte[] decodedBytes = Base64.getDecoder().decode(base64ApiKey);
-        String apiKey = new String(decodedBytes, StandardCharsets.UTF_8);
+        try {
+            DeeplRequestDto request = new DeeplRequestDto(new String[]{word});
+            DeeplResponseDto response = deeplWordService.getWordInfo(request);
 
-        // Request 객체
-        DeeplRequestDto deeplRequestDto = new DeeplRequestDto(new String[]{word});
+            if (response == null || response.getTranslations() == null
+                || response.getTranslations().isEmpty()) {
+                return word;
+            }
 
-        // 헤더 생성
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "DeepL-Auth-Key " + apiKey);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RequestEntity<DeeplRequestDto> requestEntity = new RequestEntity<>(deeplRequestDto, headers,
-            HttpMethod.POST, URI.create(url));
+            String translatedText = response.getTranslations().get(0).getText();
+            return translatedText;
 
-        // 전송
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<DeeplResponseDto> exchange = restTemplate.exchange(requestEntity,
-            DeeplResponseDto.class);
-
-        // null 확인
-        if (exchange.getBody() == null) {
-            return null;
+        } catch (Exception e) {
+            log.error("단어 번역 중 오류 발생. 단어: {}", word, e);
+            throw new RuntimeException("번역 처리 중 오류가 발생했습니다.", e);
         }
-        return exchange.getBody().getTranslations().get(0).getText();
     }
-
-
 }
 
