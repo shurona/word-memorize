@@ -18,14 +18,14 @@ import shurona.wordfinder.custom.dto.DeeplRequestDto;
 import shurona.wordfinder.custom.dto.DeeplResponseDto;
 
 @Service
-public class ConnectionTestService {
+public class WordExternalConnection {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
     // 여기서 env 한 번 갖고 와 볼까
     private final Environment environment;
 
     @Autowired
-    public ConnectionTestService(Environment environment) {
+    public WordExternalConnection(Environment environment) {
         this.environment = environment;
     }
 

@@ -1,24 +1,26 @@
 package shurona.wordfinder.custom.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import shurona.wordfinder.common.dto.ApiResponse;
 import shurona.wordfinder.custom.dto.TranslateResponseDto;
-import shurona.wordfinder.custom.service.ConnectionTestService;
-
-import java.io.IOException;
+import shurona.wordfinder.custom.service.WordExternalConnection;
 
 @RestController
 @RequestMapping("connection")
 public class ConnectionController {
 
-    private final ConnectionTestService connectionTestService;
+    private final WordExternalConnection wordExternalConnection;
 
 
     @Autowired
-    public ConnectionController(ConnectionTestService connectionTestService) {
-        this.connectionTestService = connectionTestService;
+    public ConnectionController(WordExternalConnection wordExternalConnection) {
+        this.wordExternalConnection = wordExternalConnection;
     }
 
     /**
@@ -26,12 +28,12 @@ public class ConnectionController {
      */
     @GetMapping("translate")
     public ApiResponse<TranslateResponseDto> checkConnectionPool(
-            @RequestParam(value = "word") String word,
-            HttpServletResponse response
+        @RequestParam(value = "word") String word,
+        HttpServletResponse response
     ) throws IOException {
         // strip 적용
-        String output = this.connectionTestService.getProperty(word.strip());
-//        String output =null;
+//        String output = this.connectionTestService.getProperty(word.strip());
+        String output = null;
         if (output == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Input word is wrong");
             return ApiResponse.createFail("Translate fail");
