@@ -1,5 +1,6 @@
 package shurona.wordfinder.custom.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +19,16 @@ public class LineHookController {
 
         System.out.println("?? : " + header);
 
-        System.out.println(requestBody.destination());
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            // 객체를 JSON 문자열로 변환 (Node.js의 JSON.stringify와 동일)
+            String json = objectMapper.writeValueAsString(requestBody);
+
+            System.out.println(json); // 혹은 로그로 출력
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
         return ResponseEntity.ok().build();
     }
