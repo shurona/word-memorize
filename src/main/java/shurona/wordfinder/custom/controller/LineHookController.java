@@ -29,8 +29,8 @@ public class LineHookController {
 
             System.out.println(json); // 혹은 로그로 출력
 
-//            System.out.println(
-//                objectMapper.writeValueAsString(requestBody.events().get(0).message()));
+            System.out.println(
+                objectMapper.writeValueAsString(requestBody.events().get(0).message().get()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
