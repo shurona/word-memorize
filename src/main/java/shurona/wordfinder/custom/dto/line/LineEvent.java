@@ -2,16 +2,15 @@ package shurona.wordfinder.custom.dto.line;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Optional;
 
 // 이벤트 공통 필드
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public record LineEvent(
     @JsonProperty("type") String type,
-    @JsonProperty("message") Optional<LineMessage> message,
+    @JsonProperty("message") LineMessage message,
     @JsonProperty("timestamp") Long timestamp,
     @JsonProperty("source") LineSource source,
-    @JsonProperty("replyToken") Optional<String> replyToken,
+    @JsonProperty("replyToken") String replyToken,
     @JsonProperty("mode") String mode,
     @JsonProperty("webhookEventId") String webhookEventId,
     @JsonProperty("deliveryContext") DeliveryContext deliveryContext

@@ -33,6 +33,7 @@ public class LineHookController {
 
         System.out.println("?? : " + header);
 
+        // TODO: 따로 메소드로 분리
         try {
             // header validation
             String channelSecret =
