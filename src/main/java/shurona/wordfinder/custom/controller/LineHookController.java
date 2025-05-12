@@ -2,6 +2,8 @@ package shurona.wordfinder.custom.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -10,6 +12,7 @@ import shurona.wordfinder.custom.dto.line.WebHookRequest;
 
 @RestController
 public class LineHookController {
+
 
     @PostMapping
     public ResponseEntity<?> checkUrl(
@@ -38,4 +41,15 @@ public class LineHookController {
         return ResponseEntity.ok().build();
     }
 
+
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<String> handleMissingRequestHeader(MissingRequestHeaderException ex) {
+        // 예외 메시지 로그 남기기
+        System.err.println("Missing header: " + ex.getHeaderName());
+
+        // 클라이언트에 400 Bad Request와 메시지 전송
+        return ResponseEntity
+            .badRequest()
+            .body("필수 헤더(" + ex.getHeaderName() + ")가 누락되었습니다.");
+    }
 }
