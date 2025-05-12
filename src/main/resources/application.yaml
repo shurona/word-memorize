@@ -25,6 +25,8 @@ dev:
   test:
     header: ${MY_TEST_KEY}
 
+line:
+  secret-key: ${LINE_CHANNEL_SECRET}
 
   
 
