@@ -63,7 +63,7 @@ public class LineHookController {
             System.out.println(requestBodyOrigin); // 혹은 로그로 출력
 
             System.out.println(
-                objectMapper.writeValueAsString(requestBody.events().get(0).message().get()));
+                objectMapper.writeValueAsString(requestBody.events().get(0).message()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
